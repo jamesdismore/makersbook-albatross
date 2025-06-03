@@ -55,14 +55,28 @@ public class UsersController {
         ModelAndView modelAndView = new ModelAndView("NewUserPage", "our_user", user);
         return modelAndView;
     }
+    @GetMapping("/home")
+    public String goHome() {
+        return "posts/index";
+    }
     @PostMapping("/users/newUser")
-    public RedirectView saveNewUser(@Valid User user, BindingResult result) {
+    public String saveNewUser(@Valid User user, BindingResult result) {
         System.out.println("Check");
         if (result.hasErrors()) { // errors come from class constraints
-            return new RedirectView("/users/newUser");
+            return "NewUserPage";
         } else {
             userRepository.save(user); // fill out parameters as database changes to include first name, last name, dob etc
-            return new RedirectView("/posts");
+            return "redirect:/home";
         }
     }
+//    @PostMapping("/users/newUser")
+//    public RedirectView saveNewUser(@Valid User user, BindingResult result) {
+//        System.out.println("Check");
+//        if (result.hasErrors()) { // errors come from class constraints
+//            return new RedirectView("/users/newUser");
+//        } else {
+//            userRepository.save(user); // fill out parameters as database changes to include first name, last name, dob etc
+//            return new RedirectView("/posts");
+//        }
+//    }
 }
