@@ -23,6 +23,7 @@
             <div class="col-6 mb-3">
                 <label for="userNameInput" class="form-label" >Username</label>
                 <input type="text"  id="userNameInput" aria-describedby="userNameHelp" class="form-control form-control" th:field="*{username}">
+                <div th:errors="*{username}">Error Message</div>
             </div>
 
 <!--            <div class="col-6">-->

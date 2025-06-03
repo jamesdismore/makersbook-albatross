@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,11 +14,19 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping
 public class UsersController {
     @Autowired
     UserRepository userRepository;
+
+//    @ModelAttribute("our_user")
+//    public User findUser(@PathVariable(name = "userId", required = false) Long userId) {
+//        return userId == 0 ? new User()
+//                : userRepository.findById(userId)
+//                .orElseThrow(() -> new IllegalArgumentException("Owner not found with id: " + userId
+//                        + ". Please ensure the ID is correct " + "and the owner exists in the database."));
+//    }
 
     @GetMapping("/users/after-login")
     public RedirectView afterLogin() {
@@ -43,7 +52,7 @@ public class UsersController {
 //        return new RedirectView("/posts");
     }
     @GetMapping("/users/newUser")
-    public ModelAndView afterSignUp() {
+    public String afterSignUp(@ModelAttribute("our_user") User user) {
         DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -51,32 +60,19 @@ public class UsersController {
 
         // below - post mapping?
         String username = (String) principal.getAttributes().get("email");
-        User user = new User(username);
-        ModelAndView modelAndView = new ModelAndView("NewUserPage", "our_user", user);
-        return modelAndView;
-    }
-    @GetMapping("/home")
-    public String goHome() {
-        return "posts/index";
+        user.setUsername(username);
+//        ModelAndView modelAndView = new ModelAndView("NewUserPage", "our_user", user);
+        return "NewUserPage";
     }
     @PostMapping("/users/newUser")
-    public String saveNewUser(@Valid User user, BindingResult result) {
-        System.out.println("Check");
+    public String saveNewUser(@Valid @ModelAttribute("our_user") User user, BindingResult result) {
+        System.out.println(result);
         if (result.hasErrors()) { // errors come from class constraints
+            System.out.println("I've got errors :(");
             return "NewUserPage";
         } else {
             userRepository.save(user); // fill out parameters as database changes to include first name, last name, dob etc
-            return "redirect:/home";
+            return "redirect:/posts";
         }
     }
-//    @PostMapping("/users/newUser")
-//    public RedirectView saveNewUser(@Valid User user, BindingResult result) {
-//        System.out.println("Check");
-//        if (result.hasErrors()) { // errors come from class constraints
-//            return new RedirectView("/users/newUser");
-//        } else {
-//            userRepository.save(user); // fill out parameters as database changes to include first name, last name, dob etc
-//            return new RedirectView("/posts");
-//        }
-//    }
 }

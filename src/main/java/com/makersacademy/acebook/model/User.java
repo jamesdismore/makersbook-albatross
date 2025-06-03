@@ -18,7 +18,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank // means we don't need to specify elsewhere that it can't be blank
+    @NotBlank(message = "Username cannot be blank.") // means we don't need to specify elsewhere that it can't be blank
     private String username;
     private boolean enabled;
 
@@ -26,9 +26,9 @@ public class User {
         this.username = username;
         this.enabled = TRUE;
     }
-
-    public User(String username, boolean enabled) {
-        this.username = username;
-        this.enabled = enabled;
-    }
+//
+//    public User(String username, boolean enabled) {
+//        this.username = username;
+//        this.enabled = enabled;
+//    }
 }
