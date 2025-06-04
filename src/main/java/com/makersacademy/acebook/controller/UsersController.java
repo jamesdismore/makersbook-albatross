@@ -30,9 +30,9 @@ public class UsersController {
         String username = (String) principal.getAttributes().get("email");
         Optional<User> user = userRepository.findUserByUsername(username);
         if (user.isPresent()){
-            return new RedirectView("/posts");
+            return new RedirectView("/posts"); // redirect to posts if registered
         } else {
-            return new RedirectView("/users/newUser");
+            return new RedirectView("/users/newUser"); // redirect to registration if missing
         }
 
     }
