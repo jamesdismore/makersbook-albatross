@@ -30,6 +30,7 @@ public class PostsController {
         String username = (String) principal.getAttributes().get("email");
         // code above to get email from the authenticator
         Optional<User> user = userRepository.findUserByUsername(username);
+        // ^^ optional user, theoretical
         if (user.isEmpty()) {
             return "redirect:/users/newUser"; // Redirect if not registered
         }
