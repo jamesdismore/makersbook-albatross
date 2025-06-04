@@ -28,16 +28,22 @@ public class PostsController {
     public String index(Model model, Authentication authentication) {
         DefaultOidcUser principal = (DefaultOidcUser) authentication.getPrincipal();
         String username = (String) principal.getAttributes().get("email");
-
+        // code above to get email from the authenticator
         Optional<User> user = userRepository.findUserByUsername(username);
         if (user.isEmpty()) {
             return "redirect:/users/newUser"; // Redirect if not registered
         }
         // ^^ if the user is not saved in our database, they get redirected to the registration page
 
+        Long userId = user.get().getId(); // getting id from database - checking that id is connected
+        String email = user.get().getUsername(); // getting email in same way
+
         Iterable<Post> posts = repository.findAll();
         model.addAttribute("posts", posts);
         model.addAttribute("post", new Post());
+        // code below to get userId and email from database
+        model.addAttribute("userId", userId);
+        model.addAttribute("email", email);
         return "posts/index";
     }
 
