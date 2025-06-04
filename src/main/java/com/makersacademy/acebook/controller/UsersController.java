@@ -20,14 +20,6 @@ public class UsersController {
     @Autowired
     UserRepository userRepository;
 
-//    @ModelAttribute("our_user")
-//    public User findUser(@PathVariable(name = "userId", required = false) Long userId) {
-//        return userId == 0 ? new User()
-//                : userRepository.findById(userId)
-//                .orElseThrow(() -> new IllegalArgumentException("Owner not found with id: " + userId
-//                        + ". Please ensure the ID is correct " + "and the owner exists in the database."));
-//    }
-
     @GetMapping("/users/after-login")
     public RedirectView afterLogin() {
         DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder
@@ -43,13 +35,7 @@ public class UsersController {
         } else {
             return new RedirectView("/users/newUser");
         }
-        // below -> previous method of returning posts w email welcome OR saving user and then logging in
-            //
-//        userRepository
-//                .findUserByUsername(username)
-//                .orElseGet(() -> userRepository.save(new User(username)));
-//
-//        return new RedirectView("/posts");
+
     }
     @GetMapping("/users/newUser")
     public String afterSignUp(@ModelAttribute("our_user") User user) {
@@ -58,21 +44,18 @@ public class UsersController {
                 .getAuthentication()
                 .getPrincipal();
 
-        // below - post mapping?
         String username = (String) principal.getAttributes().get("email");
-        user.setUsername(username);
-//        ModelAndView modelAndView = new ModelAndView("NewUserPage", "our_user", user);
+        user.setUsername(username); // automatically fills in username on new user field, perhaps make this not allowed to change? once we add FN and LN
         return "NewUserPage";
+
     }
     @PostMapping("/users/newUser")
     public String saveNewUser(@Valid @ModelAttribute("our_user") User user, BindingResult result) {
-        System.out.println(result);
-        if (result.hasErrors()) { // errors come from class constraints
-            System.out.println("I've got errors :(");
-            return "NewUserPage";
+        if (result.hasErrors()) { // error messages come from class constraints (needs dependency)
+            return "NewUserPage"; //stays on page
         } else {
-            userRepository.save(user); // fill out parameters as database changes to include first name, last name, dob etc
-            return "redirect:/posts";
+            userRepository.save(user); // this saves user to database, eventually fill out parameters as database changes to include first name, last name, dob etc
+            return "redirect:/posts"; // redirects to posts
         }
     }
 }
