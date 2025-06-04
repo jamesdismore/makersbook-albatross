@@ -37,6 +37,11 @@
                     <a class="nav-link" href="/logout">Logout</a> <!-- This will need to direct to logout -->
                 </li>
             </ul>
+            <div sec:authorize="isAuthenticated()"> <!-- check to see if user is logged in -->
+                <div class="user-initials"> <!-- fetch the details from the css -->
+                    <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
+                </div> <!-- use email from current route as input string, find first letter, make it capital, fallback letter is u -->
+            </div>
         </div>
     </div>
 </nav>

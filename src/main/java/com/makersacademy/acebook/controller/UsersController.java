@@ -26,6 +26,6 @@ public class UsersController {
                 .findUserByUsername(username)
                 .orElseGet(() -> userRepository.save(new User(username)));
 
-        return new RedirectView("/posts");
+        return new RedirectView("/");
     }
 }
