@@ -29,7 +29,6 @@ public class PostsController {
 
 
     @GetMapping("/posts")
-
     public String index(Model model, Authentication authentication) {
         DefaultOidcUser principal = (DefaultOidcUser) authentication.getPrincipal();
         String username = (String) principal.getAttributes().get("email");
@@ -43,15 +42,12 @@ public class PostsController {
 
         Long userId = user.get().getId(); // getting id from database - checking that id is connected
         String email = user.get().getUsername(); // getting email in same way
-  
-  
-  
+
 //     public String index(Model model, @AuthenticationPrincipal OAuth2User principal) {
   //         String userName = principal.getAttribute("email");
 //         Optional<User> user = userRepository.findUserByUsername(userName);
 //         long id = user.map(User::getId).orElse(999999999999L);
 //         model.addAttribute("userID",id);
-
 
         Iterable<Post> posts = repository.findAll();
         model.addAttribute("posts", posts);
@@ -61,7 +57,7 @@ public class PostsController {
         model.addAttribute("userId", userId);
         model.addAttribute("email", email);
 
-        return "posts/index";
+        return "index";
     }
 
     @PostMapping("/posts")
