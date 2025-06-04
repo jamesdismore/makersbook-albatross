@@ -23,6 +23,7 @@ public class HomeController {
 		// code above to get email from the authenticator
 		Optional<User> user = userRepository.findUserByUsername(username);
 		// ^^ optional user, theoretical
+		System.out.println("handing /");
 		if (user.isEmpty()) {
 			return new RedirectView("/users/newUser");// Redirect if not registered
 		}
