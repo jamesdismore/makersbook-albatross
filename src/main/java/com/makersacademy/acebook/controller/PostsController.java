@@ -26,8 +26,7 @@ public class PostsController {
     @Autowired
     UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+
 
     @GetMapping("/posts")
 
