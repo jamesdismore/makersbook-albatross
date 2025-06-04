@@ -9,6 +9,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.util.concurrent.TimeUnit;
+
 public class SignUpTest {
 
     WebDriver driver;
@@ -27,7 +29,7 @@ public class SignUpTest {
     }
 
     @Test
-    public void successfulSignUpAlsoLogsInUser() {
+    public void successfulSignUpAlsoLogsInUser() throws InterruptedException {
         String email = faker.name().username() + "@email.com";
 
         driver.get("http://localhost:8080/");
@@ -36,6 +38,7 @@ public class SignUpTest {
         driver.findElement(By.name("password")).sendKeys("P@55qw0rd");
         driver.findElement(By.name("action")).click();
         driver.findElement(By.name("action")).click();
+        TimeUnit.SECONDS.sleep(3);
         String greetingText = driver.findElement(By.id("greeting")).getText();
         Assert.assertEquals("Signed in as " + email, greetingText);
     }
