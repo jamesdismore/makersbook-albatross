@@ -14,7 +14,7 @@ import static java.lang.Boolean.TRUE;
 
 @Data
 @Entity
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter
 
 @Table(name = "USERS")
 public class User {
