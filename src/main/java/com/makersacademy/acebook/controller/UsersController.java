@@ -30,7 +30,6 @@ public class UsersController {
         String username = (String) principal.getAttributes().get("email");
         Optional<User> user = userRepository.findUserByUsername(username);
         if (user.isPresent()){
-            System.out.println(user.get().getId());
             return new RedirectView("/posts");
         } else {
             return new RedirectView("/users/newUser");
