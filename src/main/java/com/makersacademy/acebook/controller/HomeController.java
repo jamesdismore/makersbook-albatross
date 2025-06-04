@@ -8,6 +8,7 @@ import org.springframework.web.servlet.view.RedirectView;
 public class HomeController {
 	@RequestMapping(value = "/")
 	public RedirectView index() {
+
 		return new RedirectView("/posts");
 	}
 }
