@@ -28,11 +28,11 @@ INSERT INTO comments(content,user_id,post_id, comment_timestamp) VALUES ('Don''t
 INSERT INTO friendships(lower_user_id,higher_user_id,friendship_timestamp) values (1,2,'2023-09-01 08:00:00');
 INSERT INTO friendships(lower_user_id,higher_user_id,friendship_timestamp) values (2,5,'2023-06-01 10:00:00');
 INSERT INTO friendships(lower_user_id,higher_user_id,friendship_timestamp) values (3,4,'2022-01-01 12:00:00');
-INSERT INTO friendships(lower_user_id,higher_user_id,friendship_timestamp) values (6,1,'2024-03-11 12:00:00');
-INSERT INTO friendships(lower_user_id,higher_user_id,friendship_timestamp) values (6,2,'2024-03-11 12:00:00');
-INSERT INTO friendships(lower_user_id,higher_user_id,friendship_timestamp) values (6,3,'2024-03-11 12:00:00');
-INSERT INTO friendships(lower_user_id,higher_user_id,friendship_timestamp) values (6,4,'2024-03-11 12:00:00');
-INSERT INTO friendships(lower_user_id,higher_user_id,friendship_timestamp) values (6,5,'2024-03-11 12:00:00');
+INSERT INTO friendships(lower_user_id,higher_user_id,friendship_timestamp) values (1,6,'2024-03-11 12:00:00');
+INSERT INTO friendships(lower_user_id,higher_user_id,friendship_timestamp) values (2,6,'2024-03-11 12:00:00');
+INSERT INTO friendships(lower_user_id,higher_user_id,friendship_timestamp) values (3,6,'2024-03-11 12:00:00');
+INSERT INTO friendships(lower_user_id,higher_user_id,friendship_timestamp) values (4,6,'2024-03-11 12:00:00');
+INSERT INTO friendships(lower_user_id,higher_user_id,friendship_timestamp) values (5,6,'2024-03-11 12:00:00');
 
 INSERT INTO post_likes(user_id,post_id,like_timestamp) values (2,1,'2024-01-01 12:27:00');
 
