@@ -21,7 +21,7 @@ public class PostsController {
         Iterable<Post> posts = repository.findAll();
         model.addAttribute("posts", posts);
         model.addAttribute("post", new Post());
-        return "posts/index";
+        return "index";
     }
 
     @PostMapping("/posts")
