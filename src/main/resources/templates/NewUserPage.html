@@ -3,6 +3,18 @@
       xmlns:th="http://www.thymeleaf.org" lang="en"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
+    <style>
+        .error-message {
+            color: red;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        input.is-invalid {
+            border: 2px solid red;
+            background-color: #ffe6e6;
+        }
+    </style>
     <meta charset="UTF-8">
     <title>Acebook</title>
     <!-- Latest compiled and minified CSS -->
@@ -23,7 +35,10 @@
             <div class="col-6 mb-3">
                 <label for="userNameInput" class="form-label" >Username</label>
                 <input type="text"  id="userNameInput" aria-describedby="userNameHelp" class="form-control form-control" th:field="*{username}">
-                <div th:errors="*{username}">Error Message</div>
+                <div th:if="${#fields.hasErrors('username')}" class="error-message">
+                    <div th:errors="*{username}"></div>
+                    <!--                    change eventually to have the errors for all fields-->
+                </div>
             </div>
 
 <!--            <div class="col-6">-->
