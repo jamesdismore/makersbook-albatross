@@ -58,13 +58,10 @@ public class UsersController {
     }
     @PostMapping("/users/newUser")
     public String saveNewUser(@Valid @ModelAttribute("user") User user, @RequestParam("file") MultipartFile file, BindingResult result) {
-        System.out.println("saveNewUser:" + user);
-        System.out.println(result.getAllErrors());
-        if (result.hasErrors()) { // error messages come from class constraints (needs dependency)
+        if (result.hasErrors()) { // this currently does nilch
             return "newUser"; //stays on page
         }
         userRepository.save(user);
-        // this saves user to database, eventually fill out parameters as database changes to include first name, last name, dob etc
 
         if (!file.isEmpty()) {
             try {
