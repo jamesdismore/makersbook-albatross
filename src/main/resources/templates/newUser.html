@@ -29,42 +29,58 @@
             <h2 class="display-4 p-3">New User</h2>
         </a>
     </nav>
-    <form th:object="${our_user}" id="add-user-form" method="post">
+    <form th:object="${user}" id="add-user-form" method="post" enctype="multipart/form-data">
+
+        <div class="row mt-5 align-content-center" th:with="avatarFile=${user.id} + '.jpg'">
+            <img src="../static/images/userAvatars/9.jpg" th:src="@{'../images/userAvatars/' + ${avatarFile}}" class="rounded-circle mx-auto" style="max-width: 240px" alt="Early Alan">
+        </div>
+        <div class="row mt-5 align-content-center">
+            <label for="file">Choose a picture:</label>
+            <input type="file" accept="image/*" id="file" name="file" required>
+        </div>
+
+
         <div class="row mt-5">
             <div class="col-6 mb-3">
-                <label for="userNameInput" class="form-label" >Username</label>
-                <input type="text"  id="userNameInput" aria-describedby="userNameHelp" class="form-control form-control" th:field="*{username}">
-                <div th:if="${#fields.hasErrors('username')}" class="error-message">
-                    <div th:errors="*{username}"></div>
-                    <!--                    change eventually to have the errors for all fields-->
-                </div>
+                <label for="firstNameInput" class="form-label" >First Name</label>
+                <input type="text" class="form-control" id="firstNameInput" placeholder="" th:field="*{first_name}" value=""
+                       th:classappend="${#fields.hasErrors('first_name')} ? 'is-invalid' : ''">
+                <p class="invalid-feedback" th:errors="*{first_name}">Invalid data</p>
             </div>
 
-<!--            <div class="col-6">-->
-<!--                <label for="userBirthDate" class="form-label">Date of birth</label>-->
-<!--                <input type="date" class="form-control" id="userBirthDate">-->
-<!--            </div>-->
-
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button
-                            class="btn btn-primary" type="submit">Submit
-                    </button>
-                </div>
+            <div class="col-6 mb-3">
+                <label for="lastName" class="form-label">Last name</label>
+                <input type="text" class="form-control" id="lastName" placeholder="" th:field="*{last_name}" value=""
+                       th:classappend="${#fields.hasErrors('last_name')} ? 'is-invalid' : ''">
+                <p class="invalid-feedback" th:errors="*{last_name}">Invalid data</p>
             </div>
         </div>
 
-<!--            <div class="col-6 mb-3">-->
-<!--                <label for="firstNameInput" class="form-label" >First Name</label>-->
-<!--                <input type="text"  id="firstNameInput" aria-describedby="firstNameHelp" class="form-control form-control" th:field="*{firstName}">-->
-<!--            </div>-->
-<!--            <div class="col-6 mb-3">-->
-<!--                <label for="lastNameInput" class="form-label">Last Name</label>-->
-<!--                <input type="text"  id="lastNameInput" aria-describedby="lastNameHelp" class="form-control form-control" th:field="*{lastName}">-->
-<!--            </div>-->
-        <br>
+        <div class="row">
+            <div class="col-6 mb-3">
+                <label for="usernameInput" class="form-label" >Username</label>
+                <input type="text" class="form-control" id="usernameInput" placeholder="alan_partidge@midmorningmatters.com"  th:value="${user.username}" readonly disabled>
+            </div>
+            <div class="col-6">
+                <label for="playerBirthDate" class="form-label">Date of birth</label>
+                <input type="date" class="form-control" id="playerBirthDate" placeholder="" th:field="*{dob}" value=""
+                       th:classappend="${#fields.hasErrors('dob')} ? 'is-invalid' : ''">
+                <p class="invalid-feedback" th:errors="*{dob}">Invalid data</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <br>
+        </div>
+
+        <div class="row">
+
+            <div class="col-2">
+                <button class="btn btn-primary" type="submit">Update</button>
+            </div>
+
+        </div>
     </form>
-</div>
 
 <!-- Latest compiled JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
