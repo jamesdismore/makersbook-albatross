@@ -20,7 +20,7 @@ import static java.lang.Boolean.TRUE;
 @Entity
 @Getter @Setter
 
-@Table(name = "USERS")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,10 +38,12 @@ public class User {
     private LocalDate dob;
 
     @NotBlank(message = "Please enter your first name")
-    private String first_name;
+    @Column(name = "first_name")
+    private String firstName;
 
     @NotBlank(message = "Please enter your last name")
-    private String last_name;
+    @Column(name = "last_name")
+    private String lastName;
 
     public User() {
         this.enabled = TRUE;
@@ -53,18 +55,12 @@ public class User {
         this.enabled = TRUE;
     }
 
-//
-//    public User(String username, boolean enabled) {
-//        this.username = username;
-//        this.enabled = enabled;
-//    }
-
     // used - assumes there will be an avatar
-    public User(String username,String first_name, String last_name, LocalDate dob, String avatar) {
+    public User(String username,String firstName, String lastName, LocalDate dob, String avatar) {
         this.username = username;
         this.avatar = avatar;
-        this.first_name = first_name;
-        this.last_name = last_name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.dob = dob;
         this.avatar = avatar;
         this.enabled = TRUE;
