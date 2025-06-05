@@ -35,8 +35,6 @@ import java.util.Optional;
 @Controller
 public class NavigationController {
 
-
-
     @Autowired
     UserRepository userRepository;
 
@@ -64,8 +62,9 @@ public class NavigationController {
     public String settings(@Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "settings";
+        } else {
+            userRepository.save(user);
+            return "redirect:/posts";
         }
-        userRepository.save(user);
-        return "redirect:/posts";
     }
 }

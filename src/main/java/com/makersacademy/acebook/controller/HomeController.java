@@ -19,7 +19,7 @@ public class HomeController {
 	@Autowired
 	UserRepository userRepository;
 
-	@ModelAttribute("oUser")
+	@ModelAttribute("user")
 	Optional<User> findUser(Authentication authentication) {
 		DefaultOidcUser principal = (DefaultOidcUser) authentication.getPrincipal();
 		String username = (String) principal.getAttributes().get("email");
@@ -29,9 +29,9 @@ public class HomeController {
 	// Routes ------
 
 	@GetMapping(value = "/")
-	public String index(@ModelAttribute("oUser") Optional<User> oUser) {
-        return oUser.
-				map(user -> "redirect:/users/" + user.getUsername())
+	public String index(@ModelAttribute("user") Optional<User> user) {
+        return user.
+				map(_user -> "redirect:/users/" + _user.getUsername())
 				.orElse("redirect:/users/newUser");
 	}
 }
