@@ -29,8 +29,15 @@
             <h2 class="display-4 p-3">New User</h2>
         </a>
     </nav>
-    <form th:object="${our_user}" id="add-user-form" method="post">
-            <div class="row mt-5">
+    <form th:object="${our_user}" id="add-user-form" method="post" enctype="multipart/form-data">
+            <div class="row mt-5 align-content-center">
+                <div class="mb-3 text-center">
+                    <img id="imagePreview" src="../static/images/userAvatars/7.jpg" th:src="@{'../images/userAvatars/' + ${avatarFile}}" class="rounded-circle mx-auto" style="max-width: 240px" alt="Early Alan">
+                </div>
+                <div class="row mt-5 align-content-center">
+                    <label for="file">Choose a picture:</label>
+                    <input type="file" acceept="image/*" id="file" name="file" onchange="previewImage(event)" required>
+                </div>
 
                 <div class="col-6 mb-3">
                     <label for="firstNameInput" class="form-label" >First Name</label>
@@ -49,8 +56,8 @@
                 </div>
 
                 <div class="col-6 mb-3">
-                    <label for="userNameInput" class="form-label" >Username</label>
-                    <input type="text"  id="userNameInput" aria-describedby="userNameHelp" class="form-control form-control" th:field="*{username}">
+                    <label for="userNameInput" class="form-label" >Email</label>
+                    <input type="text"  id="userNameInput" aria-describedby="userNameHelp" class="form-control form-control" th:field="*{username}" readonly>
                     <div th:if="${#fields.hasErrors('username')}" class="error-message">
                         <div th:errors="*{username}"></div>
                     </div>
@@ -72,17 +79,22 @@
                 </div>
             </div>
         </div>
-
-<!--            <div class="col-6 mb-3">-->
-<!--                <label for="firstNameInput" class="form-label" >First Name</label>-->
-<!--                <input type="text"  id="firstNameInput" aria-describedby="firstNameHelp" class="form-control form-control" th:field="*{firstName}">-->
-<!--            </div>-->
-<!--            <div class="col-6 mb-3">-->
-<!--                <label for="lastNameInput" class="form-label">Last Name</label>-->
-<!--                <input type="text"  id="lastNameInput" aria-describedby="lastNameHelp" class="form-control form-control" th:field="*{lastName}">-->
-<!--            </div>-->
         <br>
     </form>
+
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];  // Get the selected file
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').src = e.target.result; // Set image source
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+
 </div>
 
 <!-- Latest compiled JavaScript -->
