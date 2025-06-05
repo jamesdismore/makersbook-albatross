@@ -30,7 +30,7 @@
             <h2 class="display-4 p-3">New User</h2>
         </a>
     </nav>
-    <form th:object="${our_user}" id="add-user-form" method="post" enctype="multipart/form-data">
+    <form th:object="${user}" id="add-user-form" method="post" enctype="multipart/form-data">
             <div class="row mt-5 align-content-center">
                 <div class="mb-3 text-center">
                     <img id="imagePreview" src="https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg"
@@ -47,15 +47,13 @@
 
                 <div class="col-6 mb-3">
                     <label for="firstNameInput" class="form-label" >First Name</label>
-                    <input type="text"  id="firstNameInput" aria-describedby="firstNameHelp" class="form-control form-control" th:field="*{firstName}">
-                    <div th:if="${#fields.hasErrors('firstName')}" class="error-message">
-                        <div th:errors="*{firstName}"></div>
-                    </div>
+                    <input type="text"  id="firstNameInput" aria-describedby="firstNameHelp" class="form-control form-control" th:field="*{firstName}" required>
+                        <p th:errors="*{firstName}">Placeholder Error</p>
                 </div>
 
                 <div class="col-6 mb-3">
                     <label for="lastNameInput" class="form-label" >Last Name</label>
-                    <input type="text"  id="lastNameInput" aria-describedby="lastNameHelp" class="form-control form-control" th:field="*{lastName}">
+                    <input type="text"  id="lastNameInput" aria-describedby="lastNameHelp" class="form-control form-control" th:field="*{lastName}" required>
                     <div th:if="${#fields.hasErrors('lastName')}" class="error-message">
                         <div th:errors="*{lastName}"></div>
                     </div>
@@ -63,15 +61,12 @@
 
                 <div class="col-6 mb-3">
                     <label for="userNameInput" class="form-label" >Email</label>
-                    <input type="text"  id="userNameInput" aria-describedby="userNameHelp" class="form-control bg-light text-muted" th:field="*{username}" readonly>
-                    <div th:if="${#fields.hasErrors('username')}" class="error-message">
-                        <div th:errors="*{username}"></div>
-                    </div>
+                    <input type="text"  id="userNameInput" aria-describedby="userNameHelp" class="form-control bg-light text-muted" th:field="*{username}" readonly required>
                 </div>
 
                 <div class="col-6 mb-3">
                     <label for="userBirthDateInput" class="form-label" >Date of birth</label>
-                    <input type="date"  id="userBirthDateInput" aria-describedby="birthDateHelp" class="form-control form-control" th:field="*{dob}">
+                    <input type="date"  id="userBirthDateInput" aria-describedby="birthDateHelp" class="form-control form-control" th:field="*{dob}" required>
                     <div th:if="${#fields.hasErrors('dob')}" class="error-message">
                         <div th:errors="*{dob}"></div>
                     </div>
