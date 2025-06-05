@@ -6,6 +6,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -13,21 +15,23 @@ import java.util.Optional;
 
 @Controller
 public class HomeController {
+
 	@Autowired
 	UserRepository userRepository;
 
-	@RequestMapping(value = "/")
-	public RedirectView index(Authentication authentication) {
+	@ModelAttribute("user")
+	Optional<User> findUser(Authentication authentication) {
 		DefaultOidcUser principal = (DefaultOidcUser) authentication.getPrincipal();
 		String username = (String) principal.getAttributes().get("email");
-		// code above to get email from the authenticator
-		Optional<User> user = userRepository.findUserByUsername(username);
-		// ^^ optional user, theoretical
-		if (user.isEmpty()) {
-			return new RedirectView("/users/newUser");// Redirect if not registered
-		}
-		// ^^ if the user is not saved in our database, they get redirected to the registration page
+		return userRepository.findUserByUsername(username);
+	}
 
-		return new RedirectView("/posts");
+	// Routes ------
+
+	@GetMapping(value = "/")
+	public String index(@ModelAttribute("user") Optional<User> user) {
+        return user.
+				map(_user -> "redirect:/users/" + _user.getUsername())
+				.orElse("redirect:/users/newUser");
 	}
 }

@@ -45,13 +45,13 @@ public class UsersController {
 
         String username = (String) principal.getAttributes().get("email");
         user.setUsername(username); // automatically fills in username on new user field, perhaps make this not allowed to change? once we add FN and LN
-        return "NewUserPage";
+        return "newUser";
 
     }
     @PostMapping("/users/newUser")
     public String saveNewUser(@Valid @ModelAttribute("our_user") User user, BindingResult result) {
         if (result.hasErrors()) { // error messages come from class constraints (needs dependency)
-            return "NewUserPage"; //stays on page
+            return "newUser"; //stays on page
         } else {
             userRepository.save(user); // this saves user to database, eventually fill out parameters as database changes to include first name, last name, dob etc
             return "redirect:/posts"; // redirects to posts
