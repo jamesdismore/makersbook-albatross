@@ -2,10 +2,12 @@ package com.makersacademy.acebook.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -21,19 +23,25 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotBlank(message = "Username cannot be blank.") // error message: means we don't need to specify elsewhere that it can't be blank
     private String username;
     private boolean enabled;
     private String avatar;
-    private LocalDate dob;
-    private String first_name;
-    private String last_name;
 
+    @NotNull(message = "Please set your date of birth")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dob;
+
+    @NotBlank(message = "Please enter your first name")
+    private String first_name;
+
+    @NotBlank(message = "Please enter your last name")
+    private String last_name;
 
     public User() {
         this.enabled = TRUE;
     }
-
 
     //used in legacy code
     public User(String username) {

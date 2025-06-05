@@ -17,16 +17,17 @@
 
 package com.makersacademy.acebook.controller;
 
-import com.makersacademy.acebook.model.Post;
 import com.makersacademy.acebook.model.User;
 import com.makersacademy.acebook.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Optional;
 
@@ -34,36 +35,37 @@ import java.util.Optional;
 @Controller
 public class NavigationController {
 
+
+
     @Autowired
     UserRepository userRepository;
 
-    @GetMapping("/profile")
-    public String profile(Authentication authentication) {
+    @ModelAttribute("user")
+    public Optional<User> getUser(Authentication authentication) {
         DefaultOidcUser principal = (DefaultOidcUser) authentication.getPrincipal();
         String username = (String) principal.getAttributes().get("email");
-        // code above to get email from the authenticator
-        Optional<User> user = userRepository.findUserByUsername(username);
-        // ^^ optional user, theoretical
-        if (user.isEmpty()) {
-            return "redirect:/users/newUser"; // Redirect if not registered
-        }
-        // ^^ if the user is not saved in our database, they get redirected to the registration page
-        return "profile";
+        return userRepository.findUserByUsername(username);
+    }
+
+
+    // Routes ------
+
+    @GetMapping("/profile")
+    public String profile(@ModelAttribute("user") Optional<User> user) {
+        return user.isEmpty() ? "redirect:/users/newUser" : "profile";
     }
 
     @GetMapping("/settings")
-    public String settings(Authentication authentication) {
-        DefaultOidcUser principal = (DefaultOidcUser) authentication.getPrincipal();
-        String username = (String) principal.getAttributes().get("email");
-        // code above to get email from the authenticator
-        Optional<User> user = userRepository.findUserByUsername(username);
-        // ^^ optional user, theoretical
-        if (user.isEmpty()) {
-            return "redirect:/users/newUser"; // Redirect if not registered
+    public String settings(@ModelAttribute("user") Optional<User> user) {
+        return user.isEmpty() ? "redirect:users/newUser" : "settings";
+   }
+
+    @PostMapping("/settings")
+    public String settings(@Valid User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "settings";
         }
-        // ^^ if the user is not saved in our database, they get redirected to the registration page
-
-        return "settings";
+        userRepository.save(user);
+        return "redirect:/posts";
     }
-
 }
