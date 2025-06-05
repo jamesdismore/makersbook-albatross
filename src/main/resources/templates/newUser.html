@@ -30,20 +30,39 @@
         </a>
     </nav>
     <form th:object="${our_user}" id="add-user-form" method="post">
-        <div class="row mt-5">
-            <div class="col-6 mb-3">
-                <label for="userNameInput" class="form-label" >Username</label>
-                <input type="text"  id="userNameInput" aria-describedby="userNameHelp" class="form-control form-control" th:field="*{username}">
-                <div th:if="${#fields.hasErrors('username')}" class="error-message">
-                    <div th:errors="*{username}"></div>
-                    <!--                    change eventually to have the errors for all fields-->
-                </div>
-            </div>
+            <div class="row mt-5">
 
-<!--            <div class="col-6">-->
-<!--                <label for="userBirthDate" class="form-label">Date of birth</label>-->
-<!--                <input type="date" class="form-control" id="userBirthDate">-->
-<!--            </div>-->
+                <div class="col-6 mb-3">
+                    <label for="firstNameInput" class="form-label" >First Name</label>
+                    <input type="text"  id="firstNameInput" aria-describedby="firstNameHelp" class="form-control form-control" th:field="*{firstName}">
+                    <div th:if="${#fields.hasErrors('firstName')}" class="error-message">
+                        <div th:errors="*{firstName}"></div>
+                    </div>
+                </div>
+
+                <div class="col-6 mb-3">
+                    <label for="lastNameInput" class="form-label" >Last Name</label>
+                    <input type="text"  id="lastNameInput" aria-describedby="lastNameHelp" class="form-control form-control" th:field="*{lastName}">
+                    <div th:if="${#fields.hasErrors('lastName')}" class="error-message">
+                        <div th:errors="*{lastName}"></div>
+                    </div>
+                </div>
+
+                <div class="col-6 mb-3">
+                    <label for="userNameInput" class="form-label" >Username</label>
+                    <input type="text"  id="userNameInput" aria-describedby="userNameHelp" class="form-control form-control" th:field="*{username}">
+                    <div th:if="${#fields.hasErrors('username')}" class="error-message">
+                        <div th:errors="*{username}"></div>
+                    </div>
+                </div>
+
+                <div class="col-6 mb-3">
+                    <label for="userBirthDateInput" class="form-label" >Date of birth</label>
+                    <input type="date"  id="userBirthDateInput" aria-describedby="birthDateHelp" class="form-control form-control" th:field="*{dob}">
+                    <div th:if="${#fields.hasErrors('dob')}" class="error-message">
+                        <div th:errors="*{dob}"></div>
+                    </div>
+                </div>
 
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
