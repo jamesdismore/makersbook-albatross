@@ -64,16 +64,16 @@
     <div class="row mt-5">
         <div class="col-6 mb-3">
           <label for="firstNameInput" class="form-label" >First Name</label>
-          <input type="text" class="form-control" id="firstNameInput" placeholder="" th:field="*{first_name}" value=""
-                 th:classappend="${#fields.hasErrors('first_name')} ? 'is-invalid' : ''">
-          <p class="invalid-feedback" th:errors="*{first_name}">Invalid data</p>
+          <input type="text" class="form-control" id="firstNameInput" placeholder="" th:field="*{firstName}" value=""
+                 th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid' : ''">
+          <p class="invalid-feedback" th:errors="*{firstName}">Invalid data</p>
         </div>
 
       <div class="col-6 mb-3">
         <label for="lastName" class="form-label">Last name</label>
-        <input type="text" class="form-control" id="lastName" placeholder="" th:field="*{last_name}" value=""
-               th:classappend="${#fields.hasErrors('last_name')} ? 'is-invalid' : ''">
-        <p class="invalid-feedback" th:errors="*{last_name}">Invalid data</p>
+        <input type="text" class="form-control" id="lastName" placeholder="" th:field="*{lastName}" value=""
+               th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid' : ''">
+        <p class="invalid-feedback" th:errors="*{lastName}">Invalid data</p>
       </div>
     </div>
 

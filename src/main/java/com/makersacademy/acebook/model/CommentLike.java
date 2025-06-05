@@ -8,18 +8,25 @@ import java.time.Instant;
 
 @Data
 @Entity
-@Table(name = "COMMENT_LIKES")
+@Table(name = "comment_likes")
 public class CommentLike {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int user_id;
-    private int comment_id;
-    private Timestamp like_timestamp;
 
-    public CommentLike(int user_id, int comment_id){
-        this.user_id = user_id;
-        this.comment_id = comment_id;
-        this.like_timestamp = Timestamp.from(Instant.now());
+    @Column(name = "user_id")
+    private int userId;
+
+    @Column(name = "comment_id")
+    private int commentId;
+
+    @Column(name = "like_timestamp")
+    private Timestamp timestamp;
+
+    public CommentLike(int userId, int commentId){
+        this.userId = userId;
+        this.commentId = commentId;
+        this.timestamp = Timestamp.from(Instant.now());
     }
 }

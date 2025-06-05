@@ -8,18 +8,29 @@ import java.time.Instant;
 
 @Data
 @Entity
-@Table(name = "POST_LIKES")
+@Table(name = "post_likes")
 public class PostLike {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int user_id;
-    private int post_id;
-    private Timestamp like_timestamp;
+
+    @Column(name = "user_id")
+    private int userId;
+
+    @Column(name = "post_id")
+    private int postId;
+
+    @Column(name = "like_timestamp")
+    private Timestamp timestamp;
 
     public PostLike(int user_id, int post_id){
-        this.user_id = user_id;
-        this.post_id = post_id;
-        this.like_timestamp = Timestamp.from(Instant.now());
+        this.userId = user_id;
+        this.postId = post_id;
+        this.timestamp = Timestamp.from(Instant.now());
+    }
+
+    public PostLike() {
+
     }
 }
