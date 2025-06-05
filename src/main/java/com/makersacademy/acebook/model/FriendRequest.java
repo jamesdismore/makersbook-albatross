@@ -19,11 +19,13 @@ public class FriendRequest {
     private int toUserId;
     @Column(name="friend_request_timestamp")
     private Timestamp friendRequestTimestamp;
+    private String status;
 
 
-    public FriendRequest(int fromUserId, int toUserId){
+    public FriendRequest(int fromUserId, int toUserId, String status){
         this.fromUserId = fromUserId;
         this.toUserId = toUserId;
+        this.status = status;
         this.friendRequestTimestamp = Timestamp.from(Instant.now());
     }
 }

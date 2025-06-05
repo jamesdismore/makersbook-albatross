@@ -36,17 +36,16 @@ public class FriendsController {
         }
         Long userIdLong = user.get().getId(); // getting id from database - checking that id is connected
         int userId = Math.toIntExact(userIdLong);
-        ArrayList<Friendship> friendsListTotal = new ArrayList<Friendship>();
-        ArrayList<Friendship> friendsListLower =  friendshipRepository.findFriendshipByLowerUserId(userId);
-        ArrayList<Friendship> friendsListHigher =  friendshipRepository.findFriendshipByHigherUserId(userId);
-        ArrayList<Friendship> friendsListLowerOrHigher = friendshipRepository.findFriendshipByLowerUserIdOrHigherUserId(userId, userId);
-        String friendslist = "";
-        for (Friendship friendship :friendsListHigher){
-            Optional<User> otherFriendOptional = userRepository.findById((long) friendship.getLowerUserId());
+        ArrayList<Friendship> friendsListArray =  friendshipRepository.findFriendshipByuserId(userId);
+
+        String friendsListEmails = "";
+
+        for (Friendship friendship :friendsListArray){
+            Optional<User> otherFriendOptional = userRepository.findById((long) friendship.getFriendId());
             User otherFriend = otherFriendOptional.get();
-            friendslist = friendslist + " " + otherFriend.getUsername();
+            friendsListEmails = friendsListEmails + " " + otherFriend.getUsername();
         }
-        return friendsListLowerOrHigher.toString();
+        return friendsListEmails;
     }
 
 }
