@@ -34,7 +34,6 @@ public class PostsController {
         return userRepository.findUserByUsername(username);
     }
 
-
     @GetMapping("/posts")
     public String index(@ModelAttribute("user") Optional<User> user, Model model) {
 

@@ -1,6 +1,6 @@
 package com.makersacademy.acebook.model;
 
-import com.makersacademy.acebook.model.validation.DateOfBirthConstraint;
+import com.makersacademy.acebook.model.validation.DateOfBirthNotNullAndOver14Constraint;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 import static java.lang.Boolean.TRUE;
 
@@ -26,15 +27,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @NotBlank(message = "Username cannot be blank.") // error message: means we don't need to specify elsewhere that it can't be blank
     private String username;
     private boolean enabled;
     private String avatar;
 
-    @NotNull(message = "Please set your date of birth")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @DateOfBirthConstraint
+    @DateOfBirthNotNullAndOver14Constraint
     private LocalDate dob;
 
     @NotBlank(message = "Please enter your first name")
@@ -66,5 +65,6 @@ public class User {
         this.enabled = TRUE;
     }
 
-
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts;
 }
