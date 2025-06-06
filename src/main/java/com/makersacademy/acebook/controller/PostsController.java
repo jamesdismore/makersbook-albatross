@@ -41,9 +41,15 @@ public class PostsController {
         if (user.isEmpty()) {
             return "redirect:/users/newUser"; // Redirect if not registered
         }
+
         Iterable<Post> posts = repository.findAll();
         model.addAttribute("posts", posts);
         model.addAttribute("post", new Post());
+
+        // code below to get userId and email from database
+        model.addAttribute("userId", user.get().getId());
+        model.addAttribute("email", user.get().getUsername());
+
 
         return "index";
     }
