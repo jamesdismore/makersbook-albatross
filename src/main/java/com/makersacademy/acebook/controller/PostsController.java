@@ -44,7 +44,6 @@ public class PostsController {
 
         Iterable<Post> posts = repository.findAll();
         Post newPost = new Post();
-
         model.addAttribute("posts", posts);
         model.addAttribute("post", newPost);
 

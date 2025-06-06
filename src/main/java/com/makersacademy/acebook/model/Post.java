@@ -18,13 +18,14 @@ public class Post {
     private long id;
     private String content;
     private String photo;
-
     private long user_id;
 
     @Column(name = "post_timestamp")
     private Timestamp timestamp;
 
-    public Post() {}
+    public Post() {
+        this.timestamp = Timestamp.from(Instant.now());
+    }
 
 
     // used when posting without a picture
