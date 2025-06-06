@@ -18,15 +18,15 @@ public class Comment {
     private String content;
 
     @Column(name = "user_id")
-    private int userId;
+    private long userId;
 
     @Column(name = "post_id")
-    private int postId;
+    private long postId;
 
     @Column(name = "comment_timestamp")
     private Timestamp commentTimestamp;
 
-    public Comment(String content, int userId, int postId){
+    public Comment(String content, long userId, long postId) {
         this.content = content;
         this.userId = userId;
         this.postId = postId;

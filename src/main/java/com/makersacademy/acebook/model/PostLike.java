@@ -13,18 +13,18 @@ public class PostLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "user_id")
-    private int userId;
+    private long userId;
 
     @Column(name = "post_id")
-    private int postId;
+    private long postId;
 
     @Column(name = "like_timestamp")
     private Timestamp timestamp;
 
-    public PostLike(int user_id, int post_id){
+    public PostLike(long user_id, long post_id){
         this.userId = user_id;
         this.postId = post_id;
         this.timestamp = Timestamp.from(Instant.now());

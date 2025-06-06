@@ -16,10 +16,10 @@ public class CommentLike {
     private Long id;
 
     @Column(name = "user_id")
-    private int userId;
+    private long userId;
 
     @Column(name = "comment_id")
-    private int commentId;
+    private long commentId;
 
     @Column(name = "like_timestamp")
     private Timestamp timestamp;

@@ -14,18 +14,22 @@ public class Friendship {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "lower_user_id")
-    private int lowerUserId;
+    private long lowerUserId;
 
     @Column(name = "higher_user_id")
-    private int higherUserId;
+    private long higherUserId;
     private Timestamp friendshipTimestamp;
 
-    public Friendship(int lowerUserId, int higherUserId){
+    public Friendship(long lowerUserId, long higherUserId){
         this.lowerUserId = lowerUserId;
         this.higherUserId = higherUserId;
         this.friendshipTimestamp = Timestamp.from(Instant.now());
+    }
+
+    public Friendship() {
+
     }
 }

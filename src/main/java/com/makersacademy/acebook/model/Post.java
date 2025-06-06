@@ -15,35 +15,31 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     private String content;
     private String photo;
-
-    @Column(name = "user_id")
-    private int userId;
 
     @Column(name = "post_timestamp")
     private Timestamp timestamp;
 
     public Post() {}
 
-    // used in the legacy code
-    public Post(String content) {
-        this.content = content;
-    }
 
     // used when posting without a picture
-    public Post(String content,int userId) {
+    public Post(String content) {
         this.content = content;
-        this.userId = userId;
         this.timestamp = Timestamp.from(Instant.now());
     }
 
     // posting with a picture
-    public Post(String content,int userId, String photo) {
+    public Post(String content, String photo) {
         this.content = content;
-        this.userId = userId;
         this.timestamp = Timestamp.from(Instant.now());
         this.photo = photo;
     }
+
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 }

@@ -54,7 +54,7 @@ public class SecurityConfiguration {
                                 String username = (String) principal.getAttributes().get("email");
                                 Optional<User> user = userRepository.findUserByUsername(username);
                                 if (user.isEmpty()) {
-                                    response.sendRedirect("/users/newUser"); // Redirect if user is missing
+                                    response.sendRedirect("/users/after-login"); // Redirect if user is missing
                                 } else {
                                     response.sendRedirect("/users/after-login");
                                     //^^ if user is not in OUR database, they get redirected

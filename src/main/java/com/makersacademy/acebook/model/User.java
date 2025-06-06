@@ -13,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 import static java.lang.Boolean.TRUE;
 
@@ -64,5 +65,6 @@ public class User {
         this.enabled = TRUE;
     }
 
-
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts;
 }
