@@ -23,6 +23,7 @@ public class PostsController {
 
     @Autowired
     PostRepository repository;
+
     @Autowired
     UserRepository userRepository;
 
@@ -35,6 +36,7 @@ public class PostsController {
         // code above to get email from the authenticator
         Optional<User> user = userRepository.findUserByUsername(username);
         // ^^ optional user, theoretical
+
         if (user.isEmpty()) {
             return "redirect:/users/newUser"; // Redirect if not registered
         }
@@ -42,7 +44,6 @@ public class PostsController {
 
         Long userId = user.get().getId(); // getting id from database - checking that id is connected
         String email = user.get().getUsername(); // getting email in same way
-
 //     public String index(Model model, @AuthenticationPrincipal OAuth2User principal) {
   //         String userName = principal.getAttribute("email");
 //         Optional<User> user = userRepository.findUserByUsername(userName);
@@ -62,7 +63,6 @@ public class PostsController {
 
     @PostMapping("/posts")
     public RedirectView create(@ModelAttribute Post post) {
-        System.out.println(post.getId());
         repository.save(post);
         return new RedirectView("/posts");
     }

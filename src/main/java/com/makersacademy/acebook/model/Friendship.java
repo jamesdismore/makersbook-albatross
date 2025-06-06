@@ -9,8 +9,9 @@ import java.time.Instant;
 
 @Data
 @Entity
-@Table(name = "FRIENDSHIPS")
+@Table(name = "friendships")
 public class Friendship {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

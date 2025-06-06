@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @Data
 @Entity
-@Table(name = "POSTS")
+@Table(name = "posts")
 public class Post {
 
     @Id
@@ -18,8 +18,12 @@ public class Post {
     private Long id;
     private String content;
     private String photo;
-    private int user_id;
-    private Timestamp post_timestamp;
+
+    @Column(name = "user_id")
+    private int userId;
+
+    @Column(name = "post_timestamp")
+    private Timestamp timestamp;
 
     public Post() {}
 
@@ -29,17 +33,17 @@ public class Post {
     }
 
     // used when posting without a picture
-    public Post(String content,int user_id) {
+    public Post(String content,int userId) {
         this.content = content;
-        this.user_id = user_id;
-        this.post_timestamp = Timestamp.from(Instant.now());
+        this.userId = userId;
+        this.timestamp = Timestamp.from(Instant.now());
     }
 
     // posting with a picture
-    public Post(String content,int user_id,String photo) {
+    public Post(String content,int userId, String photo) {
         this.content = content;
-        this.user_id = user_id;
-        this.post_timestamp = Timestamp.from(Instant.now());
+        this.userId = userId;
+        this.timestamp = Timestamp.from(Instant.now());
         this.photo = photo;
     }
 }

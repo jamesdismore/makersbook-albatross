@@ -9,20 +9,27 @@ import java.time.Instant;
 
 @Data
 @Entity
-@Table(name = "COMMENTS")
+@Table(name = "comments")
 public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String content;
-    private int user_id;
-    private int post_id;
-    private Timestamp comment_timestamp;
 
-    public Comment(String content, int user_id, int post_id){
+    @Column(name = "user_id")
+    private int userId;
+
+    @Column(name = "post_id")
+    private int postId;
+
+    @Column(name = "comment_timestamp")
+    private Timestamp commentTimestamp;
+
+    public Comment(String content, int userId, int postId){
         this.content = content;
-        this.user_id = user_id;
-        this.post_id = post_id;
-        this.comment_timestamp = Timestamp.from(Instant.now());
+        this.userId = userId;
+        this.postId = postId;
+        this.commentTimestamp = Timestamp.from(Instant.now());
     }
 }

@@ -10,11 +10,9 @@
   <link rel="stylesheet" href="/main.css" />
 </head>
 
-</head>
-
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Acebook</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -46,8 +44,73 @@
   </div>
 </nav>
 
-<h1>Account Settings</h1>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
-</body>
+  <div class="container">
+
+  <form th:object="${user}" id="add-user-form" method="post">
+
+    <div class="row mt-5 align-content-center" th:with="avatarFile=${user.id} + '.jpg'">
+      <img src="../static/images/userAvatars/9.jpg" th:src="@{'../images/userAvatars/' + ${avatarFile}}" class="rounded-circle mx-auto" style="max-width: 240px" alt="Early Alan">
+    </div>
+    <div class="row mt-3">
+        <button type="button" class="col-1 me-2 btn btn-outline-secondary py-0 offset-5"
+                style="--bs-btn-padding-y: .10rem; --bs-btn-padding-x: .15rem; --bs-btn-font-size: .65rem;">Update</button>
+        <button type="button" class="col-1 me-2 btn btn-outline-warning"
+                style="--bs-btn-padding-y: .10rem; --bs-btn-padding-x: .25rem; --bs-btn-font-size: .65rem;"
+        >Remove</button>
+    </div>
+
+
+    <div class="row mt-5">
+        <div class="col-6 mb-3">
+          <label for="firstNameInput" class="form-label" >First Name</label>
+          <input type="text" class="form-control" id="firstNameInput" placeholder="" th:field="*{firstName}" value=""
+                 th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid' : ''">
+          <p class="invalid-feedback" th:errors="*{firstName}">Invalid data</p>
+        </div>
+
+      <div class="col-6 mb-3">
+        <label for="lastName" class="form-label">Last name</label>
+        <input type="text" class="form-control" id="lastName" placeholder="" th:field="*{lastName}" value=""
+               th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid' : ''">
+        <p class="invalid-feedback" th:errors="*{lastName}">Invalid data</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6 mb-3">
+        <label for="usernameInput" class="form-label" >Username</label>
+        <input type="text" class="form-control" id="usernameInput" placeholder="alan_partidge@midmorningmatters.com"  th:value="${user.username}" readonly disabled>
+      </div>
+      <div class="col-6">
+        <label for="playerBirthDate" class="form-label">Date of birth</label>
+        <input type="date" class="form-control" id="playerBirthDate" placeholder="" th:field="*{dob}" value=""
+               th:classappend="${#fields.hasErrors('dob')} ? 'is-invalid' : ''">
+        <p class="invalid-feedback" th:errors="*{dob}">Invalid data</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <br>
+    </div>
+
+    <div class="row">
+
+      <div class="col-2">
+        <button class="btn btn-primary" type="submit">Update</button>
+      </div>
+
+      <div class="col-3 offset-7 text-right">
+        <div class="text-end">
+          <button class="btn btn-danger float-right" type="submit" disabled>Delete Forever</button>
+        </div>
+
+      </div>
+
+
+    </div>
+  </form>
+</div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+  </body>
 </html>

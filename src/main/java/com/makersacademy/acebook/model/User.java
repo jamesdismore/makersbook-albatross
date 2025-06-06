@@ -1,11 +1,15 @@
 package com.makersacademy.acebook.model;
 
+import com.makersacademy.acebook.model.validation.DateOfBirthConstraint;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -16,24 +20,34 @@ import static java.lang.Boolean.TRUE;
 @Entity
 @Getter @Setter
 
-@Table(name = "USERS")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
     @NotBlank(message = "Username cannot be blank.") // error message: means we don't need to specify elsewhere that it can't be blank
     private String username;
     private boolean enabled;
     private String avatar;
-    private LocalDate dob;
-    private String first_name;
-    private String last_name;
 
+    @NotNull(message = "Please set your date of birth")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateOfBirthConstraint
+    private LocalDate dob;
+
+    @NotBlank(message = "Please enter your first name")
+    @Column(name = "first_name")
+    private String firstName;
+
+    @NotBlank(message = "Please enter your last name")
+    @Column(name = "last_name")
+    private String lastName;
 
     public User() {
         this.enabled = TRUE;
     }
-
 
     //used in legacy code
     public User(String username) {
@@ -41,18 +55,12 @@ public class User {
         this.enabled = TRUE;
     }
 
-//
-//    public User(String username, boolean enabled) {
-//        this.username = username;
-//        this.enabled = enabled;
-//    }
-
     // used - assumes there will be an avatar
-    public User(String username,String first_name, String last_name, LocalDate dob, String avatar) {
+    public User(String username,String firstName, String lastName, LocalDate dob, String avatar) {
         this.username = username;
         this.avatar = avatar;
-        this.first_name = first_name;
-        this.last_name = last_name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.dob = dob;
         this.avatar = avatar;
         this.enabled = TRUE;
