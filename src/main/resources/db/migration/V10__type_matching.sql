@@ -6,8 +6,8 @@ ALTER TABLE comments
     ALTER COLUMN post_id TYPE bigint;
 
 ALTER TABLE friendships
-    ALTER COLUMN lower_user_id TYPE bigint,
-    ALTER COLUMN higher_user_id TYPE bigint;
+    ALTER COLUMN user_id TYPE bigint,
+    ALTER COLUMN friend_id TYPE bigint;
 
 ALTER TABLE comment_likes
     ALTER COLUMN user_id TYPE bigint,
