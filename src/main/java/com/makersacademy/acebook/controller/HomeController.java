@@ -31,7 +31,7 @@ public class HomeController {
 	@GetMapping(value = "/")
 	public String index(@ModelAttribute("user") Optional<User> user) {
         return user.
-				map(_user -> "redirect:/users/" + _user.getUsername())
+				map(_user -> "redirect:/posts" + _user.getUsername())
 				.orElse("redirect:/users/newUser");
 	}
 }

@@ -34,11 +34,17 @@
           <a class="nav-link" href="/logout">Logout</a> <!-- This works due to legacy code -->
         </li>
       </ul>
-<!--      <div sec:authorize="isAuthenticated()"> &lt;!&ndash; check to see if user is logged in &ndash;&gt;-->
-<!--        <div class="user-initials"> &lt;!&ndash; fetch the details from the css &ndash;&gt;-->
-<!--          <span th:text="${#strings.substring(${email}, 0, 1).toUpperCase()}">U</span>-->
-<!--        </div> &lt;!&ndash; use email from current route as input string, find first letter, make it capital, fallback letter is u &ndash;&gt;-->
-<!--      </div>-->
+      <div sec:authorize="isAuthenticated()">
+        <!-- th:with="avatarFile=${user.id} + '.jpg'" -->
+        <!-- th:src="@{'../images/userAvatars/' + ${avatarFile}}" -->
+        <div class="user-avatar" th:if="${user.avatar != null}" th:with="avatarFile=${user.id} + '.jpg'">
+          <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="User Avatar" class="avatar-img">
+        </div>
+        <!-- Fallback if no avatar -->
+        <div class="user-initials" th:if="${user.avatar == null}">
+          <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
+        </div>
+      </div>
     </div>
     </div>
   </div>
