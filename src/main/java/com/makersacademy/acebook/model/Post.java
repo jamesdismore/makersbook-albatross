@@ -19,6 +19,8 @@ public class Post {
     private String content;
     private String photo;
 
+    private long user_id;
+
     @Column(name = "post_timestamp")
     private Timestamp timestamp;
 
@@ -37,9 +39,4 @@ public class Post {
         this.timestamp = Timestamp.from(Instant.now());
         this.photo = photo;
     }
-
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
 }

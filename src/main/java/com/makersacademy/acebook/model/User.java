@@ -64,7 +64,4 @@ public class User {
         this.avatar = avatar;
         this.enabled = TRUE;
     }
-
-    @OneToMany(mappedBy = "user")
-    private List<Post> posts;
 }
