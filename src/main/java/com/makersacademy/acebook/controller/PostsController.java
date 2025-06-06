@@ -28,7 +28,6 @@ public class PostsController {
     UserRepository userRepository;
 
 
-
     @GetMapping("/posts")
     public String index(Model model, Authentication authentication) {
         DefaultOidcUser principal = (DefaultOidcUser) authentication.getPrincipal();

@@ -14,18 +14,24 @@ public class Friendship {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     @Column(name="user_id")
-    private int userId;
+      
+    private long userId;
     @Column(name="friend_id")
-    private int FriendId;
-    private Timestamp friendship_timestamp;
+      
+    private long FriendId;
+    private Timestamp friendshipTimestamp;
 
     public Friendship(){}
 
-    public Friendship(int userId, int friendId){
+    public Friendship(long userId, long friendId){
         this.userId = userId;
         this.FriendId = friendId;
-        this.friendship_timestamp = Timestamp.from(Instant.now());
+        this.friendshipTimestamp = Timestamp.from(Instant.now());
+    }
+
+    public Friendship() {
+
     }
 }
