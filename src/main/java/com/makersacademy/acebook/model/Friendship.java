@@ -31,7 +31,5 @@ public class Friendship {
         this.friendshipTimestamp = Timestamp.from(Instant.now());
     }
 
-    public Friendship() {
 
-    }
 }
