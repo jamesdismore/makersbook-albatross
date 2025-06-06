@@ -35,11 +35,12 @@
           <a class="nav-link" href="/logout">Logout</a> <!-- This will need to direct to logout -->
         </li>
       </ul>
-      <div sec:authorize="isAuthenticated()">
-        <!-- th:with="avatarFile=${user.id} + '.jpg'" -->
-        <!-- th:src="@{'../images/userAvatars/' + ${avatarFile}}" -->
-        <div class="user-avatar" th:if="${user.avatar != null}" th:with="avatarFile=${user.id} + '.jpg'">
-          <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="User Avatar" class="avatar-img">
+<!--      <img src="../static/images/userAvatars/placeholder.jpg" th:src="@{'../images/userAvatars/' + ${avatarFile} + '.jpg'}">-->
+      <div sec:authorize="isAuthenticated()" th:with="avatarFile=${user.avatar == null}  ? 'placeholder' : ${user.avatar}">
+        <div class="user-avatar">
+
+          <img src="../static/images/userAvatars/placeholder.jpg" th:src="@{'../images/userAvatars/' + ${avatarFile} + '.jpg'}"
+               alt="User Avatar" class="avatar-img">
         </div>
         <!-- Fallback if no avatar -->
         <div class="user-initials" th:if="${user.avatar == null}">

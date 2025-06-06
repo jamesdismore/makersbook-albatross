@@ -43,8 +43,14 @@ public class PostsController {
         }
 
         Iterable<Post> posts = repository.findAll();
+        Post newPost = new Post();
+        System.out.println(user.get());
+        newPost.setUser(user.get());
+        System.out.println(newPost.getUser());
+        User user123 = user.get();
+        model.addAttribute("user123",user123);
         model.addAttribute("posts", posts);
-        model.addAttribute("post", new Post());
+        model.addAttribute("post", newPost);
 
         // code below to get userId and email from database
         model.addAttribute("userId", user.get().getId());
@@ -56,6 +62,7 @@ public class PostsController {
 
     @PostMapping("/posts")
     public RedirectView create(@ModelAttribute Post post) {
+        System.out.println(post.getUser());
         repository.save(post);
         return new RedirectView("/posts");
     }

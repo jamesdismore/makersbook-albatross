@@ -17,7 +17,7 @@ import org.thymeleaf.util.ArrayUtils;
 import java.util.ArrayList;
 import java.util.Optional;
 
-@RestController
+@Controller
 public class FriendsController {
     @Autowired
     FriendshipRepository friendshipRepository;
@@ -27,7 +27,7 @@ public class FriendsController {
     UserRepository userRepository;
 
     @GetMapping("/friends")
-    public String friends(Authentication authentication){
+    public String friends(Model model, Authentication authentication){
         DefaultOidcUser principal = (DefaultOidcUser) authentication.getPrincipal();
         String username = (String) principal.getAttributes().get("email");
         Optional<User> user = userRepository.findUserByUsername(username);
@@ -38,14 +38,19 @@ public class FriendsController {
         int userId = Math.toIntExact(userIdLong);
         ArrayList<Friendship> friendsListArray =  friendshipRepository.findFriendshipByuserId(userId);
 
-        String friendsListEmails = "";
+//        String friendsListEmails = "";
+        ArrayList<User> friendsUserListArray = new ArrayList<User>();
 
+
+//        int arrayPos = 0;
         for (Friendship friendship :friendsListArray){
-            Optional<User> otherFriendOptional = userRepository.findById((long) friendship.getFriendId());
-            User otherFriend = otherFriendOptional.get();
-            friendsListEmails = friendsListEmails + " " + otherFriend.getUsername();
+            Optional<User> friendOptional = userRepository.findById((long) friendship.getFriendId());
+            User friend = friendOptional.get();
+            friendsUserListArray.add(friend);
         }
-        return friendsListEmails;
+        model.addAttribute("friends",friendsUserListArray);
+        model.addAttribute("user",user.get());
+        return "friends";
     }
 
 }
