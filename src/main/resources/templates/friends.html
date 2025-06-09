@@ -71,6 +71,7 @@
           <a href="#" class="btn btn-primary">Profile</a>
           <form th:action="@{/friends/unfriend}" method="post" style="display: inline;">
             <input type="hidden" name="unfriendId" th:value="${friend.id}" />
+            <input type="hidden" name="userId" th:value="${user.id}" />
             <button type="submit" class="btn btn-warning">Unfriend</button>
           </form>
         </div>

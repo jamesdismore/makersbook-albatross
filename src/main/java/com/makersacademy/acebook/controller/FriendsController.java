@@ -10,10 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.ArrayUtils;
 
 import java.util.ArrayList;
@@ -27,6 +24,13 @@ public class FriendsController {
     FriendRequestRepository friendRequestRepository;
     @Autowired
     UserRepository userRepository;
+
+    @ModelAttribute("user")
+    public Optional<User> getUser(Authentication authentication) {
+        DefaultOidcUser principal = (DefaultOidcUser) authentication.getPrincipal();
+        String username = (String) principal.getAttributes().get("email");
+        return userRepository.findUserByUsername(username);
+    }
 
     @GetMapping("/friends")
     public String friends(Model model, Authentication authentication){
@@ -56,10 +60,15 @@ public class FriendsController {
     }
 
     @PostMapping("/friends/unfriend")
-    public String unfriend(@RequestParam("unfriendId") Long unfriendId) {
+    public String unfriend(@RequestParam("unfriendId") Long unfriendId,@RequestParam("userId") Long userId) {
         int unfriendInt = unfriendId.intValue();
-        ArrayList<Friendship> friendshipArrayToDelete = friendshipRepository.findFriendshipByUserIdOrFriendId(unfriendInt,unfriendInt);
-        for (Friendship friendship : friendshipArrayToDelete){
+        int userInt = userId.intValue();
+        ArrayList<Friendship> friendshipList = friendshipRepository.findFriendshipByUserIdAndFriendId(unfriendInt,userInt);
+        ArrayList<Friendship> friendshipFrom = friendshipRepository.findFriendshipByUserIdAndFriendId(userInt,unfriendInt);
+        friendshipList.addAll(friendshipFrom);
+
+
+        for (Friendship friendship : friendshipList){
             friendshipRepository.delete(friendship);
         }
         return "redirect:/posts";

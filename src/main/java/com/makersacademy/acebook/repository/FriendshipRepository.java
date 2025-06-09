@@ -10,4 +10,5 @@ public interface FriendshipRepository extends CrudRepository<Friendship, Long> {
     public ArrayList<Friendship> findFriendshipByUserId(int userId);
     public ArrayList<Friendship> findFriendshipByFriendId(int friendId);
     public ArrayList<Friendship> findFriendshipByUserIdOrFriendId(int userId, int friendId);
+    public ArrayList<Friendship> findFriendshipByUserIdAndFriendId(int userId, int FriendId);
 }
