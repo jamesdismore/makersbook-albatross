@@ -10,6 +10,9 @@ import java.util.Optional;
 public interface UserRepository extends CrudRepository<User, Long> {
     public Optional<User> findUserByUsername(String username);
 
-    @Query(value="SELECT * FROM users u WHERE u.username LIKE %?1% OR u.first_name LIKE %?1% OR u.last_name LIKE %?1%",nativeQuery = true)
-    ArrayList<User> testFunction(String input);
+    @Query(value="SELECT * FROM users u WHERE LOWER(u.username) LIKE %?1% OR LOWER(u.first_name) LIKE %?1% OR LOWER(u.last_name) LIKE %?1%",nativeQuery = true)
+    ArrayList<User> approximateUserSearch(String input);
+
+    @Query(value="SELECT * FROM users u WHERE LOWER(u.username) = ?1 OR LOWER(u.first_name) = ?1 OR LOWER(u.last_name) = ?1",nativeQuery = true)
+    ArrayList<User> exactUserSearch(String input);
 }

@@ -33,7 +33,25 @@ public class TestController {
 
     @GetMapping("/testjsql")
     public String testjsql(){
-        ArrayList<User> output = userRepository.testFunction("sa");
+        ArrayList<User> output = userRepository.approximateUserSearch("sa");
         return output.toString();
     }
+
+    @GetMapping("/testusersearch")
+    public String testusersearch(){
+        String query = "mA";
+        String queryLow = query.toLowerCase();
+        ArrayList<User> approxOutput = userRepository.approximateUserSearch(queryLow);
+        ArrayList<User> exactOutput = userRepository.exactUserSearch(queryLow);
+        ArrayList<User> sortedOutput = exactOutput;
+        for (User user : approxOutput)
+        {
+            if(!exactOutput.contains(user)){
+                sortedOutput.add(user);
+            }
+        }
+
+        return sortedOutput.toString();
+    }
 }
+
