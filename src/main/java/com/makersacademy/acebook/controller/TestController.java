@@ -56,4 +56,10 @@ public class TestController {
         return pendingRequests;
 
     }
+
+    @GetMapping("/testacceptorreject")
+    public String testpagependingto(){
+        ArrayList<FriendRequest> friendRequests = friendRequestRepository.findFriendRequestBytoUserIdAndStatus(7,"PENDING");
+        return friendRequests.toString();
+    }
 }
