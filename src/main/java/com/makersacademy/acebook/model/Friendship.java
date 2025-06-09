@@ -19,7 +19,6 @@ public class Friendship {
       
     private long userId;
     @Column(name="friend_id")
-      
     private long FriendId;
     private Timestamp friendshipTimestamp;
 
