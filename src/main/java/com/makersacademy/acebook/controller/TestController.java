@@ -19,4 +19,10 @@ public class TestController {
         ArrayList<FriendRequest> friendRequests = friendRequestRepository.findFriendRequestByfromUserIdAndStatus(7,"PENDING");
         return friendRequests.toString();
     }
+
+    @GetMapping("/testacceptorreject")
+    public String testpagependingto(){
+        ArrayList<FriendRequest> friendRequests = friendRequestRepository.findFriendRequestBytoUserIdAndStatus(7,"PENDING");
+        return friendRequests.toString();
+    }
 }
