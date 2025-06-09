@@ -1,6 +1,6 @@
 // STOP PEOPLE BEING SNEAKY IF NOT REGISTERED
 /*
-    import com.makersacademy.acebook.repository.UserRepository;
+    import com.makersacademy.acebook.postRepository.UserRepository;
     import org.springframework.security.core.Authentication; <- replaces the tomcat one
     @Autowired
     UserRepository userRepository;
