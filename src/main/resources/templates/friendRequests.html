@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html th:fragment="thymeleaf-header"
+      xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+</head>
+<body>
+
+
+
+<div class="container-fluid">
+
+
+    <div th:each="pendingRequest : ${pendingRequests}" class="row m-3 rounded" style="background-color: #C8CBB7">
+            <div class="col-1 m-2" th:with="avatarFile=${pendingRequest.recipientId} + '.jpg'">
+                <img src="../static/images/userAvatars/9.jpg"
+                     th:src="@{'../images/userAvatars/' + ${avatarFile}}" class="rounded-circle" alt="Early Alan"
+                     style="max-width: 96px;">
+            </div>
+            <div class="col ms-5 m-2 py-0">
+                <p class="py-0" style="font-size: 18px" th:text="pendingRequest.requestMessage">You look familiar - wanna' be mates?</p>
+                <p th:text="|Sent to ${pendingRequest.getFullName()}|">Sent to Amelia Dog</p>
+                <p th:text="${pendingRequest.getTimestamp()}">3 minutes ago</p>
+            </div>
+            <button class="btn btn-secondary col-1 align-items-center">Withdraw</button>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}" src="/static/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
