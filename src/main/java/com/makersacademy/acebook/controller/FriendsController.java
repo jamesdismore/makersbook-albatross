@@ -11,6 +11,8 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.thymeleaf.util.ArrayUtils;
 
@@ -36,7 +38,7 @@ public class FriendsController {
         }
         Long userIdLong = user.get().getId(); // getting id from database - checking that id is connected
         int userId = Math.toIntExact(userIdLong);
-        ArrayList<Friendship> friendsListArray =  friendshipRepository.findFriendshipByuserId(userId);
+        ArrayList<Friendship> friendsListArray =  friendshipRepository.findFriendshipByUserId(userId);
 
 //        String friendsListEmails = "";
         ArrayList<User> friendsUserListArray = new ArrayList<User>();
@@ -51,6 +53,16 @@ public class FriendsController {
         model.addAttribute("friends",friendsUserListArray);
         model.addAttribute("user",user.get());
         return "friends";
+    }
+
+    @PostMapping("/friends/unfriend")
+    public String unfriend(@RequestParam("unfriendId") Long unfriendId) {
+        int unfriendInt = unfriendId.intValue();
+        ArrayList<Friendship> friendshipArrayToDelete = friendshipRepository.findFriendshipByUserIdOrFriendId(unfriendInt,unfriendInt);
+        for (Friendship friendship : friendshipArrayToDelete){
+            friendshipRepository.delete(friendship);
+        }
+        return "redirect:/posts";
     }
 
 }
