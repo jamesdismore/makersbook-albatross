@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.service.annotation.PostExchange;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +36,12 @@ public class TestController {
         return "friendRequests";
     }
 
+    @PostMapping("/friends/closeRequest")
+    String closeRequest(@RequestParam("id") Long requestId) {
+        friendRequestRepository.deleteById(requestId);
+        return "redirect:/test";
+    }
+
     private List<PendingFriendRequestForm> populatePendingRequestsFormUserRequestRow(ArrayList<FriendRequest> friendRequests) {
         List<PendingFriendRequestForm> pendingRequests = new ArrayList<>();
         for (FriendRequest friendRequest : friendRequests) {
@@ -48,14 +57,17 @@ public class TestController {
             pendingFriendRequestForm.setFirstName(recipient.getFirstName());
             pendingFriendRequestForm.setLastName(recipient.getLastName());
             pendingFriendRequestForm.setTimestamp(friendRequest.getRequestTimestamp().toLocalDateTime());
-            pendingFriendRequestForm.setRequestMessage("XYZ");
+            pendingFriendRequestForm.setRequestMessage(friendRequest.getRequestMessage());
+            pendingFriendRequestForm.setRequestId(friendRequest.getId());
             pendingRequests.add(pendingFriendRequestForm);
 
         }
-
         return pendingRequests;
 
     }
+
+
+
 
     @GetMapping("/testacceptorreject")
     public String testpagependingto(){

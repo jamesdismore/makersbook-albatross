@@ -17,6 +17,8 @@ public class PendingFriendRequestForm {
 
     private LocalDateTime timestamp;
 
+    private long requestId;
+
     public PendingFriendRequestForm() {
     }
 

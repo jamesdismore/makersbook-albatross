@@ -8,7 +8,7 @@ import java.time.Instant;
 
 @Data
 @Entity
-@Table(name="FRIEND_REQUESTS")
+@Table(name="friend_requests")
 public class FriendRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,11 +17,13 @@ public class FriendRequest {
     private int fromUserId;
     @Column(name="to_user_id")
     private int toUserId;
+
     @Column(name="request_timestamp")
     private Timestamp requestTimestamp;
 
     @Column(name="request_message")
     private String requestMessage;
+
     private String status;
 
     public FriendRequest(){}

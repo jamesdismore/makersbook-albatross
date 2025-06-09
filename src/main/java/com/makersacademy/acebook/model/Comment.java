@@ -32,4 +32,9 @@ public class Comment {
         this.postId = postId;
         this.commentTimestamp = Timestamp.from(Instant.now());
     }
+
+    @Override
+    public String toString() {
+        return String.format("USER_ID:%d;\nCONTENT:%s", this.userId, this.content);
+    }
 }
