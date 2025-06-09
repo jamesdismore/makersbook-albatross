@@ -29,6 +29,4 @@ public class Friendship {
         this.FriendId = friendId;
         this.friendshipTimestamp = Timestamp.from(Instant.now());
     }
-
-
 }
