@@ -21,6 +21,7 @@ public class FriendRequest {
     private Timestamp requestTimestamp;
     private String status;
 
+    public FriendRequest(){}
 
     public FriendRequest(int fromUserId, int toUserId, String status){
         this.fromUserId = fromUserId;
