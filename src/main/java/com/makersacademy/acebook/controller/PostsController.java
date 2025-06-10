@@ -2,9 +2,11 @@ package com.makersacademy.acebook.controller;
 
 import com.makersacademy.acebook.model.Comment;
 import com.makersacademy.acebook.model.Post;
+import com.makersacademy.acebook.model.PostLike;
 import com.makersacademy.acebook.model.User;
 
 import com.makersacademy.acebook.repository.CommentRepository;
+import com.makersacademy.acebook.repository.PostLikeRepository;
 import com.makersacademy.acebook.repository.UserRepository;
 import com.makersacademy.acebook.repository.PostRepository;
 import org.springframework.security.core.Authentication;
@@ -31,6 +33,9 @@ public class PostsController {
 
     @Autowired
     CommentRepository commentRepository;
+
+    @Autowired
+    PostLikeRepository postLikeRepository;
 
     @ModelAttribute("user")
     public Optional<User> getUser(Authentication authentication) {
@@ -91,5 +96,30 @@ public class PostsController {
     public RedirectView createComment(@ModelAttribute Comment comment, Model model) {
         commentRepository.save(comment);
         return new RedirectView("/posts");
+    }
+
+    @PostMapping("/posts/{postId}/like")
+    @ResponseBody
+    public Map<String, Object> toggleLike(@PathVariable Long postId, @ModelAttribute("user") Optional<User> user) {
+        Map<String, Object> response = new HashMap<>();
+
+        Long userId = user.get().getId();
+
+        Optional<PostLike> existingLike = postLikeRepository.findByUserIdAndPostId(userId, postId);
+
+        if (existingLike.isPresent()) {
+            // Unlike post
+            postLikeRepository.delete(existingLike.get());
+            response.put("liked", false);
+        } else {
+            // Like post
+            PostLike newLike = new PostLike(userId, postId);
+            postLikeRepository.save(newLike);
+            response.put("liked", true);
+        }
+        // Like count updated
+        response.put("likes", postLikeRepository.countByPostId(postId));
+
+        return response;
     }
 }

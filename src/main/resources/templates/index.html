@@ -81,6 +81,15 @@
   </div>
 
   <div th:text="${post.content}"></div>
+<!--  Like Button Functionality -->
+  <button th:id="'likeBtn-' + ${post.id}"
+          th:data-post-id="${post.id}"
+          th:data-liked="${postLikeRepository.findByUserIdAndPostId(userId, post.id).isPresent()}"
+          onclick="toggleLike(this)">
+      <span th:text="${postLikeRepository.findByUserIdAndPostId(userId, post.id).isPresent() ? 'Unlike' : 'Like'}"></span>
+  </button>
+  <p>Likes: <span th:id="'likeCount-' + ${post.id}" th:text="${postLikeRepository.countByPostId(post.id)}"></span></p>
+<!--  Comment Button Functionality -->
   <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
           th:data-bs-target="'#collapseExample' + ${iterStat.index}"
           aria-expanded="false"
@@ -116,6 +125,31 @@
     <div th:text="${comment.content}"></div>
   </div>
 </div>
+
+<script>
+  function toggleLike(button) {
+      let postId = button.getAttribute("data-post-id");
+
+      fetch(`/posts/${postId}/like`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" }
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.error) {
+              alert(data.error);
+              return;
+          }
+          // Update button text and data-liked attribute
+          button.innerHTML = data.liked ? "Unlike" : "Like";
+          button.setAttribute("data-liked", data.liked);
+
+          // Update like count
+          document.getElementById(`likeCount-${postId}`).innerText = data.likes;
+      })
+      .catch(error => console.error("Error:", error));
+  }
+</script>
 
 <script th:src="@{/js/bootstrap.bundle.min.js}" src="/static/js/bootstrap.bundle.min.js"></script>
 </body>
