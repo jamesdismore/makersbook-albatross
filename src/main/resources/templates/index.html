@@ -67,8 +67,19 @@
   <div class="user-avatar" th:with="avatarFile=${post.user_id} + '.jpg'">
     <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
   </div>
+  <!-- Fallback if no avatar -->
+  <div class="user-initials" th:if="${user.avatar == null}">
+    <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
+  </div>
 
-  <div th:text="${postAuthors[post.id]?.firstName} + ' ' + ${postAuthors[post.id]?.lastName}"></div>
+<!--  display user FullName (unknown user if null)-->
+  <div th:if="${postAuthors[post.id] != null && postAuthors[post.id].firstName != null && postAuthors[post.id].lastName != null}"
+       th:text="${postAuthors[post.id].firstName + ' ' + postAuthors[post.id].lastName}"></div>
+
+  <div th:if="${postAuthors[post.id] == null || postAuthors[post.id].firstName == null || postAuthors[post.id].lastName == null}">
+    Unknown User
+  </div>
+
   <div th:text="${post.content}"></div>
   <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
           th:data-bs-target="'#collapseExample' + ${iterStat.index}"
@@ -91,7 +102,17 @@
     <div class="user-avatar" th:with="avatarFile=${comment.userId} + '.jpg'">
       <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
     </div>
-    <div th:text="${commentAuthors[comment.id]?.firstName} + ' ' + ${commentAuthors[comment.id]?.lastName}"></div>
+    <!-- Fallback if no avatar -->
+    <div class="user-initials" th:if="${user.avatar == null}">
+      <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
+    </div>
+    <!--  display user FullName (unknown user if null)-->
+    <div th:if="${postAuthors[post.id] != null && postAuthors[post.id].firstName != null && postAuthors[post.id].lastName != null}"
+         th:text="${postAuthors[post.id].firstName + ' ' + postAuthors[post.id].lastName}"></div>
+
+    <div th:if="${postAuthors[post.id] == null || postAuthors[post.id].firstName == null || postAuthors[post.id].lastName == null}">
+      Unknown User
+    </div>
     <div th:text="${comment.content}"></div>
   </div>
 </div>
