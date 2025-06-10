@@ -66,26 +66,26 @@ public class PostsController {
 
 //        Iterable<Post> posts = postRepository.findAll();
 //        Iterable<Comment> comments = commentRepository.findAll();
-//
-//        Post newPost = new Post();
-//        Comment newComment = new Comment();
-//
-//        model.addAttribute("posts", posts);
-//        model.addAttribute("post", newPost);
+
+        Post newPost = new Post();
+        Comment newComment = new Comment();
+
+        model.addAttribute("posts", posts);
+        model.addAttribute("post", newPost);
 //        model.addAttribute("comments", comments);
 //        model.addAttribute("comment", newComment);
-//
-//        // code below to get userId and email from database
-//        model.addAttribute("userId", user.get().getId());
-//        model.addAttribute("email", user.get().getUsername());
-//
-//        // Create a map to store post authors
-//        Map<Long, User> postAuthors = new HashMap<>();
-//        for (Post post : posts) {
-//            Optional<User> postUser = userRepository.findById(post.getUser_id());
-//            postUser.ifPresent(user1 -> postAuthors.put(post.getId(), user1));
-//        }
-//        model.addAttribute("postAuthors", postAuthors);
+
+        // code below to get userId and email from database
+        model.addAttribute("userId", user.get().getId());
+        model.addAttribute("email", user.get().getUsername());
+
+        // Create a map to store post authors
+        Map<Long, User> postAuthors = new HashMap<>();
+        for (Post post : posts) {
+            Optional<User> postUser = userRepository.findById(post.getUser_id());
+            postUser.ifPresent(user1 -> postAuthors.put(post.getId(), user1));
+        }
+        model.addAttribute("postAuthors", postAuthors);
 //
 //        // Create a map to store comment authors
 //        Map<Long, User> commentAuthors = new HashMap<>();

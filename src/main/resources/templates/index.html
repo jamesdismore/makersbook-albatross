@@ -86,13 +86,13 @@
       </form>
     </div>
   </div>
-  <div th:each="comment : ${comments}" th:if="${comment.postId == post.id}" class="mb-3">
+  <div th:each="displayComment : ${post.displayComment}" class="mb-3">
     <!--  each commenter's avatar + name -->
-    <div class="user-avatar" th:with="avatarFile=${comment.userId} + '.jpg'">
+    <div class="user-avatar" th:with="avatarFile=${displayComment.commentAuthorId} + '.jpg'">
       <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
     </div>
-    <div th:text="${commentAuthors[comment.id]?.firstName} + ' ' + ${commentAuthors[comment.id]?.lastName}"></div>
-    <div th:text="${comment.content}"></div>
+    <div th:text="${displayComment.commentAuthorFullName}"></div>
+    <div th:text="${displayComment.content}"></div>
   </div>
 </div>
 
