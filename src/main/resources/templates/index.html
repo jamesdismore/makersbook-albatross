@@ -88,7 +88,7 @@
           onclick="toggleLike(this)">
       <span th:text="${likedPosts[post.id] ? 'Unlike' : 'Like'}"></span>
   </button>
-  <p>Likes: <span th:id="'likeCount-' + ${post.id}" th:text="${likeCounts[post.id]}"></span></p>
+  <p>Likes: <span th:id="'likeCount-post-' + ${post.id}" th:text="${likeCountsPosts[post.id]}"></span></p>
 
 <!--  Comment Button Functionality -->
   <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
@@ -131,39 +131,42 @@
             onclick="toggleLike(this)">
       <span th:text="${likedComments[comment.id] ? 'Unlike' : 'Like'}"></span>
     </button>
-    <p>Likes: <span th:id="'likeCount-' + ${comment.id}" th:text="${likeCounts[comment.id]}"></span></p>
+    <p>Likes: <span th:id="'likeCount-comment-' + ${comment.id}" th:text="${likeCountsComments[comment.id]}"></span></p>
   </div>
 </div>
 
 <script>
   function toggleLike(button) {
-      let postId = button.getAttribute("data-post-id");
-      let commentId = button.getAttribute("data-comment-id");
+    let postId = button.getAttribute("data-post-id");
+    let commentId = button.getAttribute("data-comment-id");
 
-      fetch(`/posts/${postId}/like`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" }
-      })
-      fetch(`/posts/${commentId}/like`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" }
-      })
-      .then(response => response.json())
-      .then(data => {
-          if (data.error) {
-              alert(data.error);
-              return;
-          }
-          // Update button text and data-liked attribute
-          button.innerHTML = data.liked ? "Unlike" : "Like";
-          button.setAttribute("data-liked", data.liked);
+    // Determine the correct URL based on whether it's a post or comment
+    let url = commentId ? `/posts/comment/${commentId}/like` : `/posts/post/${postId}/like`;
 
-          // Update like count
-          document.getElementById(`likeCount-${postId}`).innerText = data.likes;
-          document.getElementById(`likeCount-${commentId}`).innerText = data.likes;
-      })
-      .catch(error => console.error("Error:", error));
-  }
+    fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+
+        // Update button text and data-liked attribute
+        button.innerHTML = data.liked ? "Unlike" : "Like";
+        button.setAttribute("data-liked", data.liked);
+
+        // Update like count dynamically
+        if (commentId) {
+            document.getElementById(`likeCount-comment-${commentId}`).innerText = data.likes;
+        } else {
+            document.getElementById(`likeCount-post-${postId}`).innerText = data.likes;
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
 </script>
 
 <script th:src="@{/js/bootstrap.bundle.min.js}" src="/static/js/bootstrap.bundle.min.js"></script>

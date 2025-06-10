@@ -24,6 +24,8 @@ public class CommentLike {
     @Column(name = "like_timestamp")
     private Timestamp timestamp;
 
+    public CommentLike() {}
+
     public CommentLike(long userId, long commentId){
         this.userId = userId;
         this.commentId = commentId;

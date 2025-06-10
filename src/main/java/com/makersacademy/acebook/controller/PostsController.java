@@ -82,23 +82,25 @@ public class PostsController {
         }
         model.addAttribute("commentAuthors", commentAuthors);
 
-        Map<Long, Integer> likeCounts = new HashMap<>();
         // Map to store like status for each post
         Map<Long, Boolean> likedPosts = new HashMap<>();
+        Map<Long, Integer> likeCountsPosts = new HashMap<>();
         for (Post post : posts) {
             likedPosts.put(post.getId(), postLikeRepository.findByUserIdAndPostId(userId, post.getId()).isPresent());
-            likeCounts.put(post.getId(), postLikeRepository.countByPostId(post.getId())); // Fetch like count
+            likeCountsPosts.put(post.getId(), postLikeRepository.countByPostId(post.getId())); // Fetch like count
         }
         model.addAttribute("likedPosts", likedPosts);
+        model.addAttribute("likeCountsPosts", likeCountsPosts);
 
         // Map to store like status for each comment
         Map<Long, Boolean> likedComments = new HashMap<>();
+        Map<Long, Integer> likeCountsComments = new HashMap<>();
         for (Comment comment : comments) {
             likedComments.put(comment.getId(), commentLikeRepository.findByUserIdAndCommentId(userId, comment.getId()).isPresent());
-            likeCounts.put(comment.getId(), commentLikeRepository.countByCommentId(comment.getId())); // Fetch like count
+            likeCountsComments.put(comment.getId(), commentLikeRepository.countByCommentId(comment.getId())); // Fetch like count
         }
         model.addAttribute("likedComments", likedComments);
-        model.addAttribute("likeCounts", likeCounts);
+        model.addAttribute("likeCountsComments", likeCountsComments);
 
         return "index";
     }
@@ -115,7 +117,7 @@ public class PostsController {
         return new RedirectView("/posts");
     }
 
-    @PostMapping("/posts/{postId}/like")
+    @PostMapping("/posts/post/{postId}/like")
     @ResponseBody
     public Map<String, Object> toggleLike(@PathVariable Long postId, @ModelAttribute("user") Optional<User> user) {
         Map<String, Object> response = new HashMap<>();
@@ -140,7 +142,7 @@ public class PostsController {
         return response;
     }
 
-    @PostMapping("/posts/{commentId}/like")
+    @PostMapping("/posts/comment/{commentId}/like")
     @ResponseBody
     public Map<String, Object> toggleLike(@PathVariable long commentId, @ModelAttribute("user") Optional<User> user) {
         Map<String, Object> response = new HashMap<>();
