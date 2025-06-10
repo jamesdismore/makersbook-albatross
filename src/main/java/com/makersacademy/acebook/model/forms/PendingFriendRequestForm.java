@@ -1,4 +1,4 @@
-package com.makersacademy.acebook.model;
+package com.makersacademy.acebook.model.forms;
 
 import lombok.Data;
 

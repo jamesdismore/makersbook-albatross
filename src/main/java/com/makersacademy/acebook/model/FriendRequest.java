@@ -1,5 +1,6 @@
 package com.makersacademy.acebook.model;
 
+import com.makersacademy.acebook.model.forms.FriendRequestForm;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,15 +15,21 @@ public class FriendRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name="from_user_id")
-    private int fromUserId;
+    private long fromUserId;
     @Column(name="to_user_id")
-    private int toUserId;
+    private long toUserId;
 
     @Column(name="request_timestamp")
     private Timestamp requestTimestamp;
 
     @Column(name="request_message")
     private String requestMessage;
+
+    @Column(name = "response_timestamp")
+    private Timestamp responseTimestamp;
+
+    @Column(name = "response_message")
+    private String responseMessage;
 
     private String status;
 
@@ -34,5 +41,15 @@ public class FriendRequest {
         this.status = status;
         this.requestMessage = requestMessage;
         this.requestTimestamp = Timestamp.from(Instant.now());
+    }
+
+    public static FriendRequest fromForm(FriendRequestForm friendRequestForm) {
+        FriendRequest friendRequest = new  FriendRequest();
+        friendRequest.setRequestMessage(friendRequestForm.getMessage());
+        friendRequest.setRequestTimestamp(Timestamp.from(Instant.now()));
+        friendRequest.setFromUserId(friendRequestForm.getSenderId());
+        friendRequest.setToUserId(friendRequestForm.getRecipientId());
+        friendRequest.setStatus("PENDING");
+        return friendRequest;
     }
 }

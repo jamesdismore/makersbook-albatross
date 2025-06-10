@@ -1,4 +1,10 @@
 
+
+ALTER TABLE friend_requests
+    ALTER COLUMN from_user_id TYPE bigint,
+    ALTER COLUMN to_user_id TYPE bigint;
+
+
 -- Add Animal users
 
 -- | id  | Name         | Username      | AuthO password |
@@ -36,10 +42,12 @@ ALTER TABLE friend_requests
 ADD response_timestamp TIMESTAMP;
 
 
+
+
 INSERT INTO friend_requests(from_user_id, to_user_id,  request_message, request_timestamp, response_message, response_timestamp, status) VALUES
  (7, 8, 'Fancy a hunting trip sometime?', '2025-06-03 08:15:00', NULL, NULL, 'PENDING'),
  (7, 12, 'Can you ever forgive me? 🤣', '2025-05-19 10:30:00', NULL, NULL, 'PENDING'),
- (7, 9, 'You look familiar - wanna be mates?', '2025-05-29 14:45:00', NULL, NULL, 'PENDING'),
+ (7, 9, 'You look familiar - wanna be mates?', '2025-05-29 14:45:00', NULL, NULL , 'PENDING'),
  (13, 7, E'The scraps are much appreciated - let\'s keep in touch more regularly', '2025-06-1 21:00:00', NULL, NULL, 'PENDING');
 
 
