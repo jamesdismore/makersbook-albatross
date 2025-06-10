@@ -1,8 +1,10 @@
 package com.makersacademy.acebook.controller;
 
+import com.makersacademy.acebook.model.Comment;
 import com.makersacademy.acebook.model.Post;
 import com.makersacademy.acebook.model.User;
 
+import com.makersacademy.acebook.repository.CommentRepository;
 import com.makersacademy.acebook.repository.UserRepository;
 import com.makersacademy.acebook.repository.PostRepository;
 import org.springframework.security.core.Authentication;
@@ -14,18 +16,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.security.Principal;
-import java.util.List;
+import java.sql.SQLOutput;
 import java.util.Optional;
 
 @Controller
 public class PostsController {
 
     @Autowired
-    PostRepository repository;
+    PostRepository postRepository;
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
 
     @ModelAttribute("user")
     public Optional<User> getUser(Authentication authentication) {
@@ -42,7 +46,7 @@ public class PostsController {
             return "redirect:/users/newUser"; // Redirect if not registered
         }
 
-        Iterable<Post> posts = repository.findAll();
+        Iterable<Post> posts = postRepository.findAll();
         Post newPost = new Post();
         model.addAttribute("posts", posts);
         model.addAttribute("post", newPost);
@@ -51,13 +55,43 @@ public class PostsController {
         model.addAttribute("userId", user.get().getId());
         model.addAttribute("email", user.get().getUsername());
 
+        Iterable<Comment> comments = commentRepository.findAll();
+        Comment newComment = new Comment();
+        model.addAttribute("comments", comments);
+        model.addAttribute("comment", newComment);
+
+        return "index";
+    }
+
+    @GetMapping("/posts/comment")
+    public String indexComment(@ModelAttribute("user") Optional<User> user,  Model model) {
+
+        Iterable<Post> posts = postRepository.findAll();
+        Post newPost = new Post();
+        model.addAttribute("posts", posts);
+        model.addAttribute("post", newPost);
+
+        Iterable<Comment> comments = commentRepository.findAll();
+        Comment newComment = new Comment();
+        model.addAttribute("comments", comments);
+        model.addAttribute("comment", newComment);
+
+        model.addAttribute("userId", user.get().getId());
+        model.addAttribute("email", user.get().getUsername());
+
 
         return "index";
     }
 
     @PostMapping("/posts")
-    public RedirectView create(@ModelAttribute Post post) {
-        repository.save(post);
+    public RedirectView createPost(@ModelAttribute Post post) {
+        postRepository.save(post);
+        return new RedirectView("/posts");
+    }
+
+    @PostMapping("/posts/comment")
+    public RedirectView createComment(@ModelAttribute Comment comment, Model model) {
+        commentRepository.save(comment);
         return new RedirectView("/posts");
     }
 }
