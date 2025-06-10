@@ -16,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.sql.SQLOutput;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -48,7 +47,7 @@ public class PostsController {
             return "redirect:/users/newUser"; // Redirect if not registered
         }
 
-        Iterable<Post> posts = postRepository.findAll();
+        Iterable<Post> posts = postRepository.findAllByOrderByIdDesc();
         Iterable<Comment> comments = commentRepository.findAll();
 
         Post newPost = new Post();
