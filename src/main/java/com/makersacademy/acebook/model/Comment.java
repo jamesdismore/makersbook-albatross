@@ -38,6 +38,7 @@ public class Comment {
         this.commentTimestamp = Timestamp.from(Instant.now());
     }
 
+
     // used when posting without a picture
     public Comment(String content) {
         this.content = content;

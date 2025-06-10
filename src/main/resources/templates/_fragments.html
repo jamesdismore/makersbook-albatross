@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html th:fragment="thymeleaf-header"
+      xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+</head>
+<body>
+
+    <div th:fragment="accordion-placeholder" class="row m-3 p-3 rounded align-items-center">
+        <p  class="col text-center" style="font-size:13px; color: gray">Nothing here at the moment</p>
+    </div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}" src="/static/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
