@@ -47,7 +47,7 @@
             <div class="col-10 ms-3">
                 <p class="mt-3 mb-2" style="font-size: 18px;">👋 Start making friends!</p>
                 <form th:object="${friendRequestForm}" th:action="@{/manageFriends/submitFriendRequest}" th:method="post">
-                    <input class="form-control" type="text" placeholder="Use the search button to find some friends" disabled>
+                    <input class="form-control" type="text" placeholder="Use the search button to find some friends">
                     <div class="col mt-2 float-end">
                         <button type="submit" class="btn btn-primary mb-2 float-end">Search</button>
                     </div>

@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.util.ArrayUtils;
 
 import java.util.ArrayList;
@@ -71,7 +72,45 @@ public class FriendsController {
         for (Friendship friendship : friendshipList){
             friendshipRepository.delete(friendship);
         }
-        return "redirect:/posts";
+        return "redirect:/friends";
     }
+
+    @PostMapping("/friends/search")
+    public String searchFriends(@RequestParam("searchQuery") String searchQuery, Model model, Authentication authentication) {
+        // Get the logged-in user's details
+        DefaultOidcUser principal = (DefaultOidcUser) authentication.getPrincipal();
+        String username = (String) principal.getAttributes().get("email");
+        Optional<User> user = userRepository.findUserByUsername(username);
+
+        if (user.isEmpty()) {
+            return "redirect:/users/newUser"; // Redirect if not registered
+        }
+
+        // Search for users matching the query
+        String queryLow = searchQuery.toLowerCase();
+        ArrayList<User> approxOutput = userRepository.approximateUserSearch(queryLow);
+        ArrayList<User> exactOutput = userRepository.exactUserSearch(queryLow);
+        for (User userSearched : approxOutput)
+        {
+            if(!exactOutput.contains(userSearched)){
+                exactOutput.add(userSearched);
+            }
+        }
+
+        // Add search results to the model
+        model.addAttribute("friends", exactOutput); // Replace friends list with search results
+        model.addAttribute("user", user.get());
+        model.addAttribute("searchQuery", searchQuery); // Keep track of the search term
+
+        return "friends"; // Return the same friends page with search results
+    }
+
+    @PostMapping("/friends/addfriend")
+    public String addFriend(@RequestParam("newFriendId") Long recipientId){
+        return "redirect:/manageFriends?recipientId="+recipientId;
+    }
+
+
+
 
 }
