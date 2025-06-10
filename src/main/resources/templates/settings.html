@@ -53,19 +53,25 @@
 
   <div class="container">
 
-  <form th:object="${user}" id="add-user-form" method="post">
+  <form th:object="${user}" id="add-user-form" method="post" enctype="multipart/form-data">
 
-    <div class="row mt-5 justify-content-center" th:with="avatarFile=${user.id} + '.jpg'">
-      <img src="../static/images/userAvatars/9.jpg"
-           th:src="@{'../images/userAvatars/' + ${avatarFile}}" class="rounded-circle" alt="Early Alan"
-      style="max-width: 350px;">
-    </div>
-    <div class="row mt-3">
-        <button type="button" class="col-1 me-2 btn btn-outline-secondary py-0 offset-5"
-                style="--bs-btn-padding-y: .10rem; --bs-btn-padding-x: .15rem; --bs-btn-font-size: .65rem;">Update</button>
-        <button type="button" class="col-1 me-2 btn btn-outline-warning"
-                style="--bs-btn-padding-y: .10rem; --bs-btn-padding-x: .25rem; --bs-btn-font-size: .65rem;"
-        >Remove</button>
+<!--    <div class="row mt-5 justify-content-center" th:with="avatarFile=${user.id} + '.jpg'">-->
+<!--      <img src="../static/images/userAvatars/9.jpg"-->
+<!--           th:src="@{'../images/userAvatars/' + ${avatarFile}}" class="rounded-circle" alt="Default Avatar"-->
+<!--      style="max-width: 240px; object-fit: cover">-->
+<!--    </div>-->
+<!--    <div class="row mt-3">-->
+<!--        <button type="button" class="col-1 me-2 btn btn-outline-secondary py-0 offset-5"-->
+<!--                style="&#45;&#45;bs-btn-padding-y: .10rem; &#45;&#45;bs-btn-padding-x: .15rem; &#45;&#45;bs-btn-font-size: .65rem;">Update</button>-->
+<!--        <button type="button" class="col-1 me-2 btn btn-outline-warning"-->
+<!--                style="&#45;&#45;bs-btn-padding-y: .10rem; &#45;&#45;bs-btn-padding-x: .25rem; &#45;&#45;bs-btn-font-size: .65rem;"-->
+<!--        >Remove</button>-->
+<!--    </div>-->
+
+    <div class="text-center" th:with="avatarFile=${user.avatar == null}  ? 'placeholder' : ${user.avatar}">
+      <img id="imagePreview" src="../static/images/userAvatars/9.jpg"
+           th:src="@{'../images/userAvatars/' + ${avatarFile} + '.jpg'}" class="rounded-circle mx-auto"
+           style="width: 240px; height: 240px; object-fit: cover;" alt="Default Avatar">
     </div>
 
 
@@ -96,7 +102,14 @@
                th:classappend="${#fields.hasErrors('dob')} ? 'is-invalid' : ''">
         <p class="invalid-feedback" th:errors="*{dob}">Invalid data</p>
       </div>
+      <div class="col">
+        <label for="profilePicture" class="form-label">Profile Picture</label>
+        <input type="file" accept="image/*" id="profilePicture" name="file"
+               class="form-control mx-auto"
+               onchange="previewImage(event)">
+      </div>
     </div>
+
 
     <div class="row">
       <br>
@@ -112,13 +125,15 @@
         <div class="text-end">
           <button class="btn btn-danger float-right" type="submit" disabled>Delete Forever</button>
         </div>
-
       </div>
 
 
     </div>
+
   </form>
 </div>
+  <script>
+  </script>
   <script th:src="@{/js/bootstrap.bundle.min.js}" src="/static/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

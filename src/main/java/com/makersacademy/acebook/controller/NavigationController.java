@@ -24,11 +24,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 
@@ -49,8 +56,12 @@ public class NavigationController {
     // Routes ------
 
     @GetMapping("/profile")
-    public String profile(@ModelAttribute("user") Optional<User> user) {
-        return user.isEmpty() ? "redirect:/users/newUser" : "profile";
+    public String profile(@ModelAttribute("user") Optional<User> user, Model model) {
+        if (user.isEmpty()) {
+            return "redirect:/users/newUser";
+        } else {
+            return "profile";
+        }
     }
 
     @GetMapping("/settings")
@@ -59,12 +70,32 @@ public class NavigationController {
    }
 
     @PostMapping("/settings")
-    public String settings(@Valid User user, BindingResult bindingResult) {
+    public String settings(@Valid User user, BindingResult bindingResult, @RequestParam("file") MultipartFile file) {
         if (bindingResult.hasErrors()) {
             return "settings";
         } else {
+            if (!file.isEmpty()) {
+                replaceAvatarWith(file, user);
+            }
             userRepository.save(user);
             return "redirect:/posts";
         }
     }
+
+    void replaceAvatarWith(MultipartFile imageFile, User user) {
+
+        try {
+            String uploadDir = "src/main/resources/static/images/userAvatars/";
+            String filename = String.valueOf(user.getId()) ; // save as {userId}.jpg
+            Path path = Paths.get(uploadDir + filename + ".jpg" );
+            Files.write(path, imageFile.getBytes());
+
+            // Set filename in the user object & update database
+            user.setAvatar(filename); // Store "9.jpg" in DB
+            userRepository.save(user);  // Save user with updated avatar path
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
