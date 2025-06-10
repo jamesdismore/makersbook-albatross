@@ -84,11 +84,12 @@
 <!--  Like Button Functionality -->
   <button th:id="'likeBtn-' + ${post.id}"
           th:data-post-id="${post.id}"
-          th:data-liked="${postLikeRepository.findByUserIdAndPostId(userId, post.id).isPresent()}"
+          th:data-liked="${likedPosts[post.id]}"
           onclick="toggleLike(this)">
-      <span th:text="${postLikeRepository.findByUserIdAndPostId(userId, post.id).isPresent() ? 'Unlike' : 'Like'}"></span>
+      <span th:text="${likedPosts[post.id] ? 'Unlike' : 'Like'}"></span>
   </button>
-  <p>Likes: <span th:id="'likeCount-' + ${post.id}" th:text="${postLikeRepository.countByPostId(post.id)}"></span></p>
+  <p>Likes: <span th:id="'likeCount-' + ${post.id}" th:text="${likeCounts[post.id]}"></span></p>
+
 <!--  Comment Button Functionality -->
   <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
           th:data-bs-target="'#collapseExample' + ${iterStat.index}"
@@ -123,14 +124,27 @@
       Unknown User
     </div>
     <div th:text="${comment.content}"></div>
+    <!--  Like Button Functionality -->
+    <button th:id="'likeBtn-' + ${comment.id}"
+            th:data-comment-id="${comment.id}"
+            th:data-liked="${likedComments[comment.id]}"
+            onclick="toggleLike(this)">
+      <span th:text="${likedComments[comment.id] ? 'Unlike' : 'Like'}"></span>
+    </button>
+    <p>Likes: <span th:id="'likeCount-' + ${comment.id}" th:text="${likeCounts[comment.id]}"></span></p>
   </div>
 </div>
 
 <script>
   function toggleLike(button) {
       let postId = button.getAttribute("data-post-id");
+      let commentId = button.getAttribute("data-comment-id");
 
       fetch(`/posts/${postId}/like`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" }
+      })
+      fetch(`/posts/${commentId}/like`, {
           method: "POST",
           headers: { "Content-Type": "application/json" }
       })
@@ -146,6 +160,7 @@
 
           // Update like count
           document.getElementById(`likeCount-${postId}`).innerText = data.likes;
+          document.getElementById(`likeCount-${commentId}`).innerText = data.likes;
       })
       .catch(error => console.error("Error:", error));
   }
