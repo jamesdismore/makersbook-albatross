@@ -71,7 +71,7 @@ public class UsersController {
         if (!file.isEmpty()) {
             try {
                 String uploadDir = "src/main/resources/static/images/userAvatars/";
-                String filename = user.getId() + ".jpg"; // save as {userId}.jpg
+                String filename = String.valueOf(user.getId()); // save as {userId}.jpg
                 Path path = Paths.get(uploadDir + filename);
                 Files.write(path, file.getBytes());
 
