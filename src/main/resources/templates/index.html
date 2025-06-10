@@ -107,10 +107,10 @@
       <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
     </div>
     <!--  display user FullName (unknown user if null)-->
-    <div th:if="${postAuthors[post.id] != null && postAuthors[post.id].firstName != null && postAuthors[post.id].lastName != null}"
-         th:text="${postAuthors[post.id].firstName + ' ' + postAuthors[post.id].lastName}"></div>
+    <div th:if="${commentAuthors[comment.id] != null && commentAuthors[comment.id].firstName != null && commentAuthors[comment.id].lastName != null}"
+         th:text="${commentAuthors[comment.id].firstName + ' ' + commentAuthors[comment.id].lastName}"></div>
 
-    <div th:if="${postAuthors[post.id] == null || postAuthors[post.id].firstName == null || postAuthors[post.id].lastName == null}">
+    <div th:if="${commentAuthors[comment.id] == null || commentAuthors[comment.id].firstName == null || commentAuthors[comment.id].lastName == null}">
       Unknown User
     </div>
     <div th:text="${comment.content}"></div>
