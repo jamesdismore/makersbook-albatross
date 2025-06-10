@@ -52,7 +52,6 @@
 </nav>
 
 <h1>Friends List</h1>
-
 <div class="container mt-5">
 
   <div class="row">
@@ -63,14 +62,18 @@
 
       <!-- Card start-->
       <div class="card" style="width: 18rem;">
-        <img src="../static/images/userAvatars/placeholder.jpg" th:src="@{'../images/userAvatars/' + ${avatarFile} + '.jpg'}"
-             class="card-img-top ratio-1x1" alt="User Avatar">
+        <img src="../static/images/userAvatars/9.jpg" th:src="@{'../images/userAvatars/' + ${avatarFile} + '.jpg'}"
+             class="card-img-top" alt="User Avatar">
         <div class="card-body">
           <h5 class="card-title" th:text="${friend.firstName}">Mr Nobody</h5>
-          <p class="mb-1" style="font-size: 16px; font-style: italic">Not doing a great deal today!</p>
-          <p style="font-size: 12px" class="mt-0">10 minutes ago.</p>
-          <a href="#" class="btn btn-primary">Profile</a>
-          <a class="btn btn-warning">Unfriend</a>
+<!--          <p class="mb-1" style="font-size: 16px; font-style: italic">Not doing a great deal today!</p>-->
+<!--          <p style="font-size: 12px" class="mt-0">10 minutes ago.</p>-->
+          <a th:href="@{'/posts/' + ${friend.id}}" class="btn btn-primary">Profile</a>
+          <form th:action="@{/friends/unfriend}" method="post" style="display: inline;">
+            <input type="hidden" name="unfriendId" th:value="${friend.id}" />
+            <input type="hidden" name="userId" th:value="${user.id}" />
+            <button type="submit" class="btn btn-warning">Unfriend</button>
+          </form>
         </div>
       </div>
       <!-- Card end-->

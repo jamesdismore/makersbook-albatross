@@ -55,8 +55,10 @@
 
   <form th:object="${user}" id="add-user-form" method="post">
 
-    <div class="row mt-5 align-content-center" th:with="avatarFile=${user.id} + '.jpg'">
-      <img src="../static/images/userAvatars/9.jpg" th:src="@{'../images/userAvatars/' + ${avatarFile}}" class="rounded-circle mx-auto" style="max-width: 240px" alt="Early Alan">
+    <div class="row mt-5 justify-content-center" th:with="avatarFile=${user.id} + '.jpg'">
+      <img src="../static/images/userAvatars/9.jpg"
+           th:src="@{'../images/userAvatars/' + ${avatarFile}}" class="rounded-circle" alt="Early Alan"
+      style="max-width: 350px;">
     </div>
     <div class="row mt-3">
         <button type="button" class="col-1 me-2 btn btn-outline-secondary py-0 offset-5"
@@ -70,14 +72,14 @@
     <div class="row mt-5">
         <div class="col-6 mb-3">
           <label for="firstNameInput" class="form-label" >First Name</label>
-          <input type="text" class="form-control" id="firstNameInput" placeholder="" th:field="*{firstName}" value=""
+          <input type="text" class="form-control" id="firstNameInput" placeholder="" th:field="*{firstName}" value="Amelia"
                  th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid' : ''">
           <p class="invalid-feedback" th:errors="*{firstName}">Invalid data</p>
         </div>
 
       <div class="col-6 mb-3">
         <label for="lastName" class="form-label">Last name</label>
-        <input type="text" class="form-control" id="lastName" placeholder="" th:field="*{lastName}" value=""
+        <input type="text" class="form-control" id="lastName" placeholder="" th:field="*{lastName}" value="Dog"
                th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid' : ''">
         <p class="invalid-feedback" th:errors="*{lastName}">Invalid data</p>
       </div>
@@ -86,7 +88,7 @@
     <div class="row">
       <div class="col-6 mb-3">
         <label for="usernameInput" class="form-label" >Username</label>
-        <input type="text" class="form-control" id="usernameInput" placeholder="alan_partidge@midmorningmatters.com"  th:value="${user.username}" readonly disabled>
+        <input type="text" class="form-control" id="usernameInput" placeholder="dog@ex.com"  th:value="${user.username}" readonly disabled>
       </div>
       <div class="col-6">
         <label for="playerBirthDate" class="form-label">Date of birth</label>
