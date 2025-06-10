@@ -81,26 +81,6 @@ public class PostsController {
         return "index";
     }
 
-//    @GetMapping("/posts/comment")
-//    public String indexComment(@ModelAttribute("user") Optional<User> user,  Model model) {
-//
-//        Iterable<Post> posts = postRepository.findAll();
-//        Post newPost = new Post();
-//        model.addAttribute("posts", posts);
-//        model.addAttribute("post", newPost);
-//
-//        Iterable<Comment> comments = commentRepository.findAll();
-//        Comment newComment = new Comment();
-//        model.addAttribute("comments", comments);
-//        model.addAttribute("comment", newComment);
-//
-//        model.addAttribute("userId", user.get().getId());
-//        model.addAttribute("email", user.get().getUsername());
-//
-//
-//        return "index";
-//    }
-
     @PostMapping("/posts")
     public RedirectView createPost(@ModelAttribute Post post) {
         postRepository.save(post);
