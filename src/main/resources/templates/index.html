@@ -69,6 +69,7 @@
     <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
   </div>
 
+  <div th:text="${postAuthors[post.id]?.firstName} + ' ' + ${postAuthors[post.id]?.lastName}"></div>
   <div th:text="${post.content}"></div>
   <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
           th:data-bs-target="'#collapseExample' + ${iterStat.index}"
@@ -91,7 +92,7 @@
     <div class="user-avatar" th:with="avatarFile=${comment.userId} + '.jpg'">
       <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
     </div>
-    <div th:text="${firstName} + ' ' + ${lastName}" th:if="${comment.userId == user.id}"></div>
+    <div th:text="${commentAuthors[comment.id]?.firstName} + ' ' + ${commentAuthors[comment.id]?.lastName}"></div>
     <div th:text="${comment.content}"></div>
   </div>
 </div>
