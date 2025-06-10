@@ -7,6 +7,7 @@ import lombok.Data;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 @Data
 @Entity
@@ -19,6 +20,7 @@ public class Post {
     private String content;
     private String photo;
     private long user_id;
+    private ArrayList<DisplayComment> displayComment;
 
     @Column(name = "post_timestamp")
     private Timestamp timestamp;
