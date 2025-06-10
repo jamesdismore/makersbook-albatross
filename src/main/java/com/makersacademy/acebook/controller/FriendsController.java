@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.util.ArrayUtils;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -96,6 +97,13 @@ public class FriendsController {
                 exactOutput.add(userSearched);
             }
         }
+        ArrayList<Friendship> friendshipsArray = friendshipRepository.findFriendshipByUserId(user.get().getId().intValue());
+        ArrayList<Long> friendIds = new ArrayList<>();
+        for(Friendship friendship : friendshipsArray){
+            friendIds.add(friendship.getFriendId());
+        }
+        exactOutput.removeIf(searchedUser -> friendIds.contains(searchedUser.getId()));
+        exactOutput.removeIf(searchedUser -> Objects.equals(searchedUser.getId(), user.get().getId()));
 
         // Add search results to the model
         model.addAttribute("friends", exactOutput); // Replace friends list with search results
