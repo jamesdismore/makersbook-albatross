@@ -40,7 +40,7 @@
         <!-- Send message -->
         <div class="row m-3 p-2 rounded" style="background-color: #DDDDDD" th:unless="${friendRequestForm}">
             <div class="col-1 me-5 btn-group-vertical">
-                <img src="../static/images/userAvatars/10.jpg"
+                <img src="../static/images/userAvatars/placeholder.jpg"
                      th:src="@{'../images/userAvatars/placeholder.jpg'}" class="rounded-circle " alt="Retriever"
                      style="max-width: 116px;">
             </div>
@@ -84,8 +84,8 @@
                                 <p class="mt-0" style="font-size: 14px; color: #777777;" th:text="${#temporals.format(acceptedRequest.timestamp, 'EEEE d MMM')}">3 days ago</p>
                             </div>
 
-                            <form class="form col-1 my-auto mx-auto" th:action="@{/manageFriends/closeRequest(id=${acceptedRequest.requestId})}" th:method="post">
-                                <button class="btn btn-secondary" type="submit">Clear</button>
+                            <form class="form col my-auto mx-auto" th:action="@{/manageFriends/closeRequest(id=${acceptedRequest.requestId})}" th:method="post">
+                                <button class="btn btn-secondary float-end" type="submit">Clear</button>
                             </form>
                         </div>
                     </div>
@@ -119,8 +119,8 @@
                             <p class="mt-0" style="font-size: 14px; color: #777777;" th:text="${#temporals.format(pendingRequest.timestamp, 'EEEE d MMM')}">3 days ago</p>
                         </div>
 
-                        <form class="form col-1 my-auto mx-auto" th:action="@{/manageFriends/closeRequest(id=${pendingRequest.requestId})}" th:method="post">
-                            <button class="btn btn-secondary" type="submit">Withdraw</button>
+                        <form class="form col my-auto mx-auto" th:action="@{/manageFriends/closeRequest(id=${pendingRequest.requestId})}" th:method="post">
+                            <button class="btn btn-secondary float-end" type="submit">Withdraw</button>
                         </form>
                     </div>
                 </div>
@@ -151,8 +151,8 @@
                                 <p class="mt-0" style="font-size: 14px; color: #777777;" th:text="${#temporals.format(rejectedRequest.timestamp, 'EEEE d MMM')}">3 days ago</p>
                             </div>
 
-                            <form class="form col-1 my-auto mx-auto" th:action="@{/manageFriends/closeRequest(id=${rejectedRequest.requestId})}" th:method="post">
-                                <button class="btn btn-secondary" type="submit">Clear</button>
+                            <form class="form col my-auto mx-auto" th:action="@{/manageFriends/closeRequest(id=${rejectedRequest.requestId})}" th:method="post">
+                                <button class="btn btn-secondary float-end" type="submit">Clear</button>
                             </form>
                         </div>
                     </div>
