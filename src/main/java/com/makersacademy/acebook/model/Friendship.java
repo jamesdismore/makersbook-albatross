@@ -19,14 +19,14 @@ public class Friendship {
       
     private long userId;
     @Column(name="friend_id")
-    private long FriendId;
+    private long friendId;
     private Timestamp friendshipTimestamp;
 
     public Friendship(){}
 
     public Friendship(long userId, long friendId){
         this.userId = userId;
-        this.FriendId = friendId;
+        this.friendId = friendId;
         this.friendshipTimestamp = Timestamp.from(Instant.now());
     }
 }
