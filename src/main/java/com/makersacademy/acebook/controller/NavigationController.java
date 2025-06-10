@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -52,7 +53,6 @@ public class NavigationController {
         return userRepository.findUserByUsername(username);
     }
 
-
     // Routes ------
 
     @GetMapping("/profile")
@@ -70,29 +70,31 @@ public class NavigationController {
    }
 
     @PostMapping("/settings")
-    public String settings(@Valid User user, BindingResult bindingResult, @RequestParam("file") MultipartFile file) {
+    public String settings(@Valid User user, BindingResult bindingResult, @RequestParam("file") MultipartFile imageFile) {
         if (bindingResult.hasErrors()) {
             return "settings";
         } else {
-            if (!file.isEmpty()) {
-                replaceAvatarWith(file, user);
+            if (!imageFile.isEmpty()) {
+                replaceAvatar(imageFile, user);
             }
             userRepository.save(user);
             return "redirect:/posts";
         }
     }
 
-    void replaceAvatarWith(MultipartFile imageFile, User user) {
+    void replaceAvatar(MultipartFile imageFile, User user) {
 
         try {
-            String uploadDir = "src/main/resources/static/images/userAvatars/";
+
+            URL url = Paths.get("target", "classes/static/images/userAvatars").toUri().toURL();
+
             String filename = String.valueOf(user.getId()) ; // save as {userId}.jpg
-            Path path = Paths.get(uploadDir + filename + ".jpg" );
+            Path path = Paths.get(url.getPath() + "/" + filename + ".jpg" );
             Files.write(path, imageFile.getBytes());
 
             // Set filename in the user object & update database
-            user.setAvatar(filename); // Store "9.jpg" in DB
-            userRepository.save(user);  // Save user with updated avatar path
+            user.setAvatar(filename);
+            userRepository.save(user);
         } catch (IOException e) {
             e.printStackTrace();
         }

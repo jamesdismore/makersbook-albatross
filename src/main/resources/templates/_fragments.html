@@ -13,6 +13,15 @@
         <p  class="col text-center" style="font-size:13px; color: gray">Nothing here at the moment</p>
     </div>
 
+    <img th:fragment="avatarImg" src="../userAvatars/9.jpg"
+         th:src="@{'../userAvatars/' + ${avatarFile} + '.jpg'}" class="rounded-circle" alt="You Found Me">
+
+
+
+
+
 <script th:src="@{/js/bootstrap.bundle.min.js}" src="/static/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+
