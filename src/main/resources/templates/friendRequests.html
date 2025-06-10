@@ -66,7 +66,7 @@
                         ✅️ Accepted requests
                     </button>
                 </h2>
-                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                <div id="collapseOne" class="accordion-collapse collapse show">
                     <div class="accordion-body">
                         <div th:if="${acceptedRequests.size() == 0}">
                             <div th:replace="_fragments :: accordion-placeholder"></div>
@@ -100,7 +100,7 @@
                     👋 Requests you've sent
                 </button>
             </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+            <div id="collapseTwo" class="accordion-collapse collapse show">
                 <div class="accordion-body">
 
                     <div th:each="pendingRequest : ${pendingRequests}" class="row m-3 p-3 rounded" style="background-color: #C8CBB7">
@@ -130,7 +130,7 @@
                         ⛔️ Rejected requests
                     </button>
                 </h2>
-                <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                <div id="collapseThree" class="accordion-collapse collapse show">
                     <div class="accordion-body">
                         <div th:each="rejectedRequest : ${rejectedRequests}" class="row m-3 p-3 rounded" style="background-color: #D2A1A1">
 
