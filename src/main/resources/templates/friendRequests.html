@@ -85,7 +85,7 @@
                             </div>
 
                             <form class="form col-1 my-auto mx-auto" th:action="@{/manageFriends/closeRequest(id=${acceptedRequest.requestId})}" th:method="post">
-                                <button class="btn btn-secondary" type="submit">Withdraw</button>
+                                <button class="btn btn-secondary" type="submit">Clear</button>
                             </form>
                         </div>
                     </div>
@@ -102,6 +102,9 @@
             </h2>
             <div id="collapseTwo" class="accordion-collapse collapse show">
                 <div class="accordion-body">
+                    <div th:if="${pendingRequests.size() == 0}">
+                        <div th:replace="_fragments :: accordion-placeholder"></div>
+                    </div>
 
                     <div th:each="pendingRequest : ${pendingRequests}" class="row m-3 p-3 rounded" style="background-color: #C8CBB7">
 
@@ -132,6 +135,9 @@
                 </h2>
                 <div id="collapseThree" class="accordion-collapse collapse show">
                     <div class="accordion-body">
+                        <div th:if="${rejectedRequests.size() == 0}">
+                            <div th:replace="_fragments :: accordion-placeholder"></div>
+                        </div>
                         <div th:each="rejectedRequest : ${rejectedRequests}" class="row m-3 p-3 rounded" style="background-color: #D2A1A1">
 
                             <div class="col-1 me-5" th:with="avatarFile=${rejectedRequest.recipientId} + '.jpg'">
@@ -146,7 +152,7 @@
                             </div>
 
                             <form class="form col-1 my-auto mx-auto" th:action="@{/manageFriends/closeRequest(id=${rejectedRequest.requestId})}" th:method="post">
-                                <button class="btn btn-secondary" type="submit">Withdraw</button>
+                                <button class="btn btn-secondary" type="submit">Clear</button>
                             </form>
                         </div>
                     </div>
