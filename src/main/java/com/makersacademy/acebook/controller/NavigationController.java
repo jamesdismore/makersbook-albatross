@@ -19,6 +19,7 @@ package com.makersacademy.acebook.controller;
 
 import com.makersacademy.acebook.model.User;
 import com.makersacademy.acebook.repository.UserRepository;
+import com.makersacademy.acebook.util.AvatarAssistant;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -75,29 +76,12 @@ public class NavigationController {
             return "settings";
         } else {
             if (!imageFile.isEmpty()) {
-                replaceAvatar(imageFile, user);
+                AvatarAssistant.overwriteAvatar(imageFile, user);
             }
             userRepository.save(user);
             return "redirect:/posts";
         }
     }
 
-    void replaceAvatar(MultipartFile imageFile, User user) {
-
-        try {
-
-            URL url = Paths.get("target", "classes/static/images/userAvatars").toUri().toURL();
-
-            String filename = String.valueOf(user.getId()) ; // save as {userId}.jpg
-            Path path = Paths.get(url.getPath() + "/" + filename + ".jpg" );
-            Files.write(path, imageFile.getBytes());
-
-            // Set filename in the user object & update database
-            user.setAvatar(filename);
-            userRepository.save(user);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 }
