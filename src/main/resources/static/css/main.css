@@ -10,30 +10,81 @@
 }
 
 .user-avatar {
-  width: 32px;
-  height: 32px;
-  margin-left: 12px;
+    width: 32px;
+    height: 32px;
+    margin-left: 12px;
 }
 
 .avatar-img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #1877f2;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #1877f2;
 }
 
 /* initials style as fallback when no avatar img is found */
 .user-initials {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: #1877f2;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 14px;
-  margin-left: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #1877f2;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    margin-left: 12px;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.bg {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-image: url('https://wallpapercave.com/wp/wp7172499.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    height: 95%;
+    width: 95%;
+    overflow-y: scroll;
+    color: black;
+    scrollbar-width: none;
+}
+
+.user-info {
+    width: 40%;
+    display:flex;
+    gap: 10px;
+}
+
+.posts {
+    width: 40%;
+    justify: center;
+    left: 50%;
+    margin: auto;
+}
+
+.post-content {
+    width: 100%
+    border: 2px;
+    height: auto;
 }
