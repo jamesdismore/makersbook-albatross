@@ -85,6 +85,36 @@
         Unknown User
       </div>
 
+  <div th:text="${post.content}" class="post-content"></div>
+  <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+          th:data-bs-target="'#collapseExample' + ${iterStat.index}"
+          aria-expanded="false"
+          th:aria-controls="'collapseExample' + ${iterStat.index}">
+    Comment
+  </button>
+  <div class="collapse" th:id="'collapseExample' + ${iterStat.index}">
+    <div class="card card-body">
+      <form action="#" th:action="@{/posts/comment}" th:object="${comment}" method="post">
+        <p>Content: <input type="text" th:field="*{content}" /></p>
+        <input type="hidden" th:name="userId" th:value=${userId} />
+        <input type="hidden" th:name="postId" th:value=${post.id} />
+        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+      </form>
+    </div>
+  </div>
+  <div th:each="comment : ${comments}" th:if="${comment.postId == post.id}" class="mb-3">
+    <div class="user-info">
+    <!--  each commenter's avatar + name -->
+    <div class="user-avatar" th:with="avatarFile=${comment.userId} + '.jpg'">
+      <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
+    </div>
+    <!-- Fallback if no avatar -->
+    <div class="user-initials" th:if="${user.avatar == null}">
+      <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
+    </div>
+    <!--  display user FullName (unknown user if null)-->
+    <div th:if="${commentAuthors[comment.id] != null && commentAuthors[comment.id].firstName != null && commentAuthors[comment.id].lastName != null}"
+         th:text="${commentAuthors[comment.id].firstName + ' ' + commentAuthors[comment.id].lastName}"></div>
       <div th:text="${post.content}" class="post-content"></div>
       <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
               th:data-bs-target="'#collapseExample' + ${iterStat.index}"
@@ -116,6 +146,10 @@
         <div th:if="${postAuthors[post.id] != null && postAuthors[post.id].firstName != null && postAuthors[post.id].lastName != null}"
              th:text="${postAuthors[post.id].firstName + ' ' + postAuthors[post.id].lastName}"></div>
 
+    <div th:if="${commentAuthors[comment.id] == null || commentAuthors[comment.id].firstName == null || commentAuthors[comment.id].lastName == null}">
+      Unknown User
+    </div>
+    <div th:text="${comment.content}"></div>
         <div th:if="${postAuthors[post.id] == null || postAuthors[post.id].firstName == null || postAuthors[post.id].lastName == null}">
           Unknown User
         </div>

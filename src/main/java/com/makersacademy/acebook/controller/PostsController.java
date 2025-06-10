@@ -16,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.sql.SQLOutput;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -48,7 +47,7 @@ public class PostsController {
             return "redirect:/users/newUser"; // Redirect if not registered
         }
 
-        Iterable<Post> posts = postRepository.findAll();
+        Iterable<Post> posts = postRepository.findAllByOrderByIdDesc();
         Iterable<Comment> comments = commentRepository.findAll();
 
         Post newPost = new Post();
@@ -81,26 +80,6 @@ public class PostsController {
 
         return "index";
     }
-
-//    @GetMapping("/posts/comment")
-//    public String indexComment(@ModelAttribute("user") Optional<User> user,  Model model) {
-//
-//        Iterable<Post> posts = postRepository.findAll();
-//        Post newPost = new Post();
-//        model.addAttribute("posts", posts);
-//        model.addAttribute("post", newPost);
-//
-//        Iterable<Comment> comments = commentRepository.findAll();
-//        Comment newComment = new Comment();
-//        model.addAttribute("comments", comments);
-//        model.addAttribute("comment", newComment);
-//
-//        model.addAttribute("userId", user.get().getId());
-//        model.addAttribute("email", user.get().getUsername());
-//
-//
-//        return "index";
-//    }
 
     @PostMapping("/posts")
     public RedirectView createPost(@ModelAttribute Post post) {
