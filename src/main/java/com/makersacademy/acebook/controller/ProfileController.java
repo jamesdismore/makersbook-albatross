@@ -48,7 +48,48 @@ public class ProfileController {
         }
 
         Optional<User> profileUser = userRepository.findById(userId);
+        Iterable<Post> userPosts = postRepository.findByUserIdOrderByIdDesc(userId);
+        Iterable<Comment> comments = commentRepository.findAll();
+
+        // Create a map to store post authors
+        Map<Long, User> postAuthors = new HashMap<>();
+        for (Post post : userPosts) {
+            Optional<User> postUser = userRepository.findById(post.getUser_id());
+            postUser.ifPresent(user1 -> postAuthors.put(post.getId(), user1));
+        }
+
+        // Create a map to store comment authors
+        Map<Long, User> commentAuthors = new HashMap<>();
+        for (Comment comment : comments) {
+            Optional<User> commentUser = userRepository.findById(comment.getUserId());
+            commentUser.ifPresent(user1 -> commentAuthors.put(comment.getId(), user1));
+        }
+
+        // Map to store like status for each post
+        Map<Long, Boolean> likedPosts = new HashMap<>();
+        Map<Long, Integer> likeCountsPosts = new HashMap<>();
+        for (Post post : userPosts) {
+            likedPosts.put(post.getId(), postLikeRepository.findByUserIdAndPostId(userId, post.getId()).isPresent());
+            likeCountsPosts.put(post.getId(), postLikeRepository.countByPostId(post.getId())); // Fetch like count
+        }
+
+        // Map to store like status for each comment
+        Map<Long, Boolean> likedComments = new HashMap<>();
+        Map<Long, Integer> likeCountsComments = new HashMap<>();
+        for (Comment comment : comments) {
+            likedComments.put(comment.getId(), commentLikeRepository.findByUserIdAndCommentId(userId, comment.getId()).isPresent());
+            likeCountsComments.put(comment.getId(), commentLikeRepository.countByCommentId(comment.getId())); // Fetch like count
+        }
+
         model.addAttribute("profileUser", profileUser.get());
+        model.addAttribute("posts", userPosts);
+        model.addAttribute("comments", comments);
+        model.addAttribute("postAuthors", postAuthors);
+        model.addAttribute("commentAuthors", commentAuthors);
+        model.addAttribute("likedPosts", likedPosts);
+        model.addAttribute("likeCountsPosts", likeCountsPosts);
+        model.addAttribute("likedComments", likedComments);
+        model.addAttribute("likeCountsComments", likeCountsComments);
 
         return "profile";
     }

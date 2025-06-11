@@ -55,6 +55,51 @@
 <h1>Profile</h1>
 <h2>See <span th:text="${profileUser.firstName}"></span>'s posts</h2>
 
+<div th:each="post, iterStat : ${posts}" class="mb-3">
+    <!--  poster's avatar + name -->
+    <div class="user-avatar" th:with="avatarFile=${post.user_id} + '.jpg'">
+        <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
+    </div>
+    <!-- Fallback if no avatar -->
+    <div class="user-initials" th:if="${postAuthors[post.id].avatar == null}">
+        <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
+    </div>
+    <!--  display user FullName (unknown user if null)-->
+    <div th:if="${postAuthors[post.id] != null && postAuthors[post.id].firstName != null && postAuthors[post.id].lastName != null}"
+         th:text="${postAuthors[post.id].firstName + ' ' + postAuthors[post.id].lastName}"></div>
+
+    <div th:if="${postAuthors[post.id] == null || postAuthors[post.id].firstName == null || postAuthors[post.id].lastName == null}">
+        Unknown User
+    </div>
+    <div th:text="${post.content}"></div>
+
+    <!--  Comment Button Functionality -->
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+            th:data-bs-target="'#collapseExample' + ${iterStat.index}"
+            aria-expanded="false"
+            th:aria-controls="'collapseExample' + ${iterStat.index}">
+        Comment
+    </button>
+    <div th:each="comment : ${comments}" th:if="${comment.postId == post.id}" class="mb-3">
+        <!--  each commenter's avatar + name -->
+        <div class="user-avatar" th:with="avatarFile=${comment.userId} + '.jpg'">
+            <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
+        </div>
+        <!-- Fallback if no avatar -->
+        <div class="user-initials" th:if="${commentAuthors[comment.id].avatar == null}">
+            <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
+        </div>
+        <!--  display user FullName (unknown user if null)-->
+        <div th:if="${commentAuthors[comment.id] != null && commentAuthors[comment.id].firstName != null && commentAuthors[comment.id].lastName != null}"
+             th:text="${commentAuthors[comment.id].firstName + ' ' + commentAuthors[comment.id].lastName}"></div>
+
+        <div th:if="${commentAuthors[comment.id] == null || commentAuthors[comment.id].firstName == null || commentAuthors[comment.id].lastName == null}">
+            Unknown User
+        </div>
+        <div th:text="${comment.content}"></div>
+
+</div>
+
 
 <script th:src="@{/js/bootstrap.bundle.min.js}" src="/static/js/bootstrap.bundle.min.js"></script>
 </body>
