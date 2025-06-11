@@ -12,60 +12,25 @@
 
 <body>
 
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Acebook</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+<nav th:replace="_fragments :: nav-bar"></nav>
 
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/posts">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="profile">My Profile</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link settings" aria-disabled="true">Account Settings</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/logout">Logout</a> <!-- This will need to direct to logout -->
-        </li>
-      </ul>
-      <div sec:authorize="isAuthenticated()">
-        <!-- th:with="avatarFile=${user.id} + '.jpg'" -->
-        <!-- th:src="@{'../images/userAvatars/' + ${avatarFile}}" -->
-        <div class="user-avatar" th:if="${user.avatar != null}" th:with="avatarFile=${user.id} + '.jpg'">
-          <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="User Avatar" class="avatar-img">
-        </div>
-        <!-- Fallback if no avatar -->
-        <div class="user-initials" th:if="${user.avatar == null}">
-          <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
-        </div>
-      </div>
+
+
+  <div class="container mt-4">
+
+
+
+    <div th:if="${updatesSavedMessage}" class="row mt-3 alert alert-success" id="flash-display">
+      <div  class="col-11" th:text="${updatesSavedMessage}">Details Updated!</div>
+      <button type="button" id="close-flash-box" class="btn-close btn-close col-1"></button>
     </div>
-  </div>
-</nav>
 
+  <form th:object="${user}" id="add-user-form" method="post" enctype="multipart/form-data">
 
-  <div class="container">
-
-  <form th:object="${user}" id="add-user-form" method="post">
-
-    <div class="row mt-5 justify-content-center" th:with="avatarFile=${user.id} + '.jpg'">
-      <img src="../static/images/userAvatars/9.jpg"
-           th:src="@{'../images/userAvatars/' + ${avatarFile}}" class="rounded-circle" alt="Early Alan"
-      style="max-width: 350px;">
-    </div>
-    <div class="row mt-3">
-        <button type="button" class="col-1 me-2 btn btn-outline-secondary py-0 offset-5"
-                style="--bs-btn-padding-y: .10rem; --bs-btn-padding-x: .15rem; --bs-btn-font-size: .65rem;">Update</button>
-        <button type="button" class="col-1 me-2 btn btn-outline-warning"
-                style="--bs-btn-padding-y: .10rem; --bs-btn-padding-x: .25rem; --bs-btn-font-size: .65rem;"
-        >Remove</button>
+    <div class="text-center" th:with="avatarFile=${user.avatar == null}  ? 'placeholder' : ${user.avatar}">
+      <img id="imagePreview" src="../static/images/userAvatars/9.jpg"
+           th:src="@{'../images/userAvatars/' + ${avatarFile} + '.jpg'}" class="rounded-circle mx-auto"
+           style="width: 240px; height: 240px; object-fit: cover;" alt="Default Avatar">
     </div>
 
 
@@ -96,7 +61,13 @@
                th:classappend="${#fields.hasErrors('dob')} ? 'is-invalid' : ''">
         <p class="invalid-feedback" th:errors="*{dob}">Invalid data</p>
       </div>
+      <div class="col">
+        <label for="profilePicture" class="form-label">Update Picture</label>
+        <input type="file" accept="image/*" id="profilePicture" name="file"
+               class="form-control mx-auto">
+      </div>
     </div>
+
 
     <div class="row">
       <br>
@@ -112,13 +83,20 @@
         <div class="text-end">
           <button class="btn btn-danger float-right" type="submit" disabled>Delete Forever</button>
         </div>
-
       </div>
 
 
     </div>
+
   </form>
 </div>
+  <script>
+    const closeBtn = document.getElementById("close-flash-box");
+    const flashDiv = document.getElementById("flash-display");
+    closeBtn.addEventListener('click', () => {
+      flashDiv.remove();
+    });
+  </script>
   <script th:src="@{/js/bootstrap.bundle.min.js}" src="/static/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
