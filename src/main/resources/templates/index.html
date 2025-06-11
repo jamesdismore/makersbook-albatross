@@ -25,7 +25,7 @@
           <a class="nav-link home" aria-disabled="true">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="profile">My Profile</a>
+          <a class="nav-link" th:href="${user != null ? '/profile/' + user.id : '/users/newUser'}">My Profile</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/settings">Account Settings</a>
@@ -68,7 +68,7 @@
     <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
   </div>
   <!-- Fallback if no avatar -->
-  <div class="user-initials" th:if="${user.avatar == null}">
+  <div class="user-initials" th:if="${postAuthors[post.id].avatar == null}">
     <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
   </div>
 
@@ -113,7 +113,7 @@
       <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
     </div>
     <!-- Fallback if no avatar -->
-    <div class="user-initials" th:if="${user.avatar == null}">
+    <div class="user-initials" th:if="${commentAuthors[comment.id].avatar == null}">
       <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
     </div>
     <!--  display user FullName (unknown user if null)-->
