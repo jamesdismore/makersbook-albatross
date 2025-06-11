@@ -1,6 +1,8 @@
 package com.makersacademy.acebook.model;
 
 
+import com.makersacademy.acebook.model.forms.FriendRequestResponseForm;
+import com.makersacademy.acebook.model.forms.IncomingFriendRequestForm;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -28,5 +30,23 @@ public class Friendship {
         this.userId = userId;
         this.friendId = friendId;
         this.friendshipTimestamp = Timestamp.from(Instant.now());
+    }
+
+    public static Friendship[] fromForm(IncomingFriendRequestForm form){
+        Friendship aToB = new Friendship();
+        aToB.setUserId(form.getRecipientId());
+        aToB.setFriendId(form.getSenderId());
+        aToB.setFriendshipTimestamp(Timestamp.from(Instant.now()));
+
+        Friendship bToA = new Friendship();
+        bToA.setUserId(form.getRecipientId());
+        bToA.setFriendId(form.getSenderId());
+        bToA.setFriendshipTimestamp(Timestamp.from(Instant.now()));
+
+        Friendship[] friendships = new Friendship[2];
+        friendships[0] = aToB;
+        friendships[1] = bToA;
+
+        return friendships;
     }
 }

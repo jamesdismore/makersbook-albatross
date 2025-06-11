@@ -1,25 +1,24 @@
 package com.makersacademy.acebook.controller;
 
 
-import com.makersacademy.acebook.model.forms.FriendRequestForm;
-import com.makersacademy.acebook.model.forms.FriendRequestResponseForm;
+import com.makersacademy.acebook.model.Friendship;
+import com.makersacademy.acebook.model.forms.*;
+import com.makersacademy.acebook.repository.FriendshipRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.ui.Model;
 import com.makersacademy.acebook.model.FriendRequest;
-import com.makersacademy.acebook.model.forms.PendingFriendRequestForm;
 import com.makersacademy.acebook.model.User;
 import com.makersacademy.acebook.repository.FriendRequestRepository;
 import com.makersacademy.acebook.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +30,9 @@ public class ManageFriendsController {
 
     @Autowired
     FriendRequestRepository friendRequestRepository;
+
+    @Autowired
+    FriendshipRepository friendshipRepository;
 
     @ModelAttribute("user")
     Optional<User> findUser(Authentication authentication) {
@@ -53,6 +55,10 @@ public class ManageFriendsController {
                     user);
             model.addAttribute("friendRequestForm", friendRequestForm);
         }
+
+        // Gather incoming requests
+        IncomingFriendRequestsWrapper incomingRequestsWrapper = incomingRequestsFor(user);
+        model.addAttribute("incomingRequests", incomingRequestsWrapper);
 
         // Gather pending requests
         List<PendingFriendRequestForm> pendingRequestForms = pendingRequestsFor(user);
@@ -86,7 +92,46 @@ public class ManageFriendsController {
     }
 
 
+    // Handling incoming requests
+
+    @RequestMapping(value = "/manageFriends/respondToRequest", method = RequestMethod.POST, params = "accept")
+    public String acceptRequest(
+            @RequestParam(value = "index", required = false) Integer index,
+            @ModelAttribute("incomingRequests") IncomingFriendRequestsWrapper formsWrapper) {
+
+        // Save the friendship 'both ways'
+        IncomingFriendRequestForm form = formsWrapper.formAtIndex(index);
+        friendshipRepository.saveAll(Arrays.asList(Friendship.fromForm(form)));
+
+        // Mark the <FriendRequest> as ACCEPTED and update the response message
+        FriendRequest friendRequest = friendRequestRepository.findById(form.getRequestId()).orElseThrow();
+        friendRequest.setResponseMessage(form.getResponse());
+        friendRequest.setResponseTimestamp(Timestamp.from(Instant.now()));
+        friendRequest.setStatus("ACCEPTED");
+        friendRequestRepository.save(friendRequest);
+
+        return "redirect:/manageFriends";
+    }
+
+    @RequestMapping(value = "/manageFriends/respondToRequest", method = RequestMethod.POST, params = "decline")
+    public String declineRequest(
+            @RequestParam(value = "index", required = false) Integer index,
+            @ModelAttribute("incomingRequests") IncomingFriendRequestsWrapper formsWrapper) {
+
+        IncomingFriendRequestForm form = formsWrapper.formAtIndex(index);
+        FriendRequest friendRequest = friendRequestRepository.findById(form.getRequestId()).orElseThrow();
+        friendRequest.setResponseMessage(form.getResponse());
+        friendRequest.setResponseTimestamp(Timestamp.from(Instant.now()));
+        friendRequest.setStatus("REJECTED");
+        friendRequestRepository.save(friendRequest);
+
+        return "redirect:/manageFriends";
+    }
+
+
     // Post request convenience handlers
+
+
 
     // Gathering information to pass in to the template
 
@@ -191,4 +236,46 @@ public class ManageFriendsController {
         return forms;
     }
 
+    // Gather incoming requests
+
+    private IncomingFriendRequestsWrapper incomingRequestsFor(User user) {
+        ArrayList<FriendRequest> incomingRequests = friendRequestRepository.findFriendRequestBytoUserIdAndStatus(user.getId(), "PENDING");
+        return buildIncomingRequestForms(incomingRequests, user);
+    }
+
+    private IncomingFriendRequestsWrapper buildIncomingRequestForms(ArrayList<FriendRequest> incomingRequests, User user) {
+        IncomingFriendRequestsWrapper wrapper = new IncomingFriendRequestsWrapper();
+        for (FriendRequest friendRequest : incomingRequests) {
+
+            User sender = userRepository.findById(friendRequest.getFromUserId()).orElseThrow();
+
+            IncomingFriendRequestForm form = new IncomingFriendRequestForm();
+            form.setSenderId(sender.getId());
+            form.setRecipientId(user.getId());
+            form.setRequestId(friendRequest.getId());
+            form.setMessage(String.format("<b><em>%s</em></b>", friendRequest.getRequestMessage()));
+            form.setRequestTimestamp(friendRequest.getRequestTimestamp().toLocalDateTime());
+            form.setSenderName(sender.getFirstName() + " " + sender.getLastName());
+
+            wrapper.addIncomingFriendRequest(form);
+        }
+        return wrapper;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

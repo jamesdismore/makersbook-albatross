@@ -10,47 +10,11 @@
     <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}" />
 </head>
 
-</head>
+
 
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Acebook</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="profile">My Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/settings">Account Settings</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Logout</a> <!-- This will need to direct to logout -->
-                </li>
-            </ul>
-            <div sec:authorize="isAuthenticated()">
-                <!-- th:with="avatarFile=${user.id} + '.jpg'" -->
-                <!-- th:src="@{'../images/userAvatars/' + ${avatarFile}}" -->
-                <div class="user-avatar" th:if="${user.avatar != null}" th:with="avatarFile=${user.id} + '.jpg'">
-                    <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="User Avatar" class="avatar-img">
-                </div>
-                <!-- Fallback if no avatar -->
-                <div class="user-initials" th:if="${user.avatar == null}">
-                    <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</nav>
+<nav th:replace="_fragments :: nav-bar(currentPage='My Profile')"></nav>
 
 <h1>Profile</h1>
 

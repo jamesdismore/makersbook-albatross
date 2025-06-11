@@ -4,12 +4,14 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Title</title>
     <link href="/static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}" />
 </head>
 <body>
 
-
+<nav th:replace="_fragments :: nav-bar"></nav>
 
 
     <div class="container-fluid">
@@ -40,7 +42,7 @@
         <!-- Send message -->
         <div class="row m-3 p-2 rounded" style="background-color: #DDDDDD" th:unless="${friendRequestForm}">
             <div class="col-1 me-5 btn-group-vertical">
-                <img src="../static/images/userAvatars/10.jpg"
+                <img src="../static/images/userAvatars/placeholder.jpg"
                      th:src="@{'../images/userAvatars/placeholder.jpg'}" class="rounded-circle " alt="Retriever"
                      style="max-width: 116px;">
             </div>
@@ -84,8 +86,8 @@
                                 <p class="mt-0" style="font-size: 14px; color: #777777;" th:text="${#temporals.format(acceptedRequest.timestamp, 'EEEE d MMM')}">3 days ago</p>
                             </div>
 
-                            <form class="form col-1 my-auto mx-auto" th:action="@{/manageFriends/closeRequest(id=${acceptedRequest.requestId})}" th:method="post">
-                                <button class="btn btn-secondary" type="submit">Withdraw</button>
+                            <form class="form col my-auto mx-auto" th:action="@{/manageFriends/closeRequest(id=${acceptedRequest.requestId})}" th:method="post">
+                                <button class="btn btn-secondary float-end" type="submit">Clear</button>
                             </form>
                         </div>
                     </div>
@@ -102,6 +104,9 @@
             </h2>
             <div id="collapseTwo" class="accordion-collapse collapse show">
                 <div class="accordion-body">
+                    <div th:if="${pendingRequests.size() == 0}">
+                        <div th:replace="_fragments :: accordion-placeholder"></div>
+                    </div>
 
                     <div th:each="pendingRequest : ${pendingRequests}" class="row m-3 p-3 rounded" style="background-color: #C8CBB7">
 
@@ -116,8 +121,8 @@
                             <p class="mt-0" style="font-size: 14px; color: #777777;" th:text="${#temporals.format(pendingRequest.timestamp, 'EEEE d MMM')}">3 days ago</p>
                         </div>
 
-                        <form class="form col-1 my-auto mx-auto" th:action="@{/manageFriends/closeRequest(id=${pendingRequest.requestId})}" th:method="post">
-                            <button class="btn btn-secondary" type="submit">Withdraw</button>
+                        <form class="form col my-auto mx-auto" th:action="@{/manageFriends/closeRequest(id=${pendingRequest.requestId})}" th:method="post">
+                            <button class="btn btn-secondary float-end" type="submit">Withdraw</button>
                         </form>
                     </div>
                 </div>
@@ -132,6 +137,9 @@
                 </h2>
                 <div id="collapseThree" class="accordion-collapse collapse show">
                     <div class="accordion-body">
+                        <div th:if="${rejectedRequests.size() == 0}">
+                            <div th:replace="_fragments :: accordion-placeholder"></div>
+                        </div>
                         <div th:each="rejectedRequest : ${rejectedRequests}" class="row m-3 p-3 rounded" style="background-color: #D2A1A1">
 
                             <div class="col-1 me-5" th:with="avatarFile=${rejectedRequest.recipientId} + '.jpg'">
@@ -143,15 +151,65 @@
                                 <p class="mt-3 mb-2" style="font-size: 18px;" th:text="${rejectedRequest.message}">You look familiar! Wanna' be mates?</p>
                                 <p class="m-0" style="font-size: 14px;" th:text="|Sent by ${rejectedRequest.getFullName()}|">Sent to Amelia Dog</p>
                                 <p class="mt-0" style="font-size: 14px; color: #777777;" th:text="${#temporals.format(rejectedRequest.timestamp, 'EEEE d MMM')}">3 days ago</p>
+
+
                             </div>
 
-                            <form class="form col-1 my-auto mx-auto" th:action="@{/manageFriends/closeRequest(id=${rejectedRequest.requestId})}" th:method="post">
-                                <button class="btn btn-secondary" type="submit">Withdraw</button>
+                            <form class="form col my-auto mx-auto" th:action="@{/manageFriends/closeRequest(id=${rejectedRequest.requestId})}" th:method="post">
+                                <button class="btn btn-secondary float-end" type="submit">Clear</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <!-- Friend requests you've sent that have been REJECTED -->
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                        📩️ Incoming requests
+                    </button>
+                </h2>
+                <div id="collapseFour" class="accordion-collapse collapse show" th:object="${incomingRequests}">
+                    <div class="accordion-body">
+                        <div th:if="${incomingRequests.getIncomingFriendRequests().size() == 0}">
+                            <div th:replace="_fragments :: accordion-placeholder"></div>
+                        </div>
+
+                        <div th:each="request, itemStat: *{incomingFriendRequests}" class="row m-3 p-3 rounded" style="background-color: #CCCCCC">
+
+                            <div class="col-1 me-5" th:with="avatarFile=${request.senderId} + '.jpg'">
+                                <img src="../static/images/userAvatars/13.jpg"
+                                     th:src="@{'../images/userAvatars/' + ${avatarFile}}" class="rounded-circle" alt="Retriever"
+                                     style="max-width: 116px;">
+                            </div>
+                            <div class="col ms-3">
+                                <p class="mt-1 mb-1" style="font-size: 16px;" th:text="|${request.senderName} sent you a friend request|" >Rita Raven sent you a friend request</p>
+                                <p class="mb-0 ms-3" style="font-size: 15px;" th:utext="${request.message}"><b><em>Foxy! Remember me? It would be great to catch up</em></b></p>
+                                <p class="mt-0 ms-3" style="font-size: 14px; color: #777777;" th:text="${#temporals.format(request.requestTimestamp, 'EEEE d MMM')}">3 days ago</p>
+                                <form class="ms-3" th:action="@{/manageFriends/respondToRequest(index=__${itemStat.index}__)}" method="post">
+                                    <input class="form-control" type="text" placeholder="Your response" th:field="*{incomingFriendRequests[__${itemStat.index}__].response}">
+                                    <div class="float-end mt-2">
+                                        <button class="btn btn-success" type="submit" name="accept">Accept</button>
+                                        <button class="btn btn-danger ms-2" type="submit" name="decline">Decline</button>
+                                        <input type="hidden" th:field="*{incomingFriendRequests[__${itemStat.index}__].senderId}" id="incomingFRSenderId">
+                                        <input type="hidden" th:field="*{incomingFriendRequests[__${itemStat.index}__].recipientId}" id="incomingFRRecipientID">
+                                        <input type="hidden" th:field="*{incomingFriendRequests[__${itemStat.index}__].senderName}" id="incomingFRSenderName">
+                                        <input type="hidden" th:field="*{incomingFriendRequests[__${itemStat.index}__].message}" id="incomingFRMessage">
+                                        <input type="hidden" th:field="*{incomingFriendRequests[__${itemStat.index}__].requestTimestamp}" id="incomingFRTimestamp">
+                                        <input type="hidden" th:field="*{incomingFriendRequests[__${itemStat.index}__].requestId}" id="incomingFRRequestID">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
 
 
 <!--            <div class="accordion-item">-->
