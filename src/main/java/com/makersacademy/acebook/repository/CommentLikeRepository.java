@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface CommentLikeRepository extends CrudRepository<CommentLike, Long> {
     Optional<CommentLike> findByUserIdAndCommentId(Long userId, Long commentId);
     int countByCommentId(Long commentId);
+    void deleteByCommentId(Long commentId);
 }

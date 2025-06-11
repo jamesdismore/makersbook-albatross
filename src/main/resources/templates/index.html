@@ -125,8 +125,12 @@
     </div>
     <div th:text="${comment.content}"></div>
     <p>Likes: <span th:id="'likeCount-comment-' + ${comment.id}" th:text="${likeCountsComments[comment.id]}"></span></p>
-<!--    <button class="d-none">Delete</button>-->
-    <button th:if="${comment.userId == userId}">Delete</button>
+
+    <!--    Delete Comment   -->
+    <form action="#" th:action="@{/posts/comment/{commentId}/delete(commentId=${comment.id})}" method="post">
+      <button type="submit" th:if="${comment.userId == userId}">Delete</button>
+    </form>
+
     <!--  Like Button Functionality -->
     <button th:id="'likeBtn-' + ${comment.id}"
             th:data-comment-id="${comment.id}"

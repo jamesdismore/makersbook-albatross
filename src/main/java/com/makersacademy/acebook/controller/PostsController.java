@@ -3,6 +3,7 @@ package com.makersacademy.acebook.controller;
 import com.makersacademy.acebook.model.*;
 
 import com.makersacademy.acebook.repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -165,5 +166,13 @@ public class PostsController {
         response.put("likes", commentLikeRepository.countByCommentId(commentId));
 
         return response;
+    }
+
+    @PostMapping("/posts/comment/{commentId}/delete")
+    @Transactional
+    public RedirectView delete(@PathVariable long commentId, Model model){
+        commentLikeRepository.deleteByCommentId(commentId);
+        commentRepository.deleteById(commentId);
+        return new RedirectView("/posts");
     }
 }
