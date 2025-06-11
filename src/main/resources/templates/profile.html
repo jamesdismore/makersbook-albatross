@@ -28,7 +28,7 @@
                     <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="${user != null ? '/profile/' + user.id : '/users/newUser'}">>My Profile</a>
+                    <a class="nav-link" th:href="${user != null ? '/profile/' + user.id : '/users/newUser'}">My Profile</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/settings">Account Settings</a>
@@ -53,6 +53,12 @@
 </nav>
 
 <h1>Profile</h1>
+<!-- Profile Image -->
+<div class="text-center" th:with="avatarFile=${profileUser.avatar == null}  ? 'placeholder' : ${profileUser.avatar}">
+    <img id="imagePreview" src="../static/images/userAvatars/placeholder.jpg"
+         th:src="@{'../images/userAvatars/' + ${avatarFile} + '.jpg'}" class="rounded-circle mx-auto"
+         style="width: 240px; height: 240px; object-fit: cover;" alt="Default Avatar">
+</div>
 <h2>See <span th:text="${profileUser.firstName}"></span>'s posts</h2>
 
 <div th:each="post, iterStat : ${posts}" class="mb-3">
