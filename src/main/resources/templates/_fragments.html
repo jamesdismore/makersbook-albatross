@@ -13,6 +13,53 @@
         <p  class="col text-center" style="font-size:13px; color: gray">Nothing here at the moment</p>
     </div>
 
+    <p th:fragment="timeAgo(timestamp)" th:text="${#temporals.format(timestamp, 'EEEE d MMM')}"></p>
+<!--    <p th:replace="_fragments :: timeAgo(~{::rejectedRequest.timestamp})">3 days ago</p>-->
+
+    <nav th:fragment="nav-bar" class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Acebook</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/posts">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile">My Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link settings" aria-disabled="true">Account Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a> <!-- This will need to direct to logout -->
+                    </li>
+                </ul>
+                <div sec:authorize="isAuthenticated()">
+                    <!-- th:with="avatarFile=${user.id} + '.jpg'" -->
+                    <!-- th:src="@{'../images/userAvatars/' + ${avatarFile}}" -->
+                    <div class="user-avatar" th:if="${user.avatar != null}" th:with="avatarFile=${user.id} + '.jpg'">
+                        <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="User Avatar" class="avatar-img">
+                    </div>
+                    <!-- Fallback if no avatar -->
+                    <div class="user-initials" th:if="${user.avatar == null}">
+                        <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+
+
+
 <script th:src="@{/js/bootstrap.bundle.min.js}" src="/static/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+

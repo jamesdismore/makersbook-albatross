@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Account Settings</title>
+    <title>Profile</title>
     <link href="/static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
     <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}" />
 </head>
@@ -28,7 +28,7 @@
                     <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="profile">My Profile</a>
+                    <a class="nav-link" th:href="${user != null ? '/profile/' + user.id : '/users/newUser'}">My Profile</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/settings">Account Settings</a>
@@ -52,7 +52,128 @@
     </div>
 </nav>
 
-<h1>Profile</h1>
+    <div class="cover-banner"></div>
+
+    <div class="profile-container">
+        <!-- Profile Image -->
+        <div class="text-center" th:with="avatarFile=${profileUser.avatar == null}  ? 'placeholder' : ${profileUser.avatar}">
+            <img id="imagePreview" src="../static/images/userAvatars/placeholder.jpg"
+                 th:src="@{'../images/userAvatars/' + ${avatarFile} + '.jpg'}" class="rounded-circle mx-auto"
+                 style="width: 240px; height: 240px; object-fit: cover;" alt="Default Avatar">
+        </div>
+
+        <div class="profile-name">
+            <h1><span th:text="${profileUser.firstName}"></span> <span th:text="${profileUser.lastName}"}></span></h1>
+        </div>
+    </div>
+
+<div th:each="post, iterStat : ${posts}" class="mb-3">
+    <!--  poster's avatar + name -->
+    <div class="user-avatar" th:with="avatarFile=${post.user_id} + '.jpg'">
+        <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
+    </div>
+    <!-- Fallback if no avatar -->
+    <div class="user-initials" th:if="${postAuthors[post.id].avatar == null}">
+        <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
+    </div>
+    <!--  display user FullName (unknown user if null)-->
+    <div th:if="${postAuthors[post.id] != null && postAuthors[post.id].firstName != null && postAuthors[post.id].lastName != null}"
+         th:text="${postAuthors[post.id].firstName + ' ' + postAuthors[post.id].lastName}"></div>
+
+    <div th:if="${postAuthors[post.id] == null || postAuthors[post.id].firstName == null || postAuthors[post.id].lastName == null}">
+        Unknown User
+    </div>
+    <div th:text="${post.content}"></div>
+    <!--  Like Button Functionality -->
+    <button th:id="'likeBtn-' + ${post.id}"
+            th:data-post-id="${post.id}"
+            th:data-liked="${likedPosts[post.id]}"
+            onclick="toggleLike(this)">
+        <span th:text="${likedPosts[post.id] ? 'Unlike' : 'Like'}"></span>
+    </button>
+    <p>Likes: <span th:id="'likeCount-post-' + ${post.id}" th:text="${likeCountsPosts[post.id]}"></span></p>
+
+
+    <!--  Comment Button Functionality -->
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+            th:data-bs-target="'#collapseExample' + ${iterStat.index}"
+            aria-expanded="false"
+            th:aria-controls="'collapseExample' + ${iterStat.index}">
+        Comment
+    </button>
+    <div class="collapse" th:id="'collapseExample' + ${iterStat.index}">
+        <div class="card card-body">
+            <form action="#" th:action="@{'/profile/' + ${profileUser.id} + '/comment'}" th:object="${comment}" method="post">
+                <p>Content: <input type="text" th:field="*{content}" /></p>
+                <input type="hidden" th:name="userId" th:value=${userId} />
+                <input type="hidden" th:name="postId" th:value=${post.id} />
+                <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+            </form>
+        </div>
+    </div>
+    <div th:each="comment : ${comments}" th:if="${comment.postId == post.id}" class="mb-3">
+
+        <!--  each commenter's avatar + name -->
+        <div class="user-avatar" th:with="avatarFile=${comment.userId} + '.jpg'">
+            <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
+        </div>
+        <!-- Fallback if no avatar -->
+        <div class="user-initials" th:if="${commentAuthors[comment.id].avatar == null}">
+            <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
+        </div>
+        <!--  display user FullName (unknown user if null)-->
+        <div th:if="${commentAuthors[comment.id] != null && commentAuthors[comment.id].firstName != null && commentAuthors[comment.id].lastName != null}"
+             th:text="${commentAuthors[comment.id].firstName + ' ' + commentAuthors[comment.id].lastName}"></div>
+
+        <div th:if="${commentAuthors[comment.id] == null || commentAuthors[comment.id].firstName == null || commentAuthors[comment.id].lastName == null}">
+            Unknown User
+        </div>
+        <div th:text="${comment.content}"></div>
+
+        <!--  Like Button Functionality -->
+        <button th:id="'likeBtn-' + ${comment.id}"
+                th:data-comment-id="${comment.id}"
+                th:data-liked="${likedComments[comment.id]}"
+                onclick="toggleLike(this)">
+            <span th:text="${likedComments[comment.id] ? 'Unlike' : 'Like'}"></span>
+        </button>
+        <p>Likes: <span th:id="'likeCount-comment-' + ${comment.id}" th:text="${likeCountsComments[comment.id]}"></span></p>
+    </div>
+</div>
+
+    <script>
+        function toggleLike(button) {
+          let postId = button.getAttribute("data-post-id");
+          let commentId = button.getAttribute("data-comment-id");
+
+          // Determine the correct URL based on whether it's a post or comment
+          let url = commentId ? `/posts/comment/${commentId}/like` : `/posts/post/${postId}/like`;
+
+          fetch(url, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" }
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.error) {
+                  alert(data.error);
+                  return;
+              }
+
+              // Update button text and data-liked attribute
+              button.innerHTML = data.liked ? "Unlike" : "Like";
+              button.setAttribute("data-liked", data.liked);
+
+              // Update like count dynamically
+              if (commentId) {
+                  document.getElementById(`likeCount-comment-${commentId}`).innerText = data.likes;
+              } else {
+                  document.getElementById(`likeCount-post-${postId}`).innerText = data.likes;
+              }
+          })
+          .catch(error => console.error("Error:", error));
+      }
+    </script>
 
 <script th:src="@{/js/bootstrap.bundle.min.js}" src="/static/js/bootstrap.bundle.min.js"></script>
 </body>

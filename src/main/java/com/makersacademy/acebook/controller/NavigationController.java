@@ -19,16 +19,25 @@ package com.makersacademy.acebook.controller;
 
 import com.makersacademy.acebook.model.User;
 import com.makersacademy.acebook.repository.UserRepository;
+import com.makersacademy.acebook.util.AvatarAssistant;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
+import java.io.IOException;
+import java.net.URL;
+import java.net.http.HttpClient;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 
@@ -45,12 +54,14 @@ public class NavigationController {
         return userRepository.findUserByUsername(username);
     }
 
-
     // Routes ------
 
     @GetMapping("/profile")
-    public String profile(@ModelAttribute("user") Optional<User> user) {
-        return user.isEmpty() ? "redirect:/users/newUser" : "profile";
+    public String profile(@ModelAttribute("user") Optional<User> user, Model model) {
+        if (user.isEmpty()) {
+            return "redirect:/users/newUser";
+        }
+            return "redirect:/profile/" + user.get().getId();
     }
 
     @GetMapping("/settings")
@@ -59,12 +70,18 @@ public class NavigationController {
    }
 
     @PostMapping("/settings")
-    public String settings(@Valid User user, BindingResult bindingResult) {
+    public String settings(@Valid User user, BindingResult bindingResult, @RequestParam("file") MultipartFile imageFile, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "settings";
         } else {
+            if (!imageFile.isEmpty()) {
+                AvatarAssistant.overwriteAvatar(imageFile, user);
+            }
             userRepository.save(user);
-            return "redirect:/posts";
+            redirectAttributes.addFlashAttribute("updatesSavedMessage", "Your details have been updated");
+            return "redirect:/settings";
         }
     }
+
+
 }

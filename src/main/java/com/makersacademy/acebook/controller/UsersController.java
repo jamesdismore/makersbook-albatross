@@ -2,6 +2,7 @@ package com.makersacademy.acebook.controller;
 
 import com.makersacademy.acebook.model.User;
 import com.makersacademy.acebook.repository.UserRepository;
+import com.makersacademy.acebook.util.AvatarAssistant;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -69,18 +70,8 @@ public class UsersController {
         userRepository.save(user);
 
         if (!file.isEmpty()) {
-            try {
-                String uploadDir = "src/main/resources/static/images/userAvatars/";
-                String filename = String.valueOf(user.getId()); // save as {userId}.jpg
-                Path path = Paths.get(uploadDir + filename);
-                Files.write(path, file.getBytes());
-
-                // Set filename in the user object & update database
-                user.setAvatar(filename); // Store "9.jpg" in DB
-                userRepository.save(user);  // Save user with updated avatar path
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            AvatarAssistant.overwriteAvatar(file, user);
+            userRepository.save(user);  // Save user with updated avatar path
         }
         return "redirect:/posts"; // redirects to posts
     }

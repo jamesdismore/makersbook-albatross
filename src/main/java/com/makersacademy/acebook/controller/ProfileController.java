@@ -1,12 +1,10 @@
 package com.makersacademy.acebook.controller;
 
 import com.makersacademy.acebook.model.*;
-
 import com.makersacademy.acebook.repository.*;
-import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Controller
-public class PostsController {
-
+public class ProfileController {
     @Autowired
     PostRepository postRepository;
 
@@ -41,38 +38,25 @@ public class PostsController {
         return userRepository.findUserByUsername(username);
     }
 
-    @GetMapping("/posts")
-    public String index(@ModelAttribute("user") Optional<User> user, Model model) {
+    @GetMapping("/profile/{userId}")
+    public String getProfile(@PathVariable Long userId, @ModelAttribute("user") Optional<User> loggedInUser, Model model) {
 
 
-        if (user.isEmpty()) {
+        if (loggedInUser.isEmpty()) {
             return "redirect:/users/newUser"; // Redirect if not registered
         }
 
-        Iterable<Post> posts = postRepository.findAllByOrderByIdDesc();
+        Optional<User> profileUser = userRepository.findById(userId);
+        Iterable<Post> userPosts = postRepository.findByUserIdOrderByIdDesc(userId);
         Iterable<Comment> comments = commentRepository.findAll();
-
-        Post newPost = new Post();
         Comment newComment = new Comment();
-
-        Long userId = user.get().getId();
-
-        model.addAttribute("posts", posts);
-        model.addAttribute("post", newPost);
-        model.addAttribute("comments", comments);
-        model.addAttribute("comment", newComment);
-
-        // code below to get userId and email from database
-        model.addAttribute("userId", user.get().getId());
-        model.addAttribute("email", user.get().getUsername());
 
         // Create a map to store post authors
         Map<Long, User> postAuthors = new HashMap<>();
-        for (Post post : posts) {
+        for (Post post : userPosts) {
             Optional<User> postUser = userRepository.findById(post.getUser_id());
             postUser.ifPresent(user1 -> postAuthors.put(post.getId(), user1));
         }
-        model.addAttribute("postAuthors", postAuthors);
 
         // Create a map to store comment authors
         Map<Long, User> commentAuthors = new HashMap<>();
@@ -80,17 +64,14 @@ public class PostsController {
             Optional<User> commentUser = userRepository.findById(comment.getUserId());
             commentUser.ifPresent(user1 -> commentAuthors.put(comment.getId(), user1));
         }
-        model.addAttribute("commentAuthors", commentAuthors);
 
         // Map to store like status for each post
         Map<Long, Boolean> likedPosts = new HashMap<>();
         Map<Long, Integer> likeCountsPosts = new HashMap<>();
-        for (Post post : posts) {
+        for (Post post : userPosts) {
             likedPosts.put(post.getId(), postLikeRepository.findByUserIdAndPostId(userId, post.getId()).isPresent());
             likeCountsPosts.put(post.getId(), postLikeRepository.countByPostId(post.getId())); // Fetch like count
         }
-        model.addAttribute("likedPosts", likedPosts);
-        model.addAttribute("likeCountsPosts", likeCountsPosts);
 
         // Map to store like status for each comment
         Map<Long, Boolean> likedComments = new HashMap<>();
@@ -99,32 +80,35 @@ public class PostsController {
             likedComments.put(comment.getId(), commentLikeRepository.findByUserIdAndCommentId(userId, comment.getId()).isPresent());
             likeCountsComments.put(comment.getId(), commentLikeRepository.countByCommentId(comment.getId())); // Fetch like count
         }
+
+        model.addAttribute("profileUser", profileUser.get());
+        model.addAttribute("posts", userPosts);
+        model.addAttribute("comments", comments);
+        model.addAttribute("comment", newComment);
+        model.addAttribute("postAuthors", postAuthors);
+        model.addAttribute("commentAuthors", commentAuthors);
+        model.addAttribute("likedPosts", likedPosts);
+        model.addAttribute("likeCountsPosts", likeCountsPosts);
         model.addAttribute("likedComments", likedComments);
         model.addAttribute("likeCountsComments", likeCountsComments);
 
-        return "index";
+        return "profile";
     }
 
-    @PostMapping("/posts")
-    public RedirectView createPost(@ModelAttribute Post post) {
-        postRepository.save(post);
-        return new RedirectView("/posts");
-    }
-
-    @PostMapping("/posts/comment")
-    public RedirectView createComment(@ModelAttribute Comment comment, Model model) {
+    @PostMapping("/profile/{userId}/comment")
+    public String createComment(@PathVariable Long userId, @ModelAttribute Comment comment, Model model) {
         commentRepository.save(comment);
-        return new RedirectView("/posts");
+        return "redirect:/profile/" + userId;
     }
 
-    @PostMapping("/posts/post/{postId}/like")
+    @PostMapping("/profile/post/{postId}/like")
     @ResponseBody
-    public Map<String, Object> toggleLike(@PathVariable Long postId, @ModelAttribute("user") Optional<User> user) {
+    public Map<String, Object> toggleLike(@PathVariable Long postId, @ModelAttribute("user") Optional<User> loggedInUser) {
         Map<String, Object> response = new HashMap<>();
 
-        Long userId = user.get().getId();
+        Long loggedInUserId = loggedInUser.get().getId();
 
-        Optional<PostLike> existingLike = postLikeRepository.findByUserIdAndPostId(userId, postId);
+        Optional<PostLike> existingLike = postLikeRepository.findByUserIdAndPostId(loggedInUserId, postId);
 
         if (existingLike.isPresent()) {
             // Unlike post
@@ -132,7 +116,7 @@ public class PostsController {
             response.put("liked", false);
         } else {
             // Like post
-            PostLike newLike = new PostLike(userId, postId);
+            PostLike newLike = new PostLike(loggedInUserId, postId);
             postLikeRepository.save(newLike);
             response.put("liked", true);
         }
@@ -142,14 +126,14 @@ public class PostsController {
         return response;
     }
 
-    @PostMapping("/posts/comment/{commentId}/like")
+    @PostMapping("/profile/comment/{commentId}/like")
     @ResponseBody
-    public Map<String, Object> toggleLike(@PathVariable long commentId, @ModelAttribute("user") Optional<User> user) {
+    public Map<String, Object> toggleLike(@PathVariable long commentId, @ModelAttribute("user") Optional<User> loggedInUser) {
         Map<String, Object> response = new HashMap<>();
 
-        Long userId = user.get().getId();
+        Long loggedInUserId = loggedInUser.get().getId();
 
-        Optional<CommentLike> existingLike = commentLikeRepository.findByUserIdAndCommentId(userId, commentId);
+        Optional<CommentLike> existingLike = commentLikeRepository.findByUserIdAndCommentId(loggedInUserId, commentId);
 
         if (existingLike.isPresent()) {
             // Unlike comment
@@ -157,7 +141,7 @@ public class PostsController {
             response.put("liked", false);
         } else {
             // Like comment
-            CommentLike newLike = new CommentLike(userId, commentId);
+            CommentLike newLike = new CommentLike(loggedInUserId, commentId);
             commentLikeRepository.save(newLike);
             response.put("liked", true);
         }
@@ -166,4 +150,5 @@ public class PostsController {
 
         return response;
     }
+
 }
