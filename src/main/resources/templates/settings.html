@@ -25,7 +25,7 @@
       <button type="button" id="close-flash-box" class="btn-close btn-close col-1"></button>
     </div>
 
-  <form th:object="${user}" id="add-user-form" method="post" enctype="multipart/form-data">
+  <form th:object="${user}" id="add-user-form" method="post" enctype="multipart/form-data" th:unless="${deleteconfirmation}">
 
     <div class="text-center" th:with="avatarFile=${user.avatar == null}  ? 'placeholder' : ${user.avatar}">
       <img id="imagePreview" src="../static/images/userAvatars/9.jpg"
@@ -81,7 +81,10 @@
 
       <div class="col-3 offset-7 text-right">
         <div class="text-end">
-          <button class="btn btn-danger float-right" type="submit" disabled>Delete Forever</button>
+          <a th:href="deleteconfirmation" class="btn btn-danger float-right">Delete Forever</a>
+
+
+
         </div>
       </div>
 
@@ -89,6 +92,23 @@
     </div>
 
   </form>
+    <form  id="deleteuser" method="post"  th:if="${deleteconfirmation}">
+
+      <div class="text-center" th:with="avatarFile=${user.avatar == null}  ? 'placeholder' : ${user.avatar}">
+        <img id="imagePreview2" src="../static/images/userAvatars/9.jpg"
+             th:src="@{'../images/userAvatars/' + ${avatarFile} + '.jpg'}" class="rounded-circle mx-auto"
+             style="width: 240px; height: 240px; object-fit: cover;" alt="Default Avatar">
+      </div>
+      <h2 class="text-center">Are you sure?</h2>
+      <div class="row justify-content-center mt-3">
+        <div class="col-auto">
+          <button class="btn btn-danger" type="submit">Delete Forever</button>
+        </div>
+        <div class="col-auto">
+          <a href="/settings" class="btn btn-warning" type="submit">Go Back</a>
+        </div>
+      </div>
+    </form>
 </div>
   <script>
     const closeBtn = document.getElementById("close-flash-box");
@@ -97,6 +117,7 @@
       flashDiv.remove();
     });
   </script>
+
   <script th:src="@{/js/bootstrap.bundle.min.js}" src="/static/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

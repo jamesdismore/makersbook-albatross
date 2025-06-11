@@ -69,6 +69,7 @@ public class NavigationController {
 
     @GetMapping("/settings")
     public String settings(@ModelAttribute("user") Optional<User> user) {
+
         return user.isEmpty() ? "redirect:users/newUser" : "settings";
    }
 
@@ -84,6 +85,12 @@ public class NavigationController {
             redirectAttributes.addFlashAttribute("updatesSavedMessage", "Your details have been updated");
             return "redirect:/settings";
         }
+    }
+
+    @GetMapping("/deleteconfirmation")
+    public String deleteConfirmation(@ModelAttribute("user") Optional<User> user,Model model) {
+        model.addAttribute("deleteconfirmation", true);
+        return "settings";
     }
 
 
