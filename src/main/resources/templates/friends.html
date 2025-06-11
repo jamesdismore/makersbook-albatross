@@ -96,6 +96,7 @@
           </form>
           <form th:action="@{/friends/deletefriendrequest}" method="post" style="display: inline;" th:if="${alreadyFriendRequested !=null and alreadyFriendRequested.contains(friend)}">
             <input type="hidden" name="friendRequestFriendId" th:value="${friend.id}" />
+            <input type="hidden" name="userId" th:value="${user.id}" />
             <button type="submit" class="btn btn-warning" >Withdraw Request</button>
           </form>
         </div>

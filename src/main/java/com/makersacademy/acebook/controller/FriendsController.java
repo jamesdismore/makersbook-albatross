@@ -133,7 +133,13 @@ public class FriendsController {
         return "redirect:/manageFriends?recipientId="+recipientId;
     }
 
-
-
+    @PostMapping("/friends/deletefriendrequest")
+    public String deleteFriendRequest(@RequestParam("friendRequestFriendId") Long friendId,@RequestParam("userId") Long userId){
+        ArrayList<FriendRequest> requestsToDelete = friendRequestRepository.findFriendRequestByFromUserIdAndToUserIdAndStatus(userId,friendId,"PENDING");
+        for(FriendRequest request:requestsToDelete){
+            friendRequestRepository.deleteById(request.getId());
+        }
+        return "redirect:/friends";
+    }
 
 }
