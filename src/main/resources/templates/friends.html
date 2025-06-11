@@ -14,64 +14,86 @@
 
 <nav th:replace="_fragments :: nav-bar(currentPage='Friends')"></nav>
 
+<div class="container">
+  <div class="row m-3 p-2 rounded" style="background-color: #DDDDDD">
+    <div class="col-12">
+      <p class="mt-3 mb-2" style="font-size: 18px;">👋 Find new friends!</p>
 
-<div class="row m-3 p-2 rounded" style="background-color: #DDDDDD">
-  <div class="col-12">
-    <p class="mt-3 mb-2" style="font-size: 18px;">👋 Find new friends!</p>
-
-    <!-- Simple Search Form -->
-    <form th:action="@{/friends/search}" th:method="post">
-      <input class="form-control" type="text" name="searchQuery" placeholder="Enter a name to search">
-      <div class="mt-2 text-end">
-        <button type="submit" class="btn btn-primary">Search</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<h1 th:unless="${searchQuery}">Friends List</h1>
-<h1 th:if="${searchQuery}">Search Results</h1>
-<div class="container mt-5">
-
-  <div class="row">
-
-    <div class="col-md-4 col-sm-2 mb-5" th:each="friend : ${friends}"
-         th:with="avatarFile=${friend.avatar == null}  ? 'placeholder' : ${friend.avatar}">
-
-
-      <!-- Card start-->
-      <div class="card" style="width: 18rem;">
-        <img src="../static/images/userAvatars/9.jpg" th:src="@{'../images/userAvatars/' + ${avatarFile} + '.jpg'}"
-             class="card-img-top" alt="User Avatar">
-        <div class="card-body">
-          <h5 class="card-title" th:text="${friend.firstName}">Mr Nobody</h5>
-<!--          <p class="mb-1" style="font-size: 16px; font-style: italic">Not doing a great deal today!</p>-->
-<!--          <p style="font-size: 12px" class="mt-0">10 minutes ago.</p>-->
-          <a th:href="@{'/posts/' + ${friend.id}}" class="btn btn-primary">Profile</a>
-<!--          Button for the main Friends page-->
-          <form th:action="@{/friends/unfriend}" method="post" style="display: inline;" th:unless="${searchQuery}">
-            <input type="hidden" name="unfriendId" th:value="${friend.id}" />
-            <input type="hidden" name="userId" th:value="${user.id}" />
-            <button type="submit" class="btn btn-danger" >Unfriend</button>
-          </form>
-<!--          Button for adding friends on the friends search page-->
-          <form th:action="@{/friends/addfriend}" method="post" style="display: inline;" th:if="${searchQuery!=null and (alreadyFriendRequested ==null or !alreadyFriendRequested.contains(friend))}">
-            <input type="hidden" name="newFriendId" th:value="${friend.id}" />
-            <button type="submit" class="btn btn-success" >Add Friend</button>
-          </form>
-<!--          Button for withdrawing friend requests on the friends search page-->
-          <form th:action="@{/friends/deletefriendrequest}" method="post" style="display: inline;" th:if="${alreadyFriendRequested !=null and alreadyFriendRequested.contains(friend)}">
-            <input type="hidden" name="friendRequestFriendId" th:value="${friend.id}" />
-            <input type="hidden" name="userId" th:value="${user.id}" />
-            <button type="submit" class="btn btn-warning" >Withdraw Request</button>
-          </form>
+      <!-- Simple Search Form -->
+      <form th:action="@{/friends/search}" th:method="post">
+        <input class="form-control" type="text" name="searchQuery" placeholder="Enter a name to search">
+        <div class="mt-2 text-end">
+          <button type="submit" class="btn btn-primary">Search</button>
         </div>
-      </div>
-      <!-- Card end-->
+      </form>
+    </div>
+  </div>
+
+  <div class="row ms-2 me-3" style="background-color: #fff3cd">
+    <h4 class="col display-6 mb-0" th:unless="${searchQuery}">Your Friends</h4>
+<!--    <svg th:replace="_fragments :: arrow-right" size="48px"></svg>-->
+    <div class="col my-auto" style="background-color: #9eeaf9">
+      <img alt="" src="">
+        <svg th:fragment="arrow-right"  style="width: 24px; height: 24px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-circle float-end" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/>
+        </svg>
+      </img>
 
     </div>
   </div>
+
+
+<!--  <h1 class="row ms-3" th:if="${searchQuery}">Search Results</h1>-->
+
+
+
+    <hr class="row mb-4 me-2 ms-2 mt-1">
+    <div class="row">
+
+
+      <div class="col-md-4 col-sm-2 mb-5" th:each="friend : ${friends}"
+           th:with="avatarFile=${friend.avatar == null}  ? 'placeholder' : ${friend.avatar}">
+
+
+        <!-- Card start-->
+        <div class="card" style="width: 18rem;">
+          <img src="../static/images/userAvatars/9.jpg" th:src="@{'../images/userAvatars/' + ${avatarFile} + '.jpg'}"
+               class="card-img-top" alt="User Avatar">
+          <div class="card-body">
+            <h5 class="card-title" th:text="${friend.firstName}">Mr Nobody</h5>
+            <!--          <p class="mb-1" style="font-size: 16px; font-style: italic">Not doing a great deal today!</p>-->
+            <!--          <p style="font-size: 12px" class="mt-0">10 minutes ago.</p>-->
+            <a th:href="@{'/posts/' + ${friend.id}}" class="btn btn-primary">Profile</a>
+            <!--          Button for the main Friends page-->
+            <form th:action="@{/friends/unfriend}" method="post" style="display: inline;" th:unless="${searchQuery}">
+              <input type="hidden" name="unfriendId" th:value="${friend.id}" />
+              <input type="hidden" name="userId" th:value="${user.id}" />
+              <button type="submit" class="btn btn-danger" >Unfriend</button>
+            </form>
+            <!--          Button for adding friends on the friends search page-->
+            <form th:action="@{/friends/addfriend}" method="post" style="display: inline;" th:if="${searchQuery!=null and (alreadyFriendRequested ==null or !alreadyFriendRequested.contains(friend))}">
+              <input type="hidden" name="newFriendId" th:value="${friend.id}" />
+              <button type="submit" class="btn btn-success" >Add Friend</button>
+            </form>
+            <!--          Button for withdrawing friend requests on the friends search page-->
+            <form th:action="@{/friends/deletefriendrequest}" method="post" style="display: inline;" th:if="${alreadyFriendRequested !=null and alreadyFriendRequested.contains(friend)}">
+              <input type="hidden" name="friendRequestFriendId" th:value="${friend.id}" />
+              <input type="hidden" name="userId" th:value="${user.id}" />
+              <button type="submit" class="btn btn-warning" >Withdraw Request</button>
+            </form>
+          </div>
+        </div>
+        <!-- Card end-->
+
+      </div>
+    </div>
+  </div>
 </div>
+
+
+
+
+
 
 <script th:src="@{/js/bootstrap.bundle.min.js}" src="/static/js/bootstrap.bundle.min.js"></script>
 </body>
