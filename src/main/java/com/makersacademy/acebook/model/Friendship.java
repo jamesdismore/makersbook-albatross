@@ -33,19 +33,19 @@ public class Friendship {
     }
 
     public static Friendship[] fromForm(IncomingFriendRequestForm form){
-        Friendship f1 = new Friendship();
-        f1.setUserId(form.getRecipientId());
-        f1.setFriendId(form.getSenderId());
-        f1.setFriendshipTimestamp(Timestamp.from(Instant.now()));
+        Friendship aToB = new Friendship();
+        aToB.setUserId(form.getRecipientId());
+        aToB.setFriendId(form.getSenderId());
+        aToB.setFriendshipTimestamp(Timestamp.from(Instant.now()));
 
-        Friendship f2 = new Friendship();
-        f2.setUserId(form.getRecipientId());
-        f2.setFriendId(form.getSenderId());
-        f2.setFriendshipTimestamp(Timestamp.from(Instant.now()));
+        Friendship bToA = new Friendship();
+        bToA.setUserId(form.getRecipientId());
+        bToA.setFriendId(form.getSenderId());
+        bToA.setFriendshipTimestamp(Timestamp.from(Instant.now()));
 
         Friendship[] friendships = new Friendship[2];
-        friendships[0] = f1;
-        friendships[1] = f2;
+        friendships[0] = aToB;
+        friendships[1] = bToA;
 
         return friendships;
     }

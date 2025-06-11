@@ -32,9 +32,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.net.URL;
+import java.net.http.HttpClient;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -71,7 +73,7 @@ public class NavigationController {
    }
 
     @PostMapping("/settings")
-    public String settings(@Valid User user, BindingResult bindingResult, @RequestParam("file") MultipartFile imageFile) {
+    public String settings(@Valid User user, BindingResult bindingResult, @RequestParam("file") MultipartFile imageFile, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "settings";
         } else {
@@ -79,7 +81,8 @@ public class NavigationController {
                 AvatarAssistant.overwriteAvatar(imageFile, user);
             }
             userRepository.save(user);
-            return "redirect:/posts";
+            redirectAttributes.addFlashAttribute("updatesSavedMessage", "Your details have been updated");
+            return "redirect:/settings";
         }
     }
 

@@ -14,7 +14,16 @@
 
 <nav th:replace="_fragments :: nav-bar"></nav>
 
+
+
   <div class="container mt-4">
+
+
+
+    <div th:if="${updatesSavedMessage}" class="row mt-3 alert alert-success" id="flash-display">
+      <div  class="col-11" th:text="${updatesSavedMessage}">Details Updated!</div>
+      <button type="button" id="close-flash-box" class="btn-close btn-close col-1"></button>
+    </div>
 
   <form th:object="${user}" id="add-user-form" method="post" enctype="multipart/form-data">
 
@@ -53,7 +62,7 @@
         <p class="invalid-feedback" th:errors="*{dob}">Invalid data</p>
       </div>
       <div class="col">
-        <label for="profilePicture" class="form-label">Profile Picture</label>
+        <label for="profilePicture" class="form-label">Update Picture</label>
         <input type="file" accept="image/*" id="profilePicture" name="file"
                class="form-control mx-auto">
       </div>
@@ -82,6 +91,11 @@
   </form>
 </div>
   <script>
+    const closeBtn = document.getElementById("close-flash-box");
+    const flashDiv = document.getElementById("flash-display");
+    closeBtn.addEventListener('click', () => {
+      flashDiv.remove();
+    });
   </script>
   <script th:src="@{/js/bootstrap.bundle.min.js}" src="/static/js/bootstrap.bundle.min.js"></script>
   </body>
