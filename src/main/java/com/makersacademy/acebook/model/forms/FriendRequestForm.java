@@ -1,5 +1,6 @@
 package com.makersacademy.acebook.model.forms;
 
+import com.makersacademy.acebook.model.FriendRequest;
 import com.makersacademy.acebook.model.User;
 import lombok.Data;
 
@@ -17,9 +18,19 @@ public class FriendRequestForm {
     private String message;
     private LocalDate timestamp;
 
+    public FriendRequestForm(){
+
+    }
+
     public FriendRequestForm(User sender, User recipient) {
         this.senderId = sender.getId();
         this.recipientId = recipient.getId();
         this.recipientFirstName = recipient.getFirstName();
+    }
+
+    public FriendRequestForm(long senderId, long recipientId, String recipientFirstName){
+        this.senderId = senderId;
+        this.recipientId = recipientId;
+        this.recipientFirstName = recipientFirstName;
     }
 }
