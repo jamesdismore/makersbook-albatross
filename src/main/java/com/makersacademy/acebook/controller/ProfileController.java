@@ -2,6 +2,7 @@ package com.makersacademy.acebook.controller;
 
 import com.makersacademy.acebook.model.*;
 import com.makersacademy.acebook.repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -49,6 +50,7 @@ public class ProfileController {
         Optional<User> profileUser = userRepository.findById(userId);
         Iterable<Post> userPosts = postRepository.findByUserIdOrderByIdDesc(userId);
         Iterable<Comment> comments = commentRepository.findAll();
+        Long loggedInUserId = loggedInUser.get().getId();
         Comment newComment = new Comment();
 
         // Create a map to store post authors
@@ -91,15 +93,11 @@ public class ProfileController {
         model.addAttribute("likeCountsPosts", likeCountsPosts);
         model.addAttribute("likedComments", likedComments);
         model.addAttribute("likeCountsComments", likeCountsComments);
+        model.addAttribute("loggedInUserId", loggedInUserId);
 
         return "profile";
     }
 
-    @PostMapping("/profile/{userId}/comment")
-    public String createComment(@PathVariable Long userId, @ModelAttribute Comment comment, Model model) {
-        commentRepository.save(comment);
-        return "redirect:/profile/" + userId;
-    }
 
     @PostMapping("/profile/post/{postId}/like")
     @ResponseBody
@@ -149,6 +147,20 @@ public class ProfileController {
         response.put("likes", commentLikeRepository.countByCommentId(commentId));
 
         return response;
+    }
+
+    @PostMapping("/profile/{userId}/comment")
+    public String createComment(@PathVariable Long userId, @ModelAttribute Comment comment, Model model) {
+        commentRepository.save(comment);
+        return "redirect:/profile/" + userId;
+    }
+
+    @PostMapping("/profile/{userId}/comment/{commentId}/delete")
+    @Transactional
+    public String delete(@PathVariable Long userId, @PathVariable long commentId, Model model){
+        commentLikeRepository.deleteByCommentId(commentId);
+        commentRepository.deleteById(commentId);
+        return "redirect:/profile/" + userId;
     }
 
 }
