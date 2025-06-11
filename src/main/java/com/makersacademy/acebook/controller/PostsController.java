@@ -1,12 +1,8 @@
 package com.makersacademy.acebook.controller;
 
-import com.makersacademy.acebook.model.Comment;
-import com.makersacademy.acebook.model.Post;
-import com.makersacademy.acebook.model.User;
+import com.makersacademy.acebook.model.*;
 
-import com.makersacademy.acebook.repository.CommentRepository;
-import com.makersacademy.acebook.repository.UserRepository;
-import com.makersacademy.acebook.repository.PostRepository;
+import com.makersacademy.acebook.repository.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -32,6 +28,12 @@ public class PostsController {
     @Autowired
     CommentRepository commentRepository;
 
+    @Autowired
+    PostLikeRepository postLikeRepository;
+
+    @Autowired
+    CommentLikeRepository commentLikeRepository;
+
     @ModelAttribute("user")
     public Optional<User> getUser(Authentication authentication) {
         DefaultOidcUser principal = (DefaultOidcUser) authentication.getPrincipal();
@@ -52,6 +54,8 @@ public class PostsController {
 
         Post newPost = new Post();
         Comment newComment = new Comment();
+
+        Long userId = user.get().getId();
 
         model.addAttribute("posts", posts);
         model.addAttribute("post", newPost);
@@ -78,6 +82,26 @@ public class PostsController {
         }
         model.addAttribute("commentAuthors", commentAuthors);
 
+        // Map to store like status for each post
+        Map<Long, Boolean> likedPosts = new HashMap<>();
+        Map<Long, Integer> likeCountsPosts = new HashMap<>();
+        for (Post post : posts) {
+            likedPosts.put(post.getId(), postLikeRepository.findByUserIdAndPostId(userId, post.getId()).isPresent());
+            likeCountsPosts.put(post.getId(), postLikeRepository.countByPostId(post.getId())); // Fetch like count
+        }
+        model.addAttribute("likedPosts", likedPosts);
+        model.addAttribute("likeCountsPosts", likeCountsPosts);
+
+        // Map to store like status for each comment
+        Map<Long, Boolean> likedComments = new HashMap<>();
+        Map<Long, Integer> likeCountsComments = new HashMap<>();
+        for (Comment comment : comments) {
+            likedComments.put(comment.getId(), commentLikeRepository.findByUserIdAndCommentId(userId, comment.getId()).isPresent());
+            likeCountsComments.put(comment.getId(), commentLikeRepository.countByCommentId(comment.getId())); // Fetch like count
+        }
+        model.addAttribute("likedComments", likedComments);
+        model.addAttribute("likeCountsComments", likeCountsComments);
+
         return "index";
     }
 
@@ -91,5 +115,55 @@ public class PostsController {
     public RedirectView createComment(@ModelAttribute Comment comment, Model model) {
         commentRepository.save(comment);
         return new RedirectView("/posts");
+    }
+
+    @PostMapping("/posts/post/{postId}/like")
+    @ResponseBody
+    public Map<String, Object> toggleLike(@PathVariable Long postId, @ModelAttribute("user") Optional<User> user) {
+        Map<String, Object> response = new HashMap<>();
+
+        Long userId = user.get().getId();
+
+        Optional<PostLike> existingLike = postLikeRepository.findByUserIdAndPostId(userId, postId);
+
+        if (existingLike.isPresent()) {
+            // Unlike post
+            postLikeRepository.delete(existingLike.get());
+            response.put("liked", false);
+        } else {
+            // Like post
+            PostLike newLike = new PostLike(userId, postId);
+            postLikeRepository.save(newLike);
+            response.put("liked", true);
+        }
+        // Like count updated
+        response.put("likes", postLikeRepository.countByPostId(postId));
+
+        return response;
+    }
+
+    @PostMapping("/posts/comment/{commentId}/like")
+    @ResponseBody
+    public Map<String, Object> toggleLike(@PathVariable long commentId, @ModelAttribute("user") Optional<User> user) {
+        Map<String, Object> response = new HashMap<>();
+
+        Long userId = user.get().getId();
+
+        Optional<CommentLike> existingLike = commentLikeRepository.findByUserIdAndCommentId(userId, commentId);
+
+        if (existingLike.isPresent()) {
+            // Unlike comment
+            commentLikeRepository.delete(existingLike.get());
+            response.put("liked", false);
+        } else {
+            // Like comment
+            CommentLike newLike = new CommentLike(userId, commentId);
+            commentLikeRepository.save(newLike);
+            response.put("liked", true);
+        }
+        // Like count updated
+        response.put("likes", commentLikeRepository.countByCommentId(commentId));
+
+        return response;
     }
 }
