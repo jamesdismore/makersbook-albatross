@@ -94,6 +94,7 @@
             <input type="hidden" name="newFriendId" th:value="${friend.id}" />
             <button type="submit" class="btn btn-warning" >Add Friend</button>
           </form>
+          <div th:if="${alreadyFriendRequested !=null and alreadyFriendRequested.contains(friend)}">Hello</div>
         </div>
       </div>
       <!-- Card end-->

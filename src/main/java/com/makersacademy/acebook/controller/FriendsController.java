@@ -1,5 +1,6 @@
 package com.makersacademy.acebook.controller;
 
+import com.makersacademy.acebook.model.FriendRequest;
 import com.makersacademy.acebook.model.Friendship;
 import com.makersacademy.acebook.model.User;
 import com.makersacademy.acebook.repository.FriendRequestRepository;
@@ -105,10 +106,24 @@ public class FriendsController {
         exactOutput.removeIf(searchedUser -> friendIds.contains(searchedUser.getId()));
         exactOutput.removeIf(searchedUser -> Objects.equals(searchedUser.getId(), user.get().getId()));
 
+//      Identifying which friends within the search have already been friended
+        ArrayList<FriendRequest> existingRequests = friendRequestRepository.findFriendRequestByfromUserIdAndStatus(user.get().getId(),"PENDING");
+        ArrayList<User> alreadyFriended = new ArrayList<>(exactOutput);
+
+
+        ArrayList<Long> existingRequestIds = new ArrayList<>();
+        for(FriendRequest friendRequest : existingRequests){
+            existingRequestIds.add(friendRequest.getToUserId());
+        }
+
+        alreadyFriended.removeIf(userFriend -> !existingRequestIds.contains(userFriend.getId()));
+        System.out.println(alreadyFriended);
+
         // Add search results to the model
         model.addAttribute("friends", exactOutput); // Replace friends list with search results
         model.addAttribute("user", user.get());
         model.addAttribute("searchQuery", searchQuery); // Keep track of the search term
+        model.addAttribute("alreadyFriendRequested",alreadyFriended); // The list of people who have already been sent a friend request
 
         return "friends"; // Return the same friends page with search results
     }
