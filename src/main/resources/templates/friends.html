@@ -85,15 +85,18 @@
 <!--          <p class="mb-1" style="font-size: 16px; font-style: italic">Not doing a great deal today!</p>-->
 <!--          <p style="font-size: 12px" class="mt-0">10 minutes ago.</p>-->
           <a th:href="@{'/posts/' + ${friend.id}}" class="btn btn-primary">Profile</a>
+<!--          Button for the main Friends page-->
           <form th:action="@{/friends/unfriend}" method="post" style="display: inline;" th:unless="${searchQuery}">
             <input type="hidden" name="unfriendId" th:value="${friend.id}" />
             <input type="hidden" name="userId" th:value="${user.id}" />
             <button type="submit" class="btn btn-danger" >Unfriend</button>
           </form>
+<!--          Button for adding friends on the friends search page-->
           <form th:action="@{/friends/addfriend}" method="post" style="display: inline;" th:if="${searchQuery!=null and (alreadyFriendRequested ==null or !alreadyFriendRequested.contains(friend))}">
             <input type="hidden" name="newFriendId" th:value="${friend.id}" />
             <button type="submit" class="btn btn-success" >Add Friend</button>
           </form>
+<!--          Button for withdrawing friend requests on the friends search page-->
           <form th:action="@{/friends/deletefriendrequest}" method="post" style="display: inline;" th:if="${alreadyFriendRequested !=null and alreadyFriendRequested.contains(friend)}">
             <input type="hidden" name="friendRequestFriendId" th:value="${friend.id}" />
             <input type="hidden" name="userId" th:value="${user.id}" />
