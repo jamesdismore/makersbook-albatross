@@ -11,7 +11,44 @@
   </head>
 <body>
 
-<nav th:replace="_fragments :: nav-bar(currentPage='Posts')"></nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Acebook</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link home" aria-disabled="true">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="${user != null ? '/profile/' + user.id : '/users/newUser'}">My Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/settings">Account Settings</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">Logout</a> <!-- This works due to legacy code -->
+        </li>
+      </ul>
+      <div sec:authorize="isAuthenticated()">
+        <!-- th:with="avatarFile=${user.id} + '.jpg'" -->
+        <!-- th:src="@{'../images/userAvatars/' + ${avatarFile}}" -->
+        <div class="user-avatar" th:if="${user.avatar != null}" th:with="avatarFile=${user.id} + '.jpg'">
+          <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="User Avatar" class="avatar-img">
+        </div>
+        <!-- Fallback if no avatar -->
+        <div class="user-initials" th:if="${user.avatar == null}">
+          <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</nav>
 
 <h1>Posts</h1>
 
@@ -31,7 +68,7 @@
     <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
   </div>
   <!-- Fallback if no avatar -->
-  <div class="user-initials" th:if="${user.avatar == null}">
+  <div class="user-initials" th:if="${postAuthors[post.id].avatar == null}">
     <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
   </div>
 
@@ -76,7 +113,7 @@
       <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
     </div>
     <!-- Fallback if no avatar -->
-    <div class="user-initials" th:if="${user.avatar == null}">
+    <div class="user-initials" th:if="${commentAuthors[comment.id].avatar == null}">
       <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
     </div>
     <!--  display user FullName (unknown user if null)-->
