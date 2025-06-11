@@ -97,13 +97,13 @@ public class ManageFriendsController {
     @RequestMapping(value = "/manageFriends/respondToRequest", method = RequestMethod.POST, params = "accept")
     public String acceptRequest(
             @RequestParam(value = "index", required = false) Integer index,
-            @ModelAttribute("incomingRequests") IncomingFriendRequestsWrapper wrapper) {
+            @ModelAttribute("incomingRequests") IncomingFriendRequestsWrapper formsWrapper) {
 
-        // Save the friendship
-        IncomingFriendRequestForm form = wrapper.formAtIndex(index);
+        // Save the friendship 'both ways'
+        IncomingFriendRequestForm form = formsWrapper.formAtIndex(index);
         friendshipRepository.saveAll(Arrays.asList(Friendship.fromForm(form)));
 
-        // Mark the FriendRequest as ACCEPTED and update the response message
+        // Mark the <FriendRequest> as ACCEPTED and update the response message
         FriendRequest friendRequest = friendRequestRepository.findById(form.getRequestId()).orElseThrow();
         friendRequest.setResponseMessage(form.getResponse());
         friendRequest.setResponseTimestamp(Timestamp.from(Instant.now()));
@@ -115,9 +115,15 @@ public class ManageFriendsController {
 
     @RequestMapping(value = "/manageFriends/respondToRequest", method = RequestMethod.POST, params = "decline")
     public String declineRequest(
-            @RequestParam(value = "requestId", required = false) Integer requestId,
-            @ModelAttribute("incomingRequests") IncomingFriendRequestsWrapper wrapper) {
-        System.out.println("DECLINE");
+            @RequestParam(value = "index", required = false) Integer index,
+            @ModelAttribute("incomingRequests") IncomingFriendRequestsWrapper formsWrapper) {
+
+        IncomingFriendRequestForm form = formsWrapper.formAtIndex(index);
+        FriendRequest friendRequest = friendRequestRepository.findById(form.getRequestId()).orElseThrow();
+        friendRequest.setResponseMessage(form.getResponse());
+        friendRequest.setResponseTimestamp(Timestamp.from(Instant.now()));
+        friendRequest.setStatus("REJECTED");
+        friendRequestRepository.save(friendRequest);
 
         return "redirect:/manageFriends";
     }
