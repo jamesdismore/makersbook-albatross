@@ -13,10 +13,11 @@
         <p  class="col text-center" style="font-size:13px; color: gray">Nothing here at the moment</p>
     </div>
 
-    <p th:fragment="timeAgo(timestamp)" th:text="${#temporals.format(timestamp, 'EEEE d MMM')}"></p>
-<!--    <p th:replace="_fragments :: timeAgo(~{::rejectedRequest.timestamp})">3 days ago</p>-->
 
-    <nav th:fragment="nav-bar" class="navbar navbar-expand-lg navbar-light bg-light">
+    <p th:fragment="timeAgo(timestamp)" th:text="${#temporals.format(timestamp, 'EEEE d MMM')}"></p>
+
+
+    <nav th:fragment="nav-bar (currentPage)" class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Acebook</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -27,16 +28,24 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/posts">Home</a>
+                        <a th:if="${currentPage} == 'Posts'" class="nav-link" >Home</a>
+                        <a th:unless="${currentPage} == 'Posts'" class="nav-link" href="/posts">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="profile">My Profile</a>
+                        <a th:if="${currentPage} == 'My Profile'" class="nav-link" >My Profile</a>
+                        <a th:unless="${currentPage} == 'My Profile'" class="nav-link" href="/profile">My Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link settings" aria-disabled="true">Account Settings</a>
+                        <a th:if="${currentPage} == 'Friends'" class="nav-link" >Friends</a>
+                        <a th:unless="${currentPage} == 'Friends'" class="nav-link" href="/friends">Friends</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/logout">Logout</a> <!-- This will need to direct to logout -->
+                        <a th:if="${currentPage} == 'Account Settings'" class="nav-link" >Account Settings</a>
+                        <a th:unless="${currentPage} == 'Account Settings'" class="nav-link" href="/settings">Account Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:if="${currentPage} == 'Logout'" class="nav-link" >Logout</a>
+                        <a th:unless="${currentPage} == 'Logout'" class="nav-link" href="/logout">Logout</a>
                     </li>
                 </ul>
                 <div sec:authorize="isAuthenticated()">
