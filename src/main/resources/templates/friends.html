@@ -90,11 +90,14 @@
             <input type="hidden" name="userId" th:value="${user.id}" />
             <button type="submit" class="btn btn-warning" >Unfriend</button>
           </form>
-          <form th:action="@{/friends/addfriend}" method="post" style="display: inline;" th:if="${searchQuery}">
+          <form th:action="@{/friends/addfriend}" method="post" style="display: inline;" th:if="${searchQuery!=null and (alreadyFriendRequested ==null or !alreadyFriendRequested.contains(friend))}">
             <input type="hidden" name="newFriendId" th:value="${friend.id}" />
             <button type="submit" class="btn btn-warning" >Add Friend</button>
           </form>
-          <div th:if="${alreadyFriendRequested !=null and alreadyFriendRequested.contains(friend)}">Hello</div>
+          <form th:action="@{/friends/deletefriendrequest}" method="post" style="display: inline;" th:if="${alreadyFriendRequested !=null and alreadyFriendRequested.contains(friend)}">
+            <input type="hidden" name="friendRequestFriendId" th:value="${friend.id}" />
+            <button type="submit" class="btn btn-warning" >Withdraw Request</button>
+          </form>
         </div>
       </div>
       <!-- Card end-->
