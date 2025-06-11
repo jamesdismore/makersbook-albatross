@@ -52,14 +52,20 @@
     </div>
 </nav>
 
-<h1>Profile</h1>
-<!-- Profile Image -->
-<div class="text-center" th:with="avatarFile=${profileUser.avatar == null}  ? 'placeholder' : ${profileUser.avatar}">
-    <img id="imagePreview" src="../static/images/userAvatars/placeholder.jpg"
-         th:src="@{'../images/userAvatars/' + ${avatarFile} + '.jpg'}" class="rounded-circle mx-auto"
-         style="width: 240px; height: 240px; object-fit: cover;" alt="Default Avatar">
-</div>
-<h2>See <span th:text="${profileUser.firstName}"></span>'s posts</h2>
+    <div class="cover-banner"></div>
+
+    <div class="profile-container">
+        <!-- Profile Image -->
+        <div class="text-center" th:with="avatarFile=${profileUser.avatar == null}  ? 'placeholder' : ${profileUser.avatar}">
+            <img id="imagePreview" src="../static/images/userAvatars/placeholder.jpg"
+                 th:src="@{'../images/userAvatars/' + ${avatarFile} + '.jpg'}" class="rounded-circle mx-auto"
+                 style="width: 240px; height: 240px; object-fit: cover;" alt="Default Avatar">
+        </div>
+
+        <div class="profile-name">
+            <h1><span th:text="${profileUser.firstName}"></span> <span th:text="${profileUser.lastName}"}></span></h1>
+        </div>
+    </div>
 
 <div th:each="post, iterStat : ${posts}" class="mb-3">
     <!--  poster's avatar + name -->
