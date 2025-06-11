@@ -124,6 +124,9 @@
       Unknown User
     </div>
     <div th:text="${comment.content}"></div>
+    <p>Likes: <span th:id="'likeCount-comment-' + ${comment.id}" th:text="${likeCountsComments[comment.id]}"></span></p>
+<!--    <button class="d-none">Delete</button>-->
+    <button th:if="${comment.userId == userId}">Delete</button>
     <!--  Like Button Functionality -->
     <button th:id="'likeBtn-' + ${comment.id}"
             th:data-comment-id="${comment.id}"
@@ -131,7 +134,6 @@
             onclick="toggleLike(this)">
       <span th:text="${likedComments[comment.id] ? 'Unlike' : 'Like'}"></span>
     </button>
-    <p>Likes: <span th:id="'likeCount-comment-' + ${comment.id}" th:text="${likeCountsComments[comment.id]}"></span></p>
   </div>
 </div>
 
