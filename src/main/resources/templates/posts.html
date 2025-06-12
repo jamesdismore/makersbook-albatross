@@ -102,15 +102,20 @@
           <div class="user-info">
             <!--  Each commenter's avatar + name -->
             <div class="user-avatar" th:with="avatarFile=${comment.userId} + '.jpg'">
-              <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
+              <a th:href="@{'/profile/' + ${commentAuthors[comment.id].id}}">
+                <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
+              </a>
             </div>
             <!-- Fallback if no avatar -->
             <div class="user-initials" th:if="${commentAuthors[comment.id].avatar == null}">
               <img th:src="@{'../images/userAvatars/placeholder.jpg'}" alt="Placeholder Avatar" class="avatar-img">
             </div>
             <!--  Display user FullName (unknown user if null)-->
-            <div th:if="${commentAuthors[comment.id] != null && commentAuthors[comment.id].firstName != null && commentAuthors[comment.id].lastName != null}"
-                 th:text="${commentAuthors[comment.id].firstName + ' ' + commentAuthors[comment.id].lastName}"></div>
+            <div th:if="${commentAuthors[comment.id] != null && commentAuthors[comment.id].firstName != null && commentAuthors[comment.id].lastName != null}">
+              <a th:href="@{'/profile/' + ${commentAuthors[comment.id].id}}"
+                 th:text="${commentAuthors[comment.id].firstName + ' ' + commentAuthors[comment.id].lastName}"
+                 class="profile-link"></a>
+            </div>
             <div th:if="${commentAuthors[comment.id] == null || commentAuthors[comment.id].firstName == null || commentAuthors[comment.id].lastName == null}">
               Unknown User
             </div>
