@@ -57,7 +57,9 @@ INSERT INTO friend_requests(from_user_id, to_user_id,  request_message, request_
  (7, 9, 'You look familiar - wanna be mates?', '2025-05-29 14:45:00', 'Of course I''ll be your friend - let''s meet up.', '2025-06-5 9:00:00', 'ACCEPTED'),
  (13, 7, E'The scraps are much appreciated - let\'s keep in touch more regularly', '2025-06-1 21:00:00', NULL, NULL, 'PENDING');
 
-
+INSERT INTO friendships(user_id, friend_id, friendship_timestamp) VALUES
+(12, 9, '2024-06-01 10:00:00'),
+(9, 12, '2024-06-01 10:00:00');
 
 
 

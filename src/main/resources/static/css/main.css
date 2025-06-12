@@ -77,6 +77,13 @@
     font-weight: bold;
 }
 
+/* Link to Profile from Names */
+.profile-link {
+    text-decoration: none; /* Removes underline */
+    color: inherit; /* Uses the default text color */
+    cursor: pointer; /* Keeps it clickable */
+}
+
 
 
 body, html {

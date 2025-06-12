@@ -14,43 +14,7 @@
 <div class="bg">
   <div class="overlay">
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Acebook</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link home" aria-disabled="true">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" th:href="${user != null ? '/profile/' + user.id : '/users/newUser'}">My Profile</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/settings">Account Settings</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/logout">Logout</a> <!-- This works due to legacy code -->
-            </li>
-          </ul>
-          <div sec:authorize="isAuthenticated()">
-            <!-- th:with="avatarFile=${user.id} + '.jpg'" -->
-            <!-- th:src="@{'../images/userAvatars/' + ${avatarFile}}" -->
-            <div class="user-avatar" th:if="${user.avatar != null}" th:with="avatarFile=${user.id} + '.jpg'">
-              <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="User Avatar" class="avatar-img">
-            </div>
-            <!-- Fallback if no avatar -->
-            <div class="user-initials" th:if="${user.avatar == null}">
-              <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
-            </div>
-          </div>
-        </div>
-        </div>
-    </nav>
+    <nav th:replace="_fragments :: nav-bar(currentPage='Posts')"></nav>
 
     <h1>Posts</h1>
 
@@ -64,13 +28,15 @@
       <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
     </form>
 
-      <!--  iterate through and display every post -->
+<!--    Iterating through available posts    -->
     <div th:each="post, iterStat: ${posts}" class="mb-3 posts">
       <div class="post">
       <div class="user-info">
         <!--  poster's avatar + name -->
         <div class="user-avatar post-avatar" th:with="avatarFile=${post.user_id} + '.jpg'">
-          <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
+          <a th:href="@{'/profile/' + ${postAuthors[post.id].id}}">
+            <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
+          </a>
         </div>
 
         <!-- Fallback if no avatar -->
@@ -79,8 +45,12 @@
         </div>
 
         <!--  display user FullName (unknown user if null)-->
-        <div th:if="${postAuthors[post.id] != null && postAuthors[post.id].firstName != null && postAuthors[post.id].lastName != null}"
-             th:text="${postAuthors[post.id].firstName + ' ' + postAuthors[post.id].lastName}"></div>
+        <div th:if="${postAuthors[post.id] != null && postAuthors[post.id].firstName != null && postAuthors[post.id].lastName != null}">
+          <a th:href="@{'/profile/' + ${postAuthors[post.id].id}}"
+             th:text="${postAuthors[post.id].firstName + ' ' + postAuthors[post.id].lastName}"
+             class="profile-link">
+          </a>
+        </div>
 
         <div th:if="${postAuthors[post.id] == null || postAuthors[post.id].firstName == null || postAuthors[post.id].lastName == null}">
           Unknown User
@@ -103,6 +73,7 @@
 
       <!-- line of buttons for users to interact with the posts -->
       <div class="post-interactions">
+<!--        Buttons on posts   -->
         <div class="post-buttons">
         <!--  Like Button Functionality -->
           <div class="post-likes">
@@ -122,7 +93,8 @@
           </button>
         </div>
 
-        <!-- collapsable comment box -->
+
+<!--        Adding Comments     -->
         <div class="collapse" th:id="'collapseExample' + ${iterStat.index}">
           <div class="card card-body">
             <form action="#" th:action="@{/posts/comment}" th:object="${comment}" method="post">
@@ -137,56 +109,61 @@
         </div>
       </div>
 
-      <!-- display each comment -->
+<!--         Displaying Comments    -->
       <div class="comments">
         <div th:each="comment : ${comments}" th:if="${comment.postId == post.id}" class="mb-3">
+          <div class="user-info">
+            <!--  Each commenter's avatar-->
+            <div class="user-avatar" th:with="avatarFile=${comment.userId} + '.jpg'">
+              <a th:href="@{'/profile/' + ${commentAuthors[comment.id].id}}">
+                <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
+              </a>
+            </div>
+            <!-- Fallback if no avatar -->
+            <div class="user-initials" th:if="${commentAuthors[comment.id].avatar == null}">
+              <img th:src="@{'../images/userAvatars/placeholder.jpg'}" alt="Placeholder Avatar" class="avatar-img">
+            </div>
+            <!--  Display user FullName (unknown user if null)-->
+            <div th:if="${commentAuthors[comment.id] != null && commentAuthors[comment.id].firstName != null && commentAuthors[comment.id].lastName != null}">
+              <a th:href="@{'/profile/' + ${commentAuthors[comment.id].id}}"
+                 th:text="${commentAuthors[comment.id].firstName + ' ' + commentAuthors[comment.id].lastName}"
+                 class="profile-link"></a>
+            </div>
+            <div th:if="${commentAuthors[comment.id] == null || commentAuthors[comment.id].firstName == null || commentAuthors[comment.id].lastName == null}">
+              Unknown User
+            </div>
+          </div>
+<!--          Display the comment content    -->
+            <div class="content-line">
+                <div class="comment-text" th:text="${comment.content}"></div>
 
-            <div class="user-info">
-                <!--  each commenter's avatar + name -->
-                <div class="user-avatar" th:with="avatarFile=${comment.userId} + '.jpg'">
-                  <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
+                <div class="likes-count">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                    </svg>
+                    <span th:id="'likeCount-comment-' + ${comment.id}" th:text="${likeCountsComments[comment.id]}"></span></i>
                 </div>
-              <!-- Fallback if no avatar -->
-              <div class="user-initials" th:if="${commentAuthors[comment.id].avatar == null}">
-                <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
-              </div>
-              <!--  display user FullName (unknown user if null)-->
-              <div th:if="${commentAuthors[comment.id] != null && commentAuthors[comment.id].firstName != null && commentAuthors[comment.id].lastName != null}"
-                   th:text="${commentAuthors[comment.id].firstName + ' ' + commentAuthors[comment.id].lastName}"></div>
 
-              <div th:if="${commentAuthors[comment.id] == null || commentAuthors[comment.id].firstName == null || commentAuthors[comment.id].lastName == null}">
-                Unknown User
-              </div>
             </div>
-
-          <!-- comment content + like count -->
-          <div class="content-line">
-            <div class="comment-text" th:text="${comment.content}"></div>
-
-            <div class="likes-count">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-              </svg>
-              <span th:id="'likeCount-comment-' + ${comment.id}" th:text="${likeCountsComments[comment.id]}"></span></i>
-            </div>
-
-          </div>
-
-          <!-- buttons to interact with comment -->
-          <div class="like-comments">
-              <!--  Like Button Functionality -->
-              <button class="btn-comment-like" th:id="'likeBtn-' + ${comment.id}"
-                      th:data-comment-id="${comment.id}"
-                      th:data-liked="${likedComments[comment.id]}"
-                      onclick="toggleLike(this)">
-                <span th:text="${likedComments[comment.id] ? 'Unlike' : 'Like'}"></span>
-              </button>
-          </div>
+            <!-- buttons to interact with comment -->
+            <div class="like-comments">
+          <!--    Delete Comment   -->
+          <form action="#" th:action="@{/posts/comment/{commentId}/delete(commentId=${comment.id})}" method="post">
+            <button type="submit" th:if="${comment.userId == userId}">Delete</button>
+          </form>
+          <!--  Like Button Functionality -->
+          <button class="btn-comment-like" th:id="'likeBtn-' + ${comment.id}"
+                  th:data-comment-id="${comment.id}"
+                  th:data-liked="${likedComments[comment.id]}"
+                  onclick="toggleLike(this)">
+            <span th:text="${likedComments[comment.id] ? 'Unlike' : 'Like'}"></span>
+          </button>
         </div>
       </div>
     </div>
   </div>
 </div>
+  </div>
 </div>
 
 <script>
