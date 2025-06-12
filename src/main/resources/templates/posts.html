@@ -35,7 +35,9 @@
       <div class="user-info post">
         <!--  poster's avatar -->
         <div class="user-avatar post-avatar" th:with="avatarFile=${post.user_id} + '.jpg'">
-          <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
+          <a th:href="@{'/profile/' + ${postAuthors[post.id].id}}">
+            <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
+          </a>
         </div>
         <!-- Fallback if no avatar -->
         <div class="user-initials" th:if="${postAuthors[post.id].avatar == null}">
