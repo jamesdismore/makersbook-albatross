@@ -35,11 +35,14 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.io.IOException;
 import java.net.URL;
 import java.net.http.HttpClient;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.Random;
 
 
 @Controller
@@ -97,12 +100,49 @@ public class NavigationController {
         User deletedUser = new User();
         deletedUser.setId(userId);
         deletedUser.setAvatar("deleteduser");
-        deletedUser.setUsername("Deleted User");
+        String newUsername = getAlphaNumericString(12);
+        deletedUser.setUsername(newUsername);
         deletedUser.setFirstName("Deleted");
         deletedUser.setLastName("User");
         deletedUser.setDob(LocalDate.parse("1900-01-01"));
         userRepository.save(deletedUser);
         return "redirect:/posts";
     }
+
+
+
+
+    static String getAlphaNumericString(int n)
+        {
+
+            // length is bounded by 256 Character
+            byte[] array = new byte[256];
+            new Random().nextBytes(array);
+
+            String randomString
+                    = new String(array, StandardCharsets.UTF_8);
+
+            // Create a StringBuffer to store the result
+            StringBuffer r = new StringBuffer();
+
+            // Append first 20 alphanumeric characters
+            // from the generated random String into the result
+            for (int k = 0; k < randomString.length(); k++) {
+
+                char ch = randomString.charAt(k);
+
+                if (((ch >= 'a' && ch <= 'z')
+                        || (ch >= 'A' && ch <= 'Z')
+                        || (ch >= '0' && ch <= '9'))
+                        && (n > 0)) {
+
+                    r.append(ch);
+                    n--;
+                }
+            }
+
+            // return the resultant string
+            return r.toString();
+        }
 
 }

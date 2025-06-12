@@ -25,6 +25,7 @@
 
 <nav th:replace="_fragments :: nav-bar(currentPage='My Profile')"></nav>
 
+    <div class="cover-banner"></div>
 
     <div class="container-fluid">
 
@@ -53,27 +54,25 @@
 
 
         </div>
-
-
-
-
-
-    </div>
-
-
-
-
-    <div class="profile-container">
-        <!-- Profile Image -->
-<!--        <div class="text-center" th:with="avatarFile=${profileUser.avatar == null}  ? 'placeholder' : ${profileUser.avatar}">-->
-<!--            <img id="imagePreview" src="../static/images/userAvatars/placeholder.jpg"-->
-<!--                 th:src="@{'../images/userAvatars/' + ${avatarFile} + '.jpg'}" class="rounded-circle mx-auto"-->
-<!--                 style="width: 240px; height: 240px; object-fit: cover;" alt="Default Avatar">-->
-<!--        </div>-->
-
-<!--        <div class="profile-name">-->
-<!--            <h1><span th:text="${profileUser.firstName}"></span> <span th:text="${profileUser.lastName}"}></span></h1>-->
-<!--        </div>-->
+        <div class="profile-name">
+            <h1><span th:text="${profileUser.firstName}"></span> <span th:text="${profileUser.lastName}"}></span></h1>
+        </div>
+        <div th:unless="${profileUser.id == user.id}">
+        <form th:action="@{/friends/unfriend}" method="post" style="display: inline;" th:if="${isFriend}">
+            <input type="hidden" name="unfriendId" th:value="${profileUser.id}" />
+            <input type="hidden" name="userId" th:value="${user.id}" />
+            <button type="submit" class="btn btn-danger btn-sm" >Unfriend</button>
+        </form>
+        <form th:action="@{/friends/addfriend}" method="post" style="display: inline;" th:unless="${isFriend or alreadyRequested}">
+            <input type="hidden" name="newFriendId" th:value="${profileUser.id}" />
+            <button type="submit" class="btn btn-success btn-sm" >Add Friend</button>
+        </form>
+        <form th:action="@{/friends/deletefriendrequest}" method="post" style="display: inline;" th:if="${alreadyRequested and !isFriend}">
+            <input type="hidden" name="friendRequestFriendId" th:value="${profileUser.id}" />
+            <input type="hidden" name="userId" th:value="${user.id}" />
+            <button type="submit" class="btn btn-warning btn-sm" >Withdraw Request</button>
+        </form>
+        </div>
     </div>
 
 <div th:each="post, iterStat : ${posts}" class="mb-3">
@@ -122,18 +121,23 @@
     </div>
     <div th:each="comment : ${comments}" th:if="${comment.postId == post.id}" class="mb-3">
 
-        <!--  each commenter's avatar + name -->
+        <!--  Each commenter's avatar-->
         <div class="user-avatar" th:with="avatarFile=${comment.userId} + '.jpg'">
-            <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
+            <a th:href="@{'/profile/' + ${commentAuthors[comment.id].id}}">
+                <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
+            </a>
         </div>
         <!-- Fallback if no avatar -->
         <div class="user-initials" th:if="${commentAuthors[comment.id].avatar == null}">
             <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
         </div>
         <!--  display user FullName (unknown user if null)-->
-        <div th:if="${commentAuthors[comment.id] != null && commentAuthors[comment.id].firstName != null && commentAuthors[comment.id].lastName != null}"
-             th:text="${commentAuthors[comment.id].firstName + ' ' + commentAuthors[comment.id].lastName}"></div>
-
+        <!--  Display user FullName (unknown user if null)-->
+        <div th:if="${commentAuthors[comment.id] != null && commentAuthors[comment.id].firstName != null && commentAuthors[comment.id].lastName != null}">
+            <a th:href="@{'/profile/' + ${commentAuthors[comment.id].id}}"
+               th:text="${commentAuthors[comment.id].firstName + ' ' + commentAuthors[comment.id].lastName}"
+               class="profile-link"></a>
+        </div>
         <div th:if="${commentAuthors[comment.id] == null || commentAuthors[comment.id].firstName == null || commentAuthors[comment.id].lastName == null}">
             Unknown User
         </div>
