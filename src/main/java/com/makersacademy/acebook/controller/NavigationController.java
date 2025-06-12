@@ -38,6 +38,7 @@ import java.net.http.HttpClient;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.Optional;
 
 
@@ -66,6 +67,7 @@ public class NavigationController {
 
     @GetMapping("/settings")
     public String settings(@ModelAttribute("user") Optional<User> user) {
+
         return user.isEmpty() ? "redirect:users/newUser" : "settings";
    }
 
@@ -83,5 +85,24 @@ public class NavigationController {
         }
     }
 
+    @GetMapping("/deleteconfirmation")
+    public String deleteConfirmation(@ModelAttribute("user") Optional<User> user,Model model) {
+        model.addAttribute("deleteconfirmation", true);
+
+        return "settings";
+    }
+
+    @PostMapping("/deleteconfirmation")
+    public String deleteUser(@ModelAttribute("userId")long userId){
+        User deletedUser = new User();
+        deletedUser.setId(userId);
+        deletedUser.setAvatar("deleteduser");
+        deletedUser.setUsername("Deleted User");
+        deletedUser.setFirstName("Deleted");
+        deletedUser.setLastName("User");
+        deletedUser.setDob(LocalDate.parse("1900-01-01"));
+        userRepository.save(deletedUser);
+        return "redirect:/posts";
+    }
 
 }
