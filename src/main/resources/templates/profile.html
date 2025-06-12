@@ -35,6 +35,22 @@
                 <div class="row h-25 align-items-baseline" ></div>
                 <div class="row h-25 align-items-baseline" >
                     <p class="col display-3 p-0 my-auto text-start" th:text="|${profileUser.firstName} ${profileUser.lastName}|" style="font-size: 36px; color: white">Roger Fox</p>
+                    <div th:unless="${profileUser.id == user.id}" class="col my-auto float-end" >
+                        <form class="col" th:action="@{/friends/unfriend}" method="post" style="display: inline;" th:if="${isFriend}">
+                            <input type="hidden" name="unfriendId" th:value="${profileUser.id}" />
+                            <input type="hidden" name="userId" th:value="${user.id}" />
+                            <button type="submit" class="btn btn-danger btn-sm" >Unfriend</button>
+                        </form>
+                        <form class="col" th:action="@{/friends/addfriend}" method="post" style="display: inline;" th:unless="${isFriend or alreadyRequested}">
+                            <input type="hidden" name="newFriendId" th:value="${profileUser.id}" />
+                            <button type="submit" class="btn btn-success btn-sm" >Add Friend</button>
+                        </form>
+                        <form class="col" th:action="@{/friends/deletefriendrequest}" method="post" style="display: inline;" th:if="${alreadyRequested and !isFriend}">
+                            <input type="hidden" name="friendRequestFriendId" th:value="${profileUser.id}" />
+                            <input type="hidden" name="userId" th:value="${user.id}" />
+                            <button type="submit" class="btn btn-warning btn-sm" >Withdraw Request</button>
+                        </form>
+                    </div>
 
                 </div>
 
@@ -49,22 +65,7 @@
             </div>
         </div>
 
-        <div th:unless="${profileUser.id == user.id}">
-        <form th:action="@{/friends/unfriend}" method="post" style="display: inline;" th:if="${isFriend}">
-            <input type="hidden" name="unfriendId" th:value="${profileUser.id}" />
-            <input type="hidden" name="userId" th:value="${user.id}" />
-            <button type="submit" class="btn btn-danger btn-sm" >Unfriend</button>
-        </form>
-        <form th:action="@{/friends/addfriend}" method="post" style="display: inline;" th:unless="${isFriend or alreadyRequested}">
-            <input type="hidden" name="newFriendId" th:value="${profileUser.id}" />
-            <button type="submit" class="btn btn-success btn-sm" >Add Friend</button>
-        </form>
-        <form th:action="@{/friends/deletefriendrequest}" method="post" style="display: inline;" th:if="${alreadyRequested and !isFriend}">
-            <input type="hidden" name="friendRequestFriendId" th:value="${profileUser.id}" />
-            <input type="hidden" name="userId" th:value="${user.id}" />
-            <button type="submit" class="btn btn-warning btn-sm" >Withdraw Request</button>
-        </form>
-        </div>
+
     </div>
 
 <div class="full-page">
