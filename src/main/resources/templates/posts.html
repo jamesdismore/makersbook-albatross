@@ -146,19 +146,19 @@
 
             </div>
             <!-- buttons to interact with comment -->
-            <div class="like-comments">
-          <!--    Delete Comment   -->
-          <form action="#" th:action="@{/posts/comment/{commentId}/delete(commentId=${comment.id})}" method="post">
-            <button type="submit" th:if="${comment.userId == userId}">Delete</button>
-          </form>
+          <div class="like-comments">
           <!--  Like Button Functionality -->
-          <button class="btn-comment-like" th:id="'likeBtn-' + ${comment.id}"
-                  th:data-comment-id="${comment.id}"
-                  th:data-liked="${likedComments[comment.id]}"
-                  onclick="toggleLike(this)">
-            <span th:text="${likedComments[comment.id] ? 'Unlike' : 'Like'}"></span>
-          </button>
-        </div>
+            <button class="btn-comment-like" th:id="'likeBtn-' + ${comment.id}"
+            th:data-comment-id="${comment.id}"
+            th:data-liked="${likedComments[comment.id]}"
+            onclick="toggleLike(this)">
+              <span th:text="${likedComments[comment.id] ? 'Unlike' : 'Like'}"></span>
+            </button>
+            <!--    Delete Comment   -->
+            <form class="btn-delete" action="#" th:action="@{/posts/comment/{commentId}/delete(commentId=${comment.id})}" method="post">
+              <button type="submit" th:if="${comment.userId == userId}">Delete</button>
+            </form>
+          </div>
       </div>
     </div>
   </div>
