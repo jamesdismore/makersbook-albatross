@@ -78,7 +78,7 @@ public class FriendsController {
     }
 
     @PostMapping("/friends/search")
-    public String searchFriends(@RequestParam("searchQuery") String searchQuery, Model model, Authentication authentication) {
+    public String searchFriends(@RequestParam(value = "searchQuery", defaultValue = "") String searchQuery, Model model, Authentication authentication) {
         // Get the logged-in user's details
         DefaultOidcUser principal = (DefaultOidcUser) authentication.getPrincipal();
         String username = (String) principal.getAttributes().get("email");
@@ -87,6 +87,7 @@ public class FriendsController {
         if (user.isEmpty()) {
             return "redirect:/users/newUser"; // Redirect if not registered
         }
+
 
         // Search for users matching the query
         String queryLow = searchQuery.toLowerCase();

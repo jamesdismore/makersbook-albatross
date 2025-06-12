@@ -8,50 +8,60 @@
   <title>Friends</title>
   <link href="/static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
   <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}" />
+<!--  <script th:src="@{/js/bootstrap.bundle.min.js}" src="/static/js/bootstrap.bundle.min.js"></script>-->
 </head>
 
 <body>
 
+
 <nav th:replace="_fragments :: nav-bar(currentPage='Friends')"></nav>
+<main role="main">
 
-<div class="container">
-  <div class="row m-3 p-2 rounded" style="background-color: #DDDDDD">
-    <div class="col-12">
-      <p class="mt-3 mb-2" style="font-size: 18px;">👋 Find new friends!</p>
+  <div class="container">
 
-      <!-- Simple Search Form -->
-      <form th:action="@{/friends/search}" th:method="post">
-        <input class="form-control" type="text" name="searchQuery" placeholder="Enter a name to search">
-        <div class="mt-2 mb-1 text-end">
-          <button type="submit" class="btn btn-primary">Search</button>
-        </div>
-      </form>
+
+
+
+    <!-- search box -->
+    <div class="row m-3 p-2 rounded" style="background-color: #DDDDDD">
+      <div class="col-12">
+        <p class="mt-3 mb-2" style="font-size: 18px;">👋 Find new friends!</p>
+
+        <!-- Simple Search Form -->
+        <form th:action="@{/friends/search}" th:method="post">
+          <input class="form-control" type="text" name="searchQuery" placeholder="Enter a name to search">
+          <div class="mt-2 mb-1 text-end">
+            <button type="submit" class="btn btn-primary">Search</button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
 
-  <div class="row ms-3 me-3 mt-5">
-    <h4 class="col display-6 mb-0 px-0" th:unless="${searchQuery}">Your Friends</h4>
-    <h4 class="col display-6 mb-0 px-0" th:if="${searchQuery}">Search Results</h4>
-    <div class="col my-auto px-0">
-        <a class="icon-link float-end" href="">
-          <svg th:replace="_fragments :: clipboard"></svg>
-          Requests
+    <!-- titles and requests button -->
+    <div class="row ms-3 me-3 mt-5">
+      <h4 class="col display-6 mb-0 px-0" th:unless="${searchQuery}">Your Friends</h4>
+      <h4 class="col display-6 mb-0 px-0" th:if="${searchQuery}">Search Results</h4>
+
+      <div th:if="${searchQuery}" class="col-2 my-auto px-0 me-4">
+        <a class="icon-link float-end" href="/friends">
+          <svg th:replace="_fragments :: heart-fill"></svg>
+          Your Friends
         </a>
+      </div>
+      <div class="col-1 my-auto px-0">
+          <a class="icon-link float-end" href="/manageFriends">
+            <svg th:replace="_fragments :: clipboard"></svg>
+            Requests
+          </a>
+      </div>
     </div>
-  </div>
-
-
-
-
-
 
     <hr class="row mb-4 me-3 ms-3 mt-1">
     <div class="row me-3 ms-3">
 
 
-      <div class="col-md-4 col-sm-2 mb-5 overflow-scroll" th:each="friend : ${friends}"
+      <div class="card-group col-md-4 col-sm-2 mb-5" th:each="friend : ${friends}"
            th:with="avatarFile=${friend.avatar == null}  ? 'placeholder' : ${friend.avatar}">
-
 
         <!-- Card start-->
         <div class="card" style="width: 18rem;">
@@ -61,23 +71,23 @@
             <h5 class="card-title" th:text="${friend.firstName}">Mr Nobody</h5>
             <!--          <p class="mb-1" style="font-size: 16px; font-style: italic">Not doing a great deal today!</p>-->
             <!--          <p style="font-size: 12px" class="mt-0">10 minutes ago.</p>-->
-            <a th:href="@{'/posts/' + ${friend.id}}" class="btn btn-primary">Profile</a>
+            <a th:href="@{'/posts/' + ${friend.id}}" class="btn btn-primary btn-sm">Profile</a>
             <!--          Button for the main Friends page-->
             <form th:action="@{/friends/unfriend}" method="post" style="display: inline;" th:unless="${searchQuery}">
               <input type="hidden" name="unfriendId" th:value="${friend.id}" />
               <input type="hidden" name="userId" th:value="${user.id}" />
-              <button type="submit" class="btn btn-danger" >Unfriend</button>
+              <button type="submit" class="btn btn-danger btn-sm" >Unfriend</button>
             </form>
             <!--          Button for adding friends on the friends search page-->
             <form th:action="@{/friends/addfriend}" method="post" style="display: inline;" th:if="${searchQuery!=null and (alreadyFriendRequested ==null or !alreadyFriendRequested.contains(friend))}">
               <input type="hidden" name="newFriendId" th:value="${friend.id}" />
-              <button type="submit" class="btn btn-success" >Add Friend</button>
+              <button type="submit" class="btn btn-success btn-sm" >Add Friend</button>
             </form>
             <!--          Button for withdrawing friend requests on the friends search page-->
             <form th:action="@{/friends/deletefriendrequest}" method="post" style="display: inline;" th:if="${alreadyFriendRequested !=null and alreadyFriendRequested.contains(friend)}">
               <input type="hidden" name="friendRequestFriendId" th:value="${friend.id}" />
               <input type="hidden" name="userId" th:value="${user.id}" />
-              <button type="submit" class="btn btn-warning" >Withdraw Request</button>
+              <button type="submit" class="btn btn-warning btn-sm" >Withdraw Request</button>
             </form>
           </div>
         </div>
@@ -86,13 +96,8 @@
       </div>
     </div>
   </div>
-</div>
+</main>
+  <script th:src="@{/js/bootstrap.bundle.min.js}" src="/static/js/bootstrap.bundle.min.js"></script>
 
-
-
-
-
-
-<script th:src="@{/js/bootstrap.bundle.min.js}" src="/static/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

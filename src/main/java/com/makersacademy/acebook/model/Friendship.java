@@ -39,8 +39,8 @@ public class Friendship {
         aToB.setFriendshipTimestamp(Timestamp.from(Instant.now()));
 
         Friendship bToA = new Friendship();
-        bToA.setUserId(form.getRecipientId());
-        bToA.setFriendId(form.getSenderId());
+        bToA.setUserId(form.getSenderId());
+        bToA.setFriendId(form.getRecipientId());
         bToA.setFriendshipTimestamp(Timestamp.from(Instant.now()));
 
         Friendship[] friendships = new Friendship[2];
