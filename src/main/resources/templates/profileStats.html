@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+</head>
+<body>
+
+<div class="profile-container">
+    <div class="row mx-2 my-2">
+        <div class="col-3" th:with="avatarFile=${user.avatar == null}  ? 'placeholder' : ${user.avatar}">
+            <img id="imagePreview2" src="../static/images/userAvatars/9.jpg"
+                 th:src="@{'../images/userAvatars/' + ${avatarFile} + '.jpg'}" class="rounded-circle mx-auto"
+                 style="width: 240px; height: 240px; object-fit: cover;" alt="Default Avatar">
+        </div>
+        <div class="col">
+            <div class="row align-items-start ps-3 my-2">
+                <p class="col-11 py-0 my-1" style="font-size: 16px" >Amelia Dog</p>
+                <p class="col-11 py-0 my-1" >Member since 17th June 2021</p>
+                <p class="col-11 py-0 my-1" >Last Seen Monday 6th July 2022</p>
+            </div>
+
+
+        </div>
+    </div>
+
+
+</div>
+
+</body>
+</html>
