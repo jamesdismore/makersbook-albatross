@@ -32,6 +32,12 @@ public class ProfileController {
     @Autowired
     CommentLikeRepository commentLikeRepository;
 
+    @Autowired
+    FriendshipRepository friendshipRepository;
+
+    @Autowired
+    FriendRequestRepository friendshipRequestRepository;
+
     @ModelAttribute("user")
     public Optional<User> getUser(Authentication authentication) {
         DefaultOidcUser principal = (DefaultOidcUser) authentication.getPrincipal();
@@ -82,7 +88,20 @@ public class ProfileController {
             likedComments.put(comment.getId(), commentLikeRepository.findByUserIdAndCommentId(userId, comment.getId()).isPresent());
             likeCountsComments.put(comment.getId(), commentLikeRepository.countByCommentId(comment.getId())); // Fetch like count
         }
+//       Checking if they're already a friend
+        Boolean isFriend = false;
+        if (!friendshipRepository.findFriendshipByUserIdAndFriendId(loggedInUserId.intValue(),profileUser.get().getId().intValue()).isEmpty()){
+            isFriend = true;
+        }
+        Boolean alreadyRequested = false;
+        if(!friendshipRequestRepository.findFriendRequestByFromUserIdAndToUserIdAndStatus(loggedInUserId,profileUser.get().getId(),"PENDING").isEmpty()){
+            alreadyRequested = true;
+        }
 
+
+        model.addAttribute("user",loggedInUser.get());
+        model.addAttribute("isFriend",isFriend);
+        model.addAttribute("alreadyRequested",alreadyRequested);
         model.addAttribute("profileUser", profileUser.get());
         model.addAttribute("posts", userPosts);
         model.addAttribute("comments", comments);
