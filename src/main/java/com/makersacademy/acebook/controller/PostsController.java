@@ -58,14 +58,6 @@ public class PostsController {
 
         Long userId = user.get().getId();
 
-        model.addAttribute("posts", posts);
-        model.addAttribute("post", newPost);
-        model.addAttribute("comments", comments);
-        model.addAttribute("comment", newComment);
-
-        // code below to get userId and email from database
-        model.addAttribute("userId", user.get().getId());
-        model.addAttribute("email", user.get().getUsername());
 
         // Create a map to store post authors
         Map<Long, User> postAuthors = new HashMap<>();
@@ -73,7 +65,6 @@ public class PostsController {
             Optional<User> postUser = userRepository.findById(post.getUser_id());
             postUser.ifPresent(user1 -> postAuthors.put(post.getId(), user1));
         }
-        model.addAttribute("postAuthors", postAuthors);
 
         // Create a map to store comment authors
         Map<Long, User> commentAuthors = new HashMap<>();
@@ -81,7 +72,6 @@ public class PostsController {
             Optional<User> commentUser = userRepository.findById(comment.getUserId());
             commentUser.ifPresent(user1 -> commentAuthors.put(comment.getId(), user1));
         }
-        model.addAttribute("commentAuthors", commentAuthors);
 
         // Map to store like status for each post
         Map<Long, Boolean> likedPosts = new HashMap<>();
@@ -90,8 +80,6 @@ public class PostsController {
             likedPosts.put(post.getId(), postLikeRepository.findByUserIdAndPostId(userId, post.getId()).isPresent());
             likeCountsPosts.put(post.getId(), postLikeRepository.countByPostId(post.getId())); // Fetch like count
         }
-        model.addAttribute("likedPosts", likedPosts);
-        model.addAttribute("likeCountsPosts", likeCountsPosts);
 
         // Map to store like status for each comment
         Map<Long, Boolean> likedComments = new HashMap<>();
@@ -100,8 +88,19 @@ public class PostsController {
             likedComments.put(comment.getId(), commentLikeRepository.findByUserIdAndCommentId(userId, comment.getId()).isPresent());
             likeCountsComments.put(comment.getId(), commentLikeRepository.countByCommentId(comment.getId())); // Fetch like count
         }
+
+        model.addAttribute("posts", posts);
+        model.addAttribute("post", newPost);
+        model.addAttribute("comments", comments);
+        model.addAttribute("comment", newComment);
         model.addAttribute("likedComments", likedComments);
         model.addAttribute("likeCountsComments", likeCountsComments);
+        model.addAttribute("likedPosts", likedPosts);
+        model.addAttribute("likeCountsPosts", likeCountsPosts);
+        model.addAttribute("commentAuthors", commentAuthors);
+        model.addAttribute("postAuthors", postAuthors);
+        model.addAttribute("userId", user.get().getId());
+        model.addAttribute("email", user.get().getUsername());
 
         return "posts";
     }
