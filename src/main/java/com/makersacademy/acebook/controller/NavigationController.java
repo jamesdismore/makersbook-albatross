@@ -99,7 +99,7 @@ public class NavigationController {
     public String deleteUser(@ModelAttribute("userId")long userId){
         User deletedUser = new User();
         deletedUser.setId(userId);
-        deletedUser.setAvatar("placeholder");
+        deletedUser.setAvatar("deleteduser");
         deletedUser.setUsername("Deleted User");
         deletedUser.setFirstName("Deleted");
         deletedUser.setLastName("User");
