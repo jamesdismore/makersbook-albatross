@@ -118,6 +118,8 @@ body, html {
     margin: 10px;
     justify: left;
     align-items: center;
+    font-weight: 500;
+    height: ;
 }
 
 .post-interactions {
@@ -141,7 +143,7 @@ body, html {
     margin-bottom: 10px;
 }
 
-.btn-comment {
+.btn-comment , .btn-like {
     background-color: #6f5e56;
     border: #674f43;
     color: white;
@@ -150,7 +152,7 @@ body, html {
     border-radius: 10px;
 }
 
-.btn-comment:hover {
+.btn-comment:hover , .btn-like:hover {
     background-color: #92837d;
 }
 
@@ -163,6 +165,11 @@ input[type="submit"] , input[type="reset"] {
     border-radius: 10px;
 }
 
+input[type="submit"]:hover , input[type="reset"]:hover {
+    background-color: #92837d;
+}
+
+
 .posts {
     width: 40%;
     justify: center;
@@ -173,6 +180,10 @@ input[type="submit"] , input[type="reset"] {
     border-color: #000;
     text-size: 20px;
     max-width: 600px;
+}
+
+.profile-posts {
+    margin-left: 5%;
 }
 
 .post-content {
@@ -219,4 +230,13 @@ nav {
 
 .post {
     font-size: 18px;
+}
+
+.btn-like-comments {
+    display: flex;
+    margin-top: 5px;
+    height: 20px;
+    line-height: 20px;
+    margin-left: 65px;
+    gap:
 }

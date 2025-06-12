@@ -14,44 +14,43 @@
 <div class="bg">
   <div class="overlay">
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Acebook</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Acebook</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link home" aria-disabled="true">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" th:href="${user != null ? '/profile/' + user.id : '/users/newUser'}">My Profile</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/settings">Account Settings</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/logout">Logout</a> <!-- This works due to legacy code -->
-        </li>
-      </ul>
-      <div sec:authorize="isAuthenticated()">
-        <!-- th:with="avatarFile=${user.id} + '.jpg'" -->
-        <!-- th:src="@{'../images/userAvatars/' + ${avatarFile}}" -->
-        <div class="user-avatar" th:if="${user.avatar != null}" th:with="avatarFile=${user.id} + '.jpg'">
-          <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="User Avatar" class="avatar-img">
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link home" aria-disabled="true">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="${user != null ? '/profile/' + user.id : '/users/newUser'}">My Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/settings">Account Settings</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout</a> <!-- This works due to legacy code -->
+            </li>
+          </ul>
+          <div sec:authorize="isAuthenticated()">
+            <!-- th:with="avatarFile=${user.id} + '.jpg'" -->
+            <!-- th:src="@{'../images/userAvatars/' + ${avatarFile}}" -->
+            <div class="user-avatar" th:if="${user.avatar != null}" th:with="avatarFile=${user.id} + '.jpg'">
+              <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="User Avatar" class="avatar-img">
+            </div>
+            <!-- Fallback if no avatar -->
+            <div class="user-initials" th:if="${user.avatar == null}">
+              <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
+            </div>
+          </div>
         </div>
-        <!-- Fallback if no avatar -->
-        <div class="user-initials" th:if="${user.avatar == null}">
-          <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
         </div>
-      </div>
-    </div>
-    </div>
-  </div>
-</nav>
+    </nav>
 
     <h1>Posts</h1>
 
@@ -90,15 +89,8 @@
       <div class="post-content" th:text="${post.content}"></div>
       <div class="post-interactions">
         <div class="post-buttons">
-        <button class="btn btn-primary btn-comment" type="button" data-bs-toggle="collapse"
-                th:data-bs-target="'#collapseExample' + ${iterStat.index}"
-                aria-expanded="false"
-                th:aria-controls="'collapseExample' + ${iterStat.index}">
-          Comment
-        </button>
-
-          <!--  Like Button Functionality -->
-          <button th:id="'likeBtn-' + ${post.id}"
+        <!--  Like Button Functionality -->
+          <button class="btn-like" th:id="'likeBtn-' + ${post.id}"
                   th:data-post-id="${post.id}"
                   th:data-liked="${likedPosts[post.id]}"
                   onclick="toggleLike(this)">
@@ -107,7 +99,12 @@
           <p>Likes: <span th:id="'likeCount-post-' + ${post.id}" th:text="${likeCountsPosts[post.id]}"></span></p>
 
           <!--  Comment Button Functionality -->
-        </button>
+          <button class="btn btn-primary btn-comment" type="button" data-bs-toggle="collapse"
+                  th:data-bs-target="'#collapseExample' + ${iterStat.index}"
+                  aria-expanded="false"
+                  th:aria-controls="'collapseExample' + ${iterStat.index}">
+            Comment
+          </button>
         </div>
         <div class="collapse" th:id="'collapseExample' + ${iterStat.index}">
           <div class="card card-body">
@@ -124,31 +121,36 @@
       </div>
       <div class="comments">
         <div th:each="comment : ${comments}" th:if="${comment.postId == post.id}" class="mb-3">
-          <div class="user-info">
-            <!--  each commenter's avatar + name -->
-            <div class="user-avatar" th:with="avatarFile=${comment.userId} + '.jpg'">
-              <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
-            </div>
-            <!-- Fallback if no avatar -->
-            <div class="user-initials" th:if="${commentAuthors[comment.id].avatar == null}">
-              <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
-            </div>
-            <!--  display user FullName (unknown user if null)-->
-            <div th:if="${commentAuthors[comment.id] != null && commentAuthors[comment.id].firstName != null && commentAuthors[comment.id].lastName != null}"
-                 th:text="${commentAuthors[comment.id].firstName + ' ' + commentAuthors[comment.id].lastName}"></div>
+            <div class="user-info">
+                <!--  each commenter's avatar + name -->
+                <div class="user-avatar" th:with="avatarFile=${comment.userId} + '.jpg'">
+                  <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
+                </div>
+              <!-- Fallback if no avatar -->
+              <div class="user-initials" th:if="${commentAuthors[comment.id].avatar == null}">
+                <span th:text="${#strings.substring(#authentication.principal.attributes['email'], 0, 1).toUpperCase()}">U</span>
+              </div>
+              <!--  display user FullName (unknown user if null)-->
+              <div th:if="${commentAuthors[comment.id] != null && commentAuthors[comment.id].firstName != null && commentAuthors[comment.id].lastName != null}"
+                   th:text="${commentAuthors[comment.id].firstName + ' ' + commentAuthors[comment.id].lastName}"></div>
 
-    <div th:if="${commentAuthors[comment.id] == null || commentAuthors[comment.id].firstName == null || commentAuthors[comment.id].lastName == null}">
-      Unknown User
-    </div>
-    <div class="comment-text" th:text="${comment.content}"></div>
-    <!--  Like Button Functionality -->
-    <button th:id="'likeBtn-' + ${comment.id}"
-            th:data-comment-id="${comment.id}"
-            th:data-liked="${likedComments[comment.id]}"
-            onclick="toggleLike(this)">
-      <span th:text="${likedComments[comment.id] ? 'Unlike' : 'Like'}"></span>
-    </button>
-    <p>Likes: <span th:id="'likeCount-comment-' + ${comment.id}" th:text="${likeCountsComments[comment.id]}"></span></p>
+              <div th:if="${commentAuthors[comment.id] == null || commentAuthors[comment.id].firstName == null || commentAuthors[comment.id].lastName == null}">
+                Unknown User
+              </div>
+            </div>
+            <div class="comment-text" th:text="${comment.content}"></div>
+          <div class="btn-like-comments">
+              <!--  Like Button Functionality -->
+              <button th:id="'likeBtn-' + ${comment.id}"
+                      th:data-comment-id="${comment.id}"
+                      th:data-liked="${likedComments[comment.id]}"
+                      onclick="toggleLike(this)">
+                <span th:text="${likedComments[comment.id] ? 'Unlike' : 'Like'}"></span>
+              </button>
+              <p>Likes: <span th:id="'likeCount-comment-' + ${comment.id}" th:text="${likeCountsComments[comment.id]}"></span></p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
