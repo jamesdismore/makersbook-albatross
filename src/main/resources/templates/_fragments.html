@@ -31,7 +31,7 @@
     <!-- navbar -->
     <nav th:fragment="nav-bar (currentPage)" class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Acebook</a>
+            <a class="navbar-brand" href="/posts">Acebook</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -65,7 +65,9 @@
                     <!-- th:with="avatarFile=${user.id} + '.jpg'" -->
                     <!-- th:src="@{'../images/userAvatars/' + ${avatarFile}}" -->
                     <div class="user-avatar" th:if="${user.avatar != null}" th:with="avatarFile=${user.id} + '.jpg'">
-                        <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="User Avatar" class="avatar-img">
+                        <a th:href="${user != null ? '/profile/' + user.id : '/users/newUser'}">
+                            <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
+                        </a>
                     </div>
                     <!-- Fallback if no avatar -->
                     <div class="user-initials" th:if="${user.avatar == null}">
