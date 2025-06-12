@@ -65,7 +65,9 @@
                     <!-- th:with="avatarFile=${user.id} + '.jpg'" -->
                     <!-- th:src="@{'../images/userAvatars/' + ${avatarFile}}" -->
                     <div class="user-avatar" th:if="${user.avatar != null}" th:with="avatarFile=${user.id} + '.jpg'">
-                        <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="User Avatar" class="avatar-img">
+                        <a th:href="${user != null ? '/profile/' + user.id : '/users/newUser'}">
+                            <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
+                        </a>
                     </div>
                     <!-- Fallback if no avatar -->
                     <div class="user-initials" th:if="${user.avatar == null}">
