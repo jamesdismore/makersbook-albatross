@@ -73,6 +73,7 @@
             <!--          <p style="font-size: 12px" class="mt-0">10 minutes ago.</p>-->
             <a th:href="@{'/profile/' + ${friend.id}}" class="btn btn-primary btn-sm">Profile</a>
             <!--          Button for the main Friends page-->
+
             <form th:action="@{/friends/unfriend}" method="post" style="display: inline;" th:unless="${searchQuery}">
               <input type="hidden" name="unfriendId" th:value="${friend.id}" />
               <input type="hidden" name="userId" th:value="${user.id}" />

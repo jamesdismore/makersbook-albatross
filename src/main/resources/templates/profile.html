@@ -27,6 +27,7 @@
         <div class="profile-name">
             <h1><span th:text="${profileUser.firstName}"></span> <span th:text="${profileUser.lastName}"}></span></h1>
         </div>
+        <div th:unless="${profileUser.id == user.id}">
         <form th:action="@{/friends/unfriend}" method="post" style="display: inline;" th:if="${isFriend}">
             <input type="hidden" name="unfriendId" th:value="${profileUser.id}" />
             <input type="hidden" name="userId" th:value="${user.id}" />
@@ -41,6 +42,7 @@
             <input type="hidden" name="userId" th:value="${user.id}" />
             <button type="submit" class="btn btn-warning btn-sm" >Withdraw Request</button>
         </form>
+        </div>
     </div>
 
 <div th:each="post, iterStat : ${posts}" class="mb-3">
