@@ -97,6 +97,7 @@
           th:aria-controls="'collapseExample' + ${iterStat.index}">
     Comment
   </button>
+
   <div class="collapse" th:id="'collapseExample' + ${iterStat.index}">
     <div class="card card-body">
       <form action="#" th:action="@{/posts/comment}" th:object="${comment}" method="post">
@@ -107,6 +108,7 @@
       </form>
     </div>
   </div>
+
   <div th:each="comment : ${comments}" th:if="${comment.postId == post.id}" class="mb-3">
     <!--  each commenter's avatar + name -->
     <div class="user-avatar" th:with="avatarFile=${comment.userId} + '.jpg'">
