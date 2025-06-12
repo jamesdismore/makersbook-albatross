@@ -16,7 +16,12 @@
 <div class="bg">
     <div class="overlay">
 
-<nav th:replace="_fragments :: nav-bar(currentPage='My Profile')"></nav>
+    <div th:if="${profileUser.id} == ${loggedInUserId}">
+        <nav th:replace="_fragments :: nav-bar(currentPage='My Profile')"></nav>
+    </div>
+    <div th:unless="${profileUser.id} == ${loggedInUserId}">
+        <nav th:replace="_fragments :: nav-bar(currentPage='')"></nav>
+    </div>
 
     <div class="container-fluid">
         <div class="row" id="banner">
@@ -29,22 +34,21 @@
             <div class="col" >
                 <div class="row h-25 align-items-baseline" ></div>
                 <div class="row h-25 align-items-baseline" >
-                    <p class="col display-3 p-0 my-auto text-start" style="font-size: 36px; color: white">Roger Fox</p>
+                    <p class="col display-3 p-0 my-auto text-start" th:text="|${profileUser.firstName} ${profileUser.lastName}|" style="font-size: 36px; color: white">Roger Fox</p>
+
                 </div>
+
+
+
+
+
                 <div class="row h-50 h-auto my-1" >
                     <p class="display-6 p-0 col-12 m-0 py-1 text-start" style="font-size: 14px; ">Member since 23rd June 2024</p>
-                    <p class="col-12 display-6 p-0 py-1  m-0 text-sm-start" style="font-size: 14px; ">Last seen 12th August 2022</p>
-
+                    <p class="col-12 display-6 p-0 py-1  m-0 text-start" style="font-size: 14px; ">Last seen 12th August 2022</p>
                 </div>
             </div>
-
-
-
-
         </div>
-<!--        <div class="profile-name">-->
-<!--            <h1><span th:text="${profileUser.firstName}"></span> <span th:text="${profileUser.lastName}"}></span></h1>-->
-<!--        </div>-->
+
         <div th:unless="${profileUser.id == user.id}">
         <form th:action="@{/friends/unfriend}" method="post" style="display: inline;" th:if="${isFriend}">
             <input type="hidden" name="unfriendId" th:value="${profileUser.id}" />
@@ -241,9 +245,6 @@
                 const dominantColor = colorThief.getColor(img);
                 const hex = rgbToHex(dominantColor[0], dominantColor[1], dominantColor[2]);
                 banner.style.backgroundImage = `linear-gradient(0deg, #ffffff00 50%, ${hex} 50%)`;
-
-                // const hex = rgbToHex(dominantColor[0], dominantColor[1], dominantColor[2]);
-                // banner.style.backgroundImage = `linear-gradient(0deg, rgba(${dominantColor[0]}, ${dominantColor[1]}, ${dominantColor[2]}}) 50%, ${hex} 50%)`;
             }
         };
     </script>

@@ -28,7 +28,7 @@
                      style="max-width: 116px;">
             </div>
             <div class="col-10 ms-3">
-                <p class="mt-3 mb-2" style="font-size: 18px;" th:text="|Send ${friendRequestForm.recipientFirstName} a friend request|">👋 Send Barry a friend request</p>
+                <p class="mt-3 mb-2 text-start" style="font-size: 18px;" th:text="|Send ${friendRequestForm.recipientFirstName} a friend request|">👋 Send Barry a friend request</p>
                 <form th:object="${friendRequestForm}" th:action="@{/manageFriends/submitFriendRequest}" th:method="post">
                         <input class="form-control" type="text" th:placeholder="|Hi ${friendRequestForm.recipientFirstName}...|" th:field="*{message}">
                         <input type="hidden" th:field="*{recipientId}" id="recipientId">
@@ -50,7 +50,7 @@
                      style="max-width: 116px;">
             </div>
             <div class="col-10 ms-3">
-                <p class="mt-3 mb-2" style="font-size: 18px;">👋 Start making friends!</p>
+                <p class="mt-3 mb-2 text-start" style="font-size: 18px;">👋 Start making friends!</p>
 <!--                <form th:object="${friendRequestForm}" th:action="@{/friends/search(searchQuery='')}" th:method="post">-->
                 <form th:object="${friendRequestForm}" th:action="@{/friends/search}" th:method="post">
                     <input class="form-control" type="text" placeholder="Use the search button to find some friends" disabled>
