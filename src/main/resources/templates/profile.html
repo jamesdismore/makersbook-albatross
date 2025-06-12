@@ -18,7 +18,7 @@
 
 <nav th:replace="_fragments :: nav-bar(currentPage='My Profile')"></nav>
 
-    <div class="cover-banner"></div>
+    <div class="cover-banner" id="coverBanner"></div>
 
     <div class="profile-container">
         <!-- Profile Image -->
@@ -202,6 +202,27 @@
           .catch(error => console.error("Error:", error));
       }
     </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.min.js"></script>
+
+    <script>
+        window.onload = function() {
+            const img = document.getElementById("imagePreview");
+            const coverBanner = document.getElementById("coverBanner");
+            const colorThief = new ColorThief();
+
+            img.onload = function() {
+                const dominantColor = colorThief.getColor(img);
+                coverBanner.style.backgroundColor = `rgb(${dominantColor[0]}, ${dominantColor[1]}, ${dominantColor[2]})`;
+            };
+
+            if (img.complete) {
+                const dominantColor = colorThief.getColor(img);
+                coverBanner.style.backgroundColor = `rgb(${dominantColor[0]}, ${dominantColor[1]}, ${dominantColor[2]})`;
+            }
+        };
+    </script>
+
 
 <script th:src="@{/js/bootstrap.bundle.min.js}" src="/static/js/bootstrap.bundle.min.js"></script>
 </body>
