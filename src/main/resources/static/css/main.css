@@ -10,32 +10,179 @@
 }
 
 .user-avatar {
-  width: 32px;
-  height: 32px;
-  margin-left: 12px;
+    width: 32px;
+    height: 32px;
+    margin-left: 12px;
 }
 
 .avatar-img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #1877f2;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #949494;
+}
+
+.post-avatar {
+    width: 40px;
+    height: 40px;
 }
 
 /* initials style as fallback when no avatar img is found */
 .user-initials {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: #1877f2;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 14px;
-  margin-left: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #1877f2;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    margin-left: 12px;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.bg {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-image: url('https://wallpapercave.com/wp/wp7172499.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    height: 95%;
+    width: 95%;
+    overflow-y: scroll;
+    color: black;
+    scrollbar-width: none;
+}
+
+.user-info {
+    width: 80%;
+    display:flex;
+    gap: 10px;
+    margin: 10px;
+    justify: left;
+    align-items: center;
+}
+
+.post-interactions {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-width: 1px;
+    border-color: #949494;
+    border-style: solid;
+    border-left: none;
+    border-right: none;
+    margin-top: 15px;
+    width: 95%;
+    margin: auto;
+    gap: 10px;
+}
+
+.post-buttons {
+    justify-content: center;
+    display: flex;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.btn-comment {
+    background-color: #6f5e56;
+    border: #674f43;
+    color: white;
+    width: 90px;
+    height: 35px;
+    border-radius: 10px;
+}
+
+.btn-comment:hover {
+    background-color: #92837d;
+}
+
+input[type="submit"] , input[type="reset"] {
+    background-color: #6f5e56;
+    border: #674f43;
+    color: white;
+    width: 90px;
+    height: 35px;
+    border-radius: 10px;
+}
+
+.posts {
+    width: 40%;
+    justify: center;
+    left: 50%;
+    margin: auto;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #000;
+    text-size: 20px;
+    max-width: 600px;
+}
+
+.post-content {
+    width: 100%;
+    border: 2px;
+    height: auto;
+    text-align: left;
+    margin-left: 20px;
+    padding-bottom: 20px;
+    font-size: 18px;
+}
+
+.comments {
+    background-color: rgba(228, 228, 221, 0.5);
+    text-align: left;
+    padding: 10px;
+    line-height: 1px;
+}
+
+.comment-text {
+    margin-left: 65px;
+    padding-bottom: 3px;
+}
+
+nav {
+    padding-bottom: 20px;
+    padding-top: 20px;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    min-height: 8%;
+}
+
+.card {
+    width: 100%;
+    padding: 10px;
+    margin: auto;
+    justify: center;
+}
+
+.textarea-comment {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.post {
+    font-size: 18px;
 }
 
 /* Cover Banner */

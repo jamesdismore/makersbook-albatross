@@ -103,7 +103,7 @@ public class PostsController {
         model.addAttribute("likedComments", likedComments);
         model.addAttribute("likeCountsComments", likeCountsComments);
 
-        return "index";
+        return "posts";
     }
 
     @PostMapping("/posts")
