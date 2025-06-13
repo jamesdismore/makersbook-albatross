@@ -34,9 +34,10 @@
       <div class="user-info">
         <!--  poster's avatar + name -->
         <div class="user-avatar post-avatar" th:with="avatarFile=${postAuthors[post.id].avatar} + '.jpg'">
-          <a th:href="@{'/profile/' + ${postAuthors[post.id].id}}">
+          <a th:unless="${postAuthors[post.id].avatar == 'deleteduser'}" th:href="@{'/profile/' + ${postAuthors[post.id].id}}">
             <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
           </a>
+          <img th:if="${postAuthors[post.id].avatar == 'deleteduser'}" th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
         </div>
 
         <!-- Fallback if no avatar -->
@@ -114,9 +115,10 @@
           <div class="user-info">
             <!--  Each commenter's avatar-->
             <div class="user-avatar" th:with="avatarFile=${commentAuthors[comment.id].avatar} + '.jpg'">
-              <a th:href="@{'/profile/' + ${commentAuthors[comment.id].id}}">
+              <a th:unless="${commentAuthors[comment.id].avatar == 'deleteduser'}" th:href="@{'/profile/' + ${commentAuthors[comment.id].id}}">
                 <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
               </a>
+              <img th:if="${commentAuthors[comment.id].avatar == 'deleteduser'}" th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
             </div>
             <!-- Fallback if no avatar -->
             <div class="user-initials" th:if="${commentAuthors[comment.id].avatar == null}">
