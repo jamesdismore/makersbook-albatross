@@ -17,10 +17,14 @@
 
 package com.makersacademy.acebook.controller;
 
+import com.makersacademy.acebook.model.Friendship;
 import com.makersacademy.acebook.model.User;
+import com.makersacademy.acebook.repository.FriendRequestRepository;
+import com.makersacademy.acebook.repository.FriendshipRepository;
 import com.makersacademy.acebook.repository.UserRepository;
 import com.makersacademy.acebook.util.AvatarAssistant;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -41,15 +45,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Random;
 
 
+@Slf4j
 @Controller
 public class NavigationController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    FriendRequestRepository friendRequestRepository;
+
+    @Autowired
+    FriendshipRepository friendshipRepository;
 
     @ModelAttribute("user")
     public Optional<User> getUser(Authentication authentication) {
@@ -105,6 +117,10 @@ public class NavigationController {
         deletedUser.setFirstName("Deleted");
         deletedUser.setLastName("User");
         deletedUser.setDob(LocalDate.parse("1900-01-01"));
+//
+//        ArrayList<Friendship> friendshipsToDelete = friendshipRepository.findFriendshipByUserIdAndFriendId()
+
+
         userRepository.save(deletedUser);
         return "redirect:/logout";
     }
