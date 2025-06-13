@@ -176,7 +176,7 @@
             </button>
             <!--    Delete Comment   -->
             <form class="btn-delete" action="#" th:action="@{/profile/{userId}/comment/{commentId}/delete(userId=${profileUser.id}, commentId=${comment.id})}" method="post">
-                <button type="submit" th:if="${comment.userId == userId}">Delete</button>
+                <button type="submit" th:if="${comment.userId == loggedInUserId}">Delete</button>
             </form>
         </div>
     </div>
