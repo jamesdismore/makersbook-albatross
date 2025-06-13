@@ -17,6 +17,7 @@
 
 package com.makersacademy.acebook.controller;
 
+import com.makersacademy.acebook.model.FriendRequest;
 import com.makersacademy.acebook.model.Friendship;
 import com.makersacademy.acebook.model.User;
 import com.makersacademy.acebook.repository.FriendRequestRepository;
@@ -117,8 +118,17 @@ public class NavigationController {
         deletedUser.setFirstName("Deleted");
         deletedUser.setLastName("User");
         deletedUser.setDob(LocalDate.parse("1900-01-01"));
-//
-//        ArrayList<Friendship> friendshipsToDelete = friendshipRepository.findFriendshipByUserIdAndFriendId()
+
+        ArrayList<Friendship> friendshipsToDelete = friendshipRepository.findFriendshipByUserIdOrFriendId(Math.toIntExact(userId),Math.toIntExact(userId));
+        ArrayList<FriendRequest> friendRequestsToDelete = friendRequestRepository.findFriendRequestByFromUserIdOrToUserId(userId,userId);
+
+        for (Friendship friendship : friendshipsToDelete){
+            friendshipRepository.deleteById(friendship.getId());
+        }
+
+        for (FriendRequest friendRequest : friendRequestsToDelete){
+            friendRequestRepository.deleteById(friendRequest.getId());
+        }
 
 
         userRepository.save(deletedUser);
