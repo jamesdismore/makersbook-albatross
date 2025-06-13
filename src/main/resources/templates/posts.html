@@ -47,10 +47,10 @@
 
         <!--  display user FullName (unknown user if null)-->
         <div th:if="${postAuthors[post.id] != null && postAuthors[post.id].firstName != null && postAuthors[post.id].lastName != null}">
-          <a th:href="@{'/profile/' + ${postAuthors[post.id].id}}"
+          <a th:unless="${postAuthors[post.id].avatar == 'deleteduser'}" th:href="@{'/profile/' + ${postAuthors[post.id].id}}"
              th:text="${postAuthors[post.id].firstName + ' ' + postAuthors[post.id].lastName}"
-             class="profile-link">
-          </a>
+             class="profile-link"></a>
+            <a th:if="${postAuthors[post.id].avatar == 'deleteduser'}" th:text="${postAuthors[post.id].firstName + ' ' + postAuthors[post.id].lastName}"></a>
         </div>
 
         <div th:if="${postAuthors[post.id] == null || postAuthors[post.id].firstName == null || postAuthors[post.id].lastName == null}">
@@ -126,9 +126,10 @@
             </div>
             <!--  Display user FullName (unknown user if null)-->
             <div th:if="${commentAuthors[comment.id] != null && commentAuthors[comment.id].firstName != null && commentAuthors[comment.id].lastName != null}">
-              <a th:href="@{'/profile/' + ${commentAuthors[comment.id].id}}"
+              <a th:unless="${commentAuthors[comment.id].avatar == 'deleteduser'}" th:href="@{'/profile/' + ${commentAuthors[comment.id].id}}"
                  th:text="${commentAuthors[comment.id].firstName + ' ' + commentAuthors[comment.id].lastName}"
                  class="profile-link"></a>
+              <a th:if="${commentAuthors[comment.id].avatar == 'deleteduser'}" th:text="${commentAuthors[comment.id].firstName + ' ' + commentAuthors[comment.id].lastName}"></a>
             </div>
             <div th:if="${commentAuthors[comment.id] == null || commentAuthors[comment.id].firstName == null || commentAuthors[comment.id].lastName == null}">
               Unknown User
