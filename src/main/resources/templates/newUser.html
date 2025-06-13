@@ -33,6 +33,10 @@
             <h2 class="display-4 p-3">New User</h2>
         </a>
     </nav>
+
+
+
+
     <form th:object="${user}" id="add-user-form" method="post" enctype="multipart/form-data">
         <div class="row mt-5 align-content-center">
             <div class="mb-3 text-center" th:with="avatarFile=${user.avatar == null}  ? 'placeholder' : ${user.avatar}">
