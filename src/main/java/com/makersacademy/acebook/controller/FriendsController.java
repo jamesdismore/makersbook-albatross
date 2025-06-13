@@ -106,6 +106,7 @@ public class FriendsController {
         }
         exactOutput.removeIf(searchedUser -> friendIds.contains(searchedUser.getId()));
         exactOutput.removeIf(searchedUser -> Objects.equals(searchedUser.getId(), user.get().getId()));
+        exactOutput.removeIf(searchedUser -> Objects.equals(searchedUser.getAvatar(), "deleteduser"));
 
 //      Identifying which friends within the search have already been friended
         ArrayList<FriendRequest> existingRequests = friendRequestRepository.findFriendRequestByfromUserIdAndStatus(user.get().getId(),"PENDING");
