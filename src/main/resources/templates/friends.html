@@ -27,11 +27,11 @@
     <!-- search box -->
     <div class="row m-3 p-2 rounded" style="background-color: #DDDDDD">
       <div class="col-12">
-        <p class="mt-3 mb-2" style="font-size: 18px;">👋 Find new friends!</p>
+        <p class="mt-3 mb-2 text-start" style="font-size: 18px;">👋 Find new friends!</p>
 
         <!-- Simple Search Form -->
         <form th:action="@{/friends/search}" th:method="post">
-          <input class="form-control" type="text" name="searchQuery" placeholder="Enter a name to search">
+          <input class="form-control" type="text" name="searchQuery" placeholder="Start typing or just hit search...">
           <div class="mt-2 mb-1 text-end">
             <button type="submit" class="btn btn-primary">Search</button>
           </div>
@@ -41,8 +41,8 @@
 
     <!-- titles and requests button -->
     <div class="row ms-3 me-3 mt-5">
-      <h4 class="col display-6 mb-0 px-0" th:unless="${searchQuery}">Your Friends</h4>
-      <h4 class="col display-6 mb-0 px-0" th:if="${searchQuery}">Search Results</h4>
+      <h4 class="col display-6 mb-0 px-0 text-start" th:unless="${searchQuery}">Your Friends</h4>
+      <h4 class="col display-6 mb-0 px-0 text-start" th:if="${searchQuery}">Search Results</h4>
 
       <div th:if="${searchQuery}" class="col-2 my-auto px-0 me-4">
         <a class="icon-link float-end" href="/friends">

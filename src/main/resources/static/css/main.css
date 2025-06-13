@@ -207,7 +207,7 @@ input[type="submit"]:hover , input[type="reset"]:hover {
 }
 
 .post-content {
-    width: 90%
+    width: 90%;
     border: 2px;
     height: auto;
     text-align: left;
@@ -311,6 +311,7 @@ nav {
     width: 100%;
     padding: 0;
 }
+
 
 .btn-delete {
     display: inline;
