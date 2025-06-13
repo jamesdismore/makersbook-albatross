@@ -106,7 +106,7 @@ public class NavigationController {
         deletedUser.setLastName("User");
         deletedUser.setDob(LocalDate.parse("1900-01-01"));
         userRepository.save(deletedUser);
-        return "redirect:/posts";
+        return "redirect:/logout";
     }
 
 
