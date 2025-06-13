@@ -54,7 +54,7 @@
     <div class="post">
     <div class="user-info">
     <!--  poster's avatar + name -->
-    <div class="user-avatar" th:with="avatarFile=${post.user_id} + '.jpg'">
+    <div class="user-avatar" th:with="avatarFile=${postAuthors[post.id].avatar} + '.jpg'">
         <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
     </div>
     <!-- Fallback if no avatar -->
@@ -120,7 +120,7 @@
         <div th:each="comment : ${comments}" th:if="${comment.postId == post.id}" class="mb-3 comments">
         <div class="user-info">
             <!--  each commenter's avatar + name -->
-            <div class="user-avatar" th:with="avatarFile=${comment.userId} + '.jpg'">
+            <div class="user-avatar" th:with="avatarFile=${commentAuthors[comment.id].avatar} + '.jpg'">
                 <img th:src="@{'../images/userAvatars/' + ${avatarFile}}" alt="Poster's Avatar" class="avatar-img">
             </div>
             <!-- Fallback if no avatar -->
