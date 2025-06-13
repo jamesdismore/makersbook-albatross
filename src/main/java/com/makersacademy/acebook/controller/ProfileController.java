@@ -176,9 +176,11 @@ public class ProfileController {
 
     @PostMapping("/profile/{userId}/comment/{commentId}/delete")
     @Transactional
-    public String delete(@PathVariable Long userId, @PathVariable long commentId, Model model){
+    public String delete(@PathVariable Long userId, @PathVariable long commentId, Model model, @ModelAttribute("user") Optional<User> loggedInUser){
+        Long loggedInUserId = loggedInUser.get().getId();
         commentLikeRepository.deleteByCommentId(commentId);
         commentRepository.deleteById(commentId);
+        model.addAttribute("loggedInUserId", loggedInUserId);
         return "redirect:/profile/" + userId;
     }
 
