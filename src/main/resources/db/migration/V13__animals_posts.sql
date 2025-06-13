@@ -37,3 +37,7 @@ INSERT INTO posts(content, user_id, post_timestamp) VALUES
  (E'I feel the cold breath of extinction closing in, as the lands I once ruled grow silent and empty. Every step I take is shadowed by hunters’ relentless pursuit, leaving fewer of my kind to roam free.', 8, '2024-06-07 15:00:00'),
  (E'If there’s one thing I truly look forward to each year, it’s the long, deep sleep of hibernation. After months of foraging, and feeling the pulse of the wild, there’s nothing like curling up in my den.', 10, '2024-08-01 15:00:00'),
  (E'Being a small furry dog feels like living in a world full of big, exciting smells everywhere. I’m always ready to curl up on a soft lap or cozy blanket for a nap.', 6, '2025-6-13 14:00:00');
+
+
+
+
