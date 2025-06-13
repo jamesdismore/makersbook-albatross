@@ -31,7 +31,7 @@
   <form th:object="${user}" id="add-user-form" method="post" enctype="multipart/form-data" th:unless="${deleteconfirmation}">
 
     <div class="text-center" th:with="avatarFile=${user.avatar == null}  ? 'placeholder' : ${user.avatar}">
-      <img id="imagePreview" src="../static/images/userAvatars/9.jpg"
+      <img id="imagePreview" src="../static/images/userAvatars/placeholder.jpg"
            th:src="@{'../images/userAvatars/' + ${avatarFile} + '.jpg'}" class="rounded-circle mx-auto"
            style="width: 240px; height: 240px; object-fit: cover;" alt="Default Avatar">
     </div>
@@ -65,9 +65,9 @@
         <p class="invalid-feedback" th:errors="*{dob}">Invalid data</p>
       </div>
       <div class="col">
-        <label for="profilePicture" class="form-label">Update Picture</label>
-        <input type="file" accept="image/*" id="profilePicture" name="file"
-               class="form-control mx-auto">
+        <label for="file" class="form-label">Update Picture</label>
+        <input type="file" accept="image/*" id="file" name="file"
+               class="form-control mx-auto" onchange="previewImage(event)">
       </div>
     </div>
 
@@ -122,6 +122,19 @@
       flashDiv.remove();
     });
   </script>
+
+    <script>
+      function previewImage(event) {
+          const file = event.target.files[0];  // Get the selected file
+          if (file) {
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                  document.getElementById('imagePreview').src = e.target.result; // Set image source
+              };
+              reader.readAsDataURL(file);
+          }
+      }
+    </script>
 
   </div>
 </div>
